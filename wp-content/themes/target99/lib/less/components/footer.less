@@ -1,0 +1,72 @@
+@import '../base/variables';
+@import '../base/layout';
+
+.footer {
+    padding-top: 50px;
+    padding-bottom: 40px;
+
+    background: url(../images/dark-forest-background.jpg) no-repeat;
+    background-size: cover;
+
+    .footer__inner-container {
+        position: relative;
+
+        &:after {
+            display: table;
+            visibility: hidden;
+            clear: both;
+
+            content: '';
+        }
+    }
+
+    .footer__site-map-link {
+        position: absolute;
+        bottom: 0;
+        left: 20px;
+
+        display: block;
+
+        font-family: @main-control-font;
+        font-size: 12px;
+
+        text-decoration: none;
+        text-transform: uppercase;
+
+        color: @text-color-2;
+    }
+
+    .footer__socials-container {
+        position: absolute;
+        right: 20px;
+        bottom: 0;
+
+        display: block;
+    }
+
+    .footer__logo-container {
+        width: 220px;
+        margin: 0 auto;
+
+        text-align: center;
+    }
+
+    .footer__logo {
+        display: block;
+
+        max-height: 90px;
+        margin: 0 auto;
+        padding-bottom: 16px;
+    }
+
+    .footer__logo-text {
+        display: inline-block;
+
+        font-family: @main-control-font;
+        font-size: 12px;
+
+        text-transform: uppercase;
+
+        color: @text-color-2;
+    }
+}

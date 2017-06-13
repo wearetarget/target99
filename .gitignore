@@ -1,0 +1,5 @@
+wp-config.php
+node_modules/
+docs/
+.idea/
+wp-content/cache/

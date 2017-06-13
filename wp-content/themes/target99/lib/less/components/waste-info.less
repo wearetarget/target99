@@ -1,0 +1,151 @@
+@import '../base/variables';
+@import '../base/layout';
+
+.waste-info {
+    background-color: @background-color-3;
+
+
+
+    .waste-info__title-container {
+        padding-bottom: 50px;
+
+        text-align: right;
+
+        @media @small-screen {
+            text-align: center;
+        }
+    }
+
+    .waste-info__title {
+        display: inline-block;
+
+        min-width: 210px;
+        padding-bottom: 12px;
+
+        font-family: @main-control-font;
+        font-size: 24px;
+
+        text-transform: uppercase;
+
+        color: @text-color-1;
+        border-bottom: 1px solid @text-color-1;
+    }
+
+    .waste-info__tiles-list {
+        display: flex;
+
+        align-items: stretch;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .waste-info__tile {
+        display: inline-block;
+
+        padding: 8px;
+    }
+}
+
+.waste-info-tile {
+    position: relative;
+
+    box-sizing: border-box;
+    width: 218px;
+    height: 222px;
+
+    cursor: pointer;
+
+    &:hover {
+        .waste-info-tile__content {
+            background-color: @background-color-2;
+
+            > .waste-info-tile__title-container {
+                padding-top: 0;
+            }
+
+            > .waste-info-tile__text-container {
+                display: block;
+            }
+        }
+    }
+
+    &.waste-info-tile--paper {
+        background: url(../images/paper.jpg) no-repeat;
+
+        &:hover {
+            background: url(../images/paper.jpg) no-repeat, @background-color-2;
+        }
+    }
+    &.waste-info-tile--glass {
+        background: url(../images/glass.jpg) no-repeat;
+
+        &:hover {
+            background: url(../images/glass.jpg) no-repeat, @background-color-2;
+        }
+    }
+    &.waste-info-tile--plastic {
+        background: url(../images/plastic.jpg) no-repeat;
+    }
+    &.waste-info-tile--tyre {
+        background: url(../images/tyre.jpg) no-repeat;
+    }
+    &.waste-info-tile--battery {
+        background: url(../images/battery.jpg) no-repeat;
+    }
+    &.waste-info-tile--tech {
+        background: url(../images/tech.jpg) no-repeat;
+    }
+    &.waste-info-tile--lamp {
+        background: url(../images/lamp.jpg) no-repeat;
+    }
+    &.waste-info-tile--oil {
+        background: url(../images/oil.jpg) no-repeat;
+    }
+
+    .waste-info-tile__content {
+        position: absolute;
+        top: 0;
+        left: 0;
+
+        overflow-y: auto;
+
+        box-sizing: border-box;
+        width: 100%;
+        height: 100%;
+        padding: 10px;
+
+        text-align: center;
+    }
+
+    .waste-info-tile__title-container {
+        display: block;
+
+        padding-top: 90px;
+        padding-bottom: 10px;
+    }
+
+    .waste-info-tile__title {
+        font-family: @main-control-font;
+        font-size: 22px;
+        font-weight: bold;
+
+        text-transform: uppercase;
+
+        color: @text-color-3;
+    }
+
+    .waste-info-tile__text-container {
+        display: none;
+
+        padding: 0 10px;
+    }
+
+    .waste-info-tile__text {
+        font-size: 14px;
+        line-height: 18px;
+
+        text-align: justify;
+
+        color: @text-color-2;
+    }
+}

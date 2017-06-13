@@ -1,0 +1,25 @@
+@import '../base/variables';
+@import '../base/layout';
+
+.slider-panel {
+    padding-bottom: 50px;
+
+    background-color: @background-color-1;
+}
+
+.slider {
+    .slider__image-container {
+        display: block;
+
+        margin: 0 auto;
+    }
+
+    .slider__image {
+        width: 100%;
+        max-width: 1920px;
+        max-height: 600px;
+
+        object-fit: cover;
+        object-position: 0 0;
+    }
+}
