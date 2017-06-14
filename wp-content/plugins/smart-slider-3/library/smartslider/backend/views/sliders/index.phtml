@@ -1,0 +1,67 @@
+<?php
+/**
+ * @var $this   N2View
+ * @var $_class N2SmartsliderBackendSlidersView
+ */
+
+$this->widget->init('topbar');
+
+$this->widget->init('heading', array(
+    'title'   => n2_('Dashboard') . N2Html::tag('span', array(), n2_('Version'). ': ' . N2SS3::$version . (N2SSPRO ? '-pro' : '-free') . ' - <a target="_blank" href="http://doc.smartslider3.com/article/432-changelog">' . n2_('Changelog') . '</a>'),
+    'actions' => $_class->getDashboardButtons()
+));
+?>
+
+    <div class="n2-ss-sliders-outer-container">
+        <?php
+        $this->renderInline("slidermanager", array(
+            'groupID' => 0
+        ));
+        ?>
+    </div>
+
+<?php
+if (0 && intval(N2SmartSliderSettings::get('discover', 1)) == 1):
+    N2SmartSliderSettings::set('discover', 0);
+    $video = 'https://www.youtube.com/embed/fjmENHah_oY?autoplay=1';
+
+    ?>
+
+    <script type="text/javascript">
+    n2(window).ready(function () {
+        new NextendModal({
+            zero: {
+                size: [
+                    913,
+                    710
+                ],
+                title: n2_('Discover Smart Slider 3'),
+                back: false,
+                close: true,
+                content: '<iframe style="margin:20px 10px 0;" width="854" height="480" src="<?php echo $video; ?>" frameborder="0" allowfullscreen></iframe>',
+                controls: ['<a href="#" class="n2-button n2-button-normal n2-button-l n2-button-green n2-radius-s n2-uc n2-h4">' + n2_('Close') + '</a>'],
+                fn: {
+                    show: function () {
+                        this.createHeading(n2_("We've created a simple tutorial video to guide you through the basic steps of making your first slider. Good luck with the sliders!")).css({
+                            width: '520px',
+                            textAlign: 'center',
+                            margin: '15px auto',
+                            lineHeight: '24px'
+                        }).appendTo(this.content);
+                        this.controls.find('.n2-button-green')
+                            .on('click', n2.proxy(function (e) {
+                                e.preventDefault();
+                                this.hide(e);
+                            }, this));
+                    }
+                }
+            }
+        }, true);
+
+    });
+</script>
+
+    <?php
+endif;
+?>
+<?php N2SS3::showBeacon('Main page, Import, Update'); ?>

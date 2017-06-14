@@ -135,7 +135,7 @@ body {
 }
 .layout {
   width: 100%;
-  height: 100%;
+  min-height: 100%;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   position: relative;
@@ -507,7 +507,7 @@ body {
 }
 .header .header__inner-container {
   margin: 0 auto;
-  padding: 50px 130px;
+  padding: 10px 130px 25px 130px;
 }
 @media screen and (max-width: 799px), screen and (min-width: 800px) and (max-width: 1240px) {
   .header .header__inner-container {
@@ -533,7 +533,7 @@ body {
 }
 .header .header__socials-container {
   float: right;
-  padding-bottom: 60px;
+  padding-bottom: 30px;
   text-align: right;
 }
 .header .header__menu-container {
@@ -576,6 +576,11 @@ body {
 }
 .header .header__logo-text.header__logo-text--secondary {
   font-size: 12px;
+}
+@media screen and (max-width: 799px), screen and (min-width: 800px) and (max-width: 1240px) {
+  .header .header__logo-text {
+    display: inline-block;
+  }
 }
 .partners {
   background-color: #f1f1f1;
@@ -949,36 +954,6 @@ body {
 }
 .waste-info-tile:hover .waste-info-tile__content > .waste-info-tile__text-container {
   display: block;
-}
-.waste-info-tile.waste-info-tile--paper {
-  background: url(../images/paper.jpg) no-repeat;
-}
-.waste-info-tile.waste-info-tile--paper:hover {
-  background: url(../images/paper.jpg) no-repeat, rgba(0, 171, 143, 0.7);
-}
-.waste-info-tile.waste-info-tile--glass {
-  background: url(../images/glass.jpg) no-repeat;
-}
-.waste-info-tile.waste-info-tile--glass:hover {
-  background: url(../images/glass.jpg) no-repeat, rgba(0, 171, 143, 0.7);
-}
-.waste-info-tile.waste-info-tile--plastic {
-  background: url(../images/plastic.jpg) no-repeat;
-}
-.waste-info-tile.waste-info-tile--tyre {
-  background: url(../images/tyre.jpg) no-repeat;
-}
-.waste-info-tile.waste-info-tile--battery {
-  background: url(../images/battery.jpg) no-repeat;
-}
-.waste-info-tile.waste-info-tile--tech {
-  background: url(../images/tech.jpg) no-repeat;
-}
-.waste-info-tile.waste-info-tile--lamp {
-  background: url(../images/lamp.jpg) no-repeat;
-}
-.waste-info-tile.waste-info-tile--oil {
-  background: url(../images/oil.jpg) no-repeat;
 }
 .waste-info-tile .waste-info-tile__content {
   position: absolute;

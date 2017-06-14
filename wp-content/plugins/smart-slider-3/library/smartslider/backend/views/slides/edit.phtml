@@ -1,0 +1,617 @@
+<?php
+
+$externals = N2SmartSliderSettings::get('external-css-files');
+if (!empty($externals)) {
+    $externals = explode("\n", $externals);
+    foreach ($externals AS $external) {
+        echo "<link rel='stylesheet' href='" . $external . "' type='text/css' media='all' />";
+    }
+}
+
+include(dirname(__FILE__) . '/_editor.php');
+/**
+ * @var $slidesModel N2SmartsliderSlidesModel
+ */
+$slide = $slidesModel->get(N2Request::getInt('slideid', 0));
+
+
+/** @var N2SmartSliderManager $sliderManager */
+$sliderManager  = $this->appType->app->get('sliderManager');
+$slider         = $sliderManager->getSlider();
+$renderedSlider = $sliderManager->render();
+
+if ($slider->params->get('global-lightbox', 0)) {
+    define('N2_SS_SLIDER_CUSTOM_LIGHTBOX', 1);
+}
+
+
+$actions = array(
+    N2Html::tag('a', array(
+        'id'    => 'n2-ss-undo',
+        'href'  => '#',
+        'class' => 'n2-h3 n2-button n2-button-grey n2-button-l n2-button-icon n2-radius-s',
+        'style' => 'font-size: 12px;'
+    ), '<i class="n2-i n2-it n2-i-16 n2-i-undo"></i>'),
+    N2Html::tag('a', array(
+        'id'    => 'n2-ss-redo',
+        'href'  => '#',
+        'class' => 'n2-h3 n2-button n2-button-grey n2-button-l n2-button-icon n2-radius-s',
+        'style' => 'font-size: 12px;'
+    ), '<i class="n2-i n2-it n2-i-16 n2-i-redo"></i>'),
+    N2Html::tag('a', array(
+        'href'    => $this->appType->router->createUrl(array(
+            "slider/edit",
+            array(
+                "sliderid" => $sliderId
+            )
+        )),
+        'class'   => 'n2-button n2-button-normal n2-button-red n2-button-l n2-h4 n2-b n2-uc n2-radius-s',
+        'onclick' => 'return nextend.cancel(this.href);'
+    ), n2_('Cancel'))
+);
+
+if ($slide && $slide['generator_id'] > 0) {
+    $actions[] = N2Html::tag('a', array(
+        'href'    => '#',
+        'class'   => 'n2-button n2-button-normal n2-button-l n2-radius-s n2-button-blue n2-h4 n2-b n2-uc',
+        'onclick' => 'nextend.askToSave = false;setTimeout(function() {var static = n2("<input name=\'static\' value=\'1\' />"); n2(\'#smartslider-form\').append(static).submit(); static.remove();}, 300); return false;'
+    ), n2_('Static save'));
+}
+
+$actions[] = N2Html::tag('a', array(
+    'href'    => '#',
+    'class'   => 'n2-button n2-button-normal n2-button-green n2-button-l n2-h4 n2-b n2-uc n2-radius-s',
+    'onclick' => 'return NextendForm.submit("#smartslider-form");'
+), n2_('Save'));
+
+
+$this->widget->init('topbar', array(
+    "actions"     => $actions,
+    'back'        => N2Html::tag('a', array(
+            'class' => 'n2-ss-back-slider n2-h4 n2-uc',
+            'href'  => $this->appType->router->createUrl(array(
+                "slider/edit",
+                array(
+                    "sliderid" => $sliderId
+                )
+            ))
+        ), n2_('Slider')) . N2Html::tag('a', array(
+            'class'   => 'n2-ss-back-slides n2-h4 n2-uc',
+            'onclick' => 'n2("html").toggleClass("n2-ss-show-slides");return false;',
+            'href'    => $this->appType->router->createUrl(array(
+                "slider/edit",
+                array(
+                    "sliderid" => $sliderId
+                )
+            ))
+        ), n2_('Slides')) . N2Html::tag('a', array(
+            'id'    => 'n2-ss-preview',
+            'href'  => $this->appType->router->createUrl(array(
+                "preview/index",
+                array('sliderid' => $sliderId) + N2Form::tokenizeUrl()
+            )),
+            'class' => 'n2-h4 n2-uc'
+        ), n2_('Preview')),
+    'middle'      => '<div class="n2-ss-device-zoomer">
+                    <div id="n2-ss-devices" class="n2-ss-devices-compact">
+                        <div class="n2-controls-panel n2-table n2-table-auto">
+                            <div class="n2-tr">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="n2-ss-zoom">
+                        <div class="n2-ss-slider-zoom-container">
+                            <i class="n2-i n2-i-minus"></i>
+                            <i class="n2-i n2-i-plus"></i>
+
+                            <div class="n2-ss-slider-zoom-bg"></div>
+
+                            <div class="n2-ss-slider-zoom-1"></div>
+
+                            <div id="n2-ss-slider-zoom"></div>
+
+                            <div class="n2-expert" id="n2-ss-lock">
+                                <i class="n2-i n2-i-unlock"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    </div>',
+    "hideSidebar" => true
+));
+?>
+
+<script type="text/javascript">
+    nextend.isPreview = false;
+    nextend.ready(
+        function ($) {
+
+            var form = $('#smartslider-form'),
+                formAction = form.attr('action');
+            var newWindow = <?php echo intval(N2SmartSliderSettings::get('preview-new-window', 0)); ?>;
+
+            if (!newWindow) {
+                var modal = new NextendSimpleModal('<iframe name="n2-tab-preview" src="" style="width: 100%;height:100%;"></iframe>', {
+                    class: 'n2-ss-preview-modal'
+                });
+                modal.modal.on('ModalHide', function () {
+                    modal.modal.find('iframe').attr('src', 'about:blank');
+                    $(window).trigger('SSPreviewHide');
+                });
+            }
+
+            $('#n2-ss-preview').on('click', function (e) {
+                nextend.isPreview = true;
+                e.preventDefault();
+                nextend.smartSlider.slide.prepareForm();
+                if (!newWindow) {
+                    modal.show();
+                } else {
+                    NextendNewFullWindow('', 'n2-tab-preview');
+                }
+                //var currentRequest = form.serialize();
+                form.attr({
+                    action: '<?php echo $this->appType->router->createUrl(array(
+                        "preview/slide",
+                        N2Form::tokenizeUrl() + array(
+                            'slideId'  => $slide ? $slide['id'] : 0,
+                            'sliderId' => $sliderId
+                        )
+                    ))?>',
+                    target: 'n2-tab-preview'
+                }).submit().attr({
+                    action: formAction,
+                    target: null
+                });
+                nextend.isPreview = false;
+            });
+
+            <?php
+            if (N2Get::getCmd('nextendaction') == 'create') {
+            ?>
+            $('.n2-ss-tab-background').trigger('click');
+            <?php
+            }
+            ?>
+        }
+    );
+</script>
+<?php
+$renderedSlide = null;
+if ($slide) {
+    $params = new N2Data($slide['params'], true);
+    if ($params->get('static-slide', 0)) {
+        foreach ($slider->staticSlides AS $s) {
+            if ($s->id == $slide['id']) {
+                $renderedSlide = $s;
+                break;
+            }
+        }
+    }
+    if ($renderedSlide == null) {
+        foreach ($slider->slides AS $s) {
+            if ($s->id == $slide['id']) {
+                $renderedSlide = $s;
+                break;
+            }
+        }
+    }
+} else {
+    $renderedSlide = new N2SmartSliderSlide($slider, array('params' => ''));
+}
+
+?>
+
+<?php
+ob_start();
+?>
+<div id="n2-ss-slide-edit-slides" class="n2-ss-slides-outer-container">
+<div class="n2-heading-bar ">
+            <div class="n2-h1 n2-heading">Slides</div>
+    </div>
+    <?php
+    $this->renderInline("slidemanager", array(
+        'sliderObj' => $slider
+    ));
+    ?>
+    <div class="n2-clear"></div>
+</div>
+<?php
+$slidesOuterHTML = ob_get_clean();
+
+$thumbnail = $renderedSlide->getThumbnail();
+if (empty($thumbnail)) {
+    $thumbnail = N2ImageHelper::fixed('$system$/images/placeholder/image.png');
+}
+$title = $renderedSlide->getTitle();
+if (empty($thumbnail)) {
+    $thumbnail = N2ImageHelper::fixed('$system$/images/placeholder/image.png');
+}
+?>
+
+<?php echo $slidesOuterHTML; ?>
+
+<div class="n2-ss-edit-slide-top">
+    <div class="n2-ss-edit-slide-top-thumbnail" onclick="n2('.n2-ss-tab-background').trigger('click');"><img src="<?php echo $thumbnail; ?>"/></div>
+    <div class="n2-ss-edit-slide-top-details">
+        <div class="n2-h1" onclick="n2('.n2-ss-tab-settings').trigger('click');n2('#slidetitle').trigger('focus');"><?php echo $renderedSlide->getTitle(); ?></div>
+        <div class="n2-h4"><a class="n2-ss-back-to" href="<?php echo $this->appType->router->createUrl(array(
+                "slider/edit",
+                array('sliderid' => $sliderId)
+            )) ?>"><?php n2_e('Back to slider'); ?></a></div>
+        <div id="n2-form-matrix-slide-settings-external-tab" class="n2-ss-edit-slide-top-tabs">
+            <?php
+            $tab = 0;
+
+            if (!$slider->isStaticEdited) {
+                echo N2Html::tag('a', array(
+                    'href'     => '#',
+                    'data-tab' => $tab++,
+                    'class'    => 'n2-ss-tab-background n2-button n2-button-l n2-radius-s n2-button-with-icon n2-h4' . ($tab == 1 ? ' n2-first' : '')
+                ), n2_('Background'));
+            }
+
+            if (!$slider->isStaticEdited) {
+                switch ($slider->data->get('type')) {
+                    case 'simple':
+                    case 'block':
+                        echo N2Html::tag('a', array(
+                            'href'     => '#',
+                            'data-tab' => $tab++,
+                            'class'    => 'n2-ss-tab-animation n2-button n2-button-l n2-radius-s n2-button-with-icon n2-h4' . ($tab == 1 ? ' n2-first' : '')
+                        ), n2_('Animation'));
+                        break;
+                }
+            }
+
+            if ($slide['generator_id'] > 0) {
+                echo N2Html::tag('a', array(
+                    'href'     => '#',
+                    'data-tab' => $tab++,
+                    'class'    => 'n2-ss-tab-settings n2-button n2-button-l n2-radius-s n2-button-with-icon n2-h4' . ($tab == 1 ? ' n2-first' : '')
+                ), n2_('Settings'));
+                echo N2Html::tag('a', array(
+                    'href'     => '#',
+                    'data-tab' => $tab++,
+                    'class'    => 'n2-ss-tab-generator n2-button n2-button-l n2-radius-s n2-button-with-icon n2-h4 n2-last' . ($tab == 1 ? ' n2-first' : '')
+                ), n2_('Generator'));
+            } else {
+                echo N2Html::tag('a', array(
+                    'href'     => '#',
+                    'data-tab' => $tab++,
+                    'class'    => 'n2-ss-tab-settings n2-button n2-button-l n2-radius-s n2-button-with-icon n2-h4 n2-last' . ($tab == 1 ? ' n2-first' : '')
+                ), n2_('Settings'));
+            }
+            ?>
+        </div>
+    </div>
+    <div class="n2-heading-actions">
+        <span class="n2-heading-actions-label n2-h4"></span>
+        <?php
+        if ($slide['id'] > 0) {
+            $app          = N2Base::getApplication('smartslider');
+            $accessEdit   = N2Acl::canDo('smartslider_edit', $app->info);
+            $accessDelete = N2Acl::canDo('smartslider_delete', $app->info);
+            if ($accessEdit) {
+                echo N2Html::tag('a', array(
+                    'data-label' => n2_('Duplicate slide'),
+                    'href'       => $this->appType->router->createUrl(array(
+                        'slides/duplicate',
+                        array(
+                            'sliderid' => $sliderId,
+                            'slideid'  => $slide['id']
+                        ) + N2Form::tokenizeUrl()
+                    ))
+                ), N2Html::tag('i', array('class' => 'n2-i n2-i-a-duplicate')));
+            }
+
+            if ($accessDelete) {
+                echo N2Html::tag('a', array(
+                    'data-label' => n2_('Delete slide'),
+                    "onclick"    => "return NextendDeleteModalLink(this, 'slide-delete', " . json_encode($slide['title']) . ");",
+                    'href'       => $this->appType->router->createUrl(array(
+                        'slides/delete',
+                        array(
+                            'sliderid' => $sliderId,
+                            'slideid'  => $slide['id']
+                        ) + N2Form::tokenizeUrl()
+                    ))
+                ), N2Html::tag('i', array('class' => 'n2-i n2-i-a-delete')));
+            }
+        }
+        ?>
+        <script type="text/javascript">
+            nextend.ready(
+                function ($) {
+                    var label = $('.n2-heading-actions-label');
+                    $('.n2-heading-actions > a').on({
+                        mouseenter: function () {
+                            label.html($(this).data('label'));
+                        },
+                        mouseleave: function () {
+                            label.html('');
+                        }
+                    });
+                }
+            );
+        </script>
+    </div>
+</div>
+
+    <form id="smartslider-form" action="" method="post">
+    <?php
+    $slideData = $slidesModel->renderEditForm($slide);
+    ?>
+        <input name="save" value="1" type="hidden"/>
+</form>
+
+    <div id='n2-tab-smartslider-editor' class='n2-form-tab unselectable'>
+    <div class="n2-heading-controls n2-content-box-title-bg">
+        <div class="">
+            <div class="n2-table" style="table-layout:fixed;">
+                <div class="n2-tr">
+                    <div class="n2-td">
+                        <div id="n2-ss-control-line" class="n2-content-box-title-bg">
+                            <div id="n2-ss-slide-canvas-settings"><a href="#" class="n2-button n2-button-icon n2-button-m n2-radius-s n2-button-grey n2-uc n2-h4" data-n2tip="<?php n2_e('Canvas settings'); ?>"><i class="n2-i n2-it n2-i-16 n2-i-settings"></i></a><div class="n2-ss-settings-panel"><div class="n2-ss-settings-panel-inner"></div></div></div>
+
+                            <?php
+                            ?>
+                            <div class="n2-ss-editor-layer-mode-only">
+                                <div id="n2-ss-layer-horizontal-align"
+                                     class="n2-ss-tool n2-form-element-radio-tab n2-form-element-icon-radio">
+                                    <div class="n2-radio-option n2-first" data-align="left"
+                                         data-n2tip="<?php n2_e('Horizontal align - Left'); ?>"><i
+                                            class="n2-i n2-it n2-i-horizontal-left"></i></div>
+
+                                    <div class="n2-radio-option" data-align="center"
+                                         data-n2tip="<?php n2_e('Horizontal align - Center'); ?>"><i
+                                            class="n2-i n2-it n2-i-horizontal-center"></i>
+                                    </div>
+
+                                    <div class="n2-radio-option n2-last" data-align="right"
+                                         data-n2tip="<?php n2_e('Horizontal align - Right'); ?>"><i
+                                            class="n2-i n2-it n2-i-horizontal-right"></i></div>
+                                </div>
+
+                                <div id="n2-ss-layer-vertical-align" class="n2-ss-tool n2-form-element-radio-tab n2-form-element-icon-radio">
+                                    <div
+                                        class="n2-radio-option n2-first" data-align="top"
+                                        data-n2tip="<?php n2_e('Vertical align - Top'); ?>"><i
+                                            class="n2-i n2-it n2-i-vertical-top"></i></div>
+
+                                    <div class="n2-radio-option" data-align="middle"
+                                         data-n2tip="<?php n2_e('Vertical align - Middle'); ?>"><i
+                                            class="n2-i n2-it n2-i-vertical-middle"></i>
+                                    </div>
+
+                                    <div class="n2-radio-option n2-last" data-align="bottom"
+                                         data-n2tip="<?php n2_e('Vertical align - Bottom'); ?>"><i
+                                            class="n2-i n2-it n2-i-vertical-bottom"></i></div></div>
+
+                                <div id="n2-ss-layer-show-on" class="n2-ss-tool n2-form-element-radio-tab n2-form-element-icon-radio" data-n2tip="<?php n2_e('Show layer on selected devices'); ?>"></div>
+
+                                <div id="n2-ss-layer-adaptive-font" class="n2-ss-tool n2-button n2-button-icon n2-button-grey n2-button-s n2-radius-s n2-expert"
+                                     data-n2tip="<?php n2_e('Adaptive (Off: auto-scaled, On: fixed) font size'); ?>"><i
+                                        class="n2-i n2-it n2-i-16 n2-i-adaptive"></i></div>
+
+                                <div data-n2tip="<?php n2_e('Font size scaling - enlarge or shrink text on each device'); ?>"
+                                     class="n2-ss-tool n2-form-element-text n2-form-element-autocomplete ui-front n2-form-element-number n2-text-has-unit n2-border-radius">
+                                <div class="n2-text-sub-label n2-h5 n2-uc"><i
+                                        class="n2-i n2-it n2-i-16 n2-i-fontmodifier"></i></div>
+                                <input type="text" autocomplete="off" style="width:32px"
+                                       class="n2-h5 ui-autocomplete-input" value="100" name="n2-ss-layer-font-size"
+                                       id="n2-ss-layer-font-size">
+
+                                <div class="n2-text-unit n2-h5 n2-uc">%</div></div>
+                                <div id="n2-ss-layer-reset-to-desktop" class="n2-ss-tool n2-button n2-button-icon n2-button-s n2-button-grey n2-radius-s"
+                                     data-n2tip="<?php n2_e('Clear device specific layer settings'); ?>"><i
+                                        class="n2-i n2-it n2-i-16 n2-i-reset"></i></div>
+
+                                <a href="https://youtu.be/yGpVsrzwt1U " class="n2-ss-responsive-helper n2-ss-tool n2-button n2-button-normal n2-button-s n2-button-grey n2-radius-s" target="_blank">
+                                    <?php n2_e("Responsive tricks"); ?>
+                                </a>
+                            </div>
+
+                            <div class="n2-ss-editor-group-mode-only">
+
+                                <div id="n2-ss-layer-show-on" class="n2-ss-tool n2-form-element-radio-tab n2-form-element-icon-radio" data-n2tip="<?php n2_e('Show layer on selected devices'); ?>"></div>
+
+                                <div id="n2-ss-group-adaptive-font" class="n2-ss-tool n2-button n2-button-icon n2-button-grey n2-button-s n2-radius-s n2-expert"
+                                     data-n2tip="<?php n2_e('Adaptive (Off: auto-scaled, On: fixed) font size'); ?>"><i
+                                        class="n2-i n2-it n2-i-16 n2-i-adaptive"></i></div>
+
+                                <div data-n2tip="<?php n2_e('Font size scaling - enlarge or shrink text on each device'); ?>"
+                                     class="n2-ss-tool n2-form-element-text n2-form-element-autocomplete ui-front n2-form-element-number n2-text-has-unit n2-border-radius">
+                                <div class="n2-text-sub-label n2-h5 n2-uc"><i
+                                        class="n2-i n2-it n2-i-16 n2-i-fontmodifier"></i></div>
+                                <input type="text" autocomplete="off" style="width:32px"
+                                       class="n2-h5 ui-autocomplete-input" value="100" name="n2-ss-group-font-size"
+                                       id="n2-ss-group-font-size">
+
+                                <div class="n2-text-unit n2-h5 n2-uc">%</div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+        <?php
+        echo N2Html::openTag('div', array(
+            'id'    => 'smartslider-adjust-height',
+            'class' => 'viewport'
+        ));
+
+        ?>
+        <div class="n2-ss-scrollbar-wrapper n2-ss-scrollbar-light">
+                <div class="scrollbar">
+                    <div class="track">
+                        <div class="thumb"><div class="end"></div></div>
+                    </div>
+                </div>
+            </div>
+
+        <div class="n2-ss-slider-real-container">
+            <?php echo N2Html::tag('div', array('class' => "n2-ss-slider-outer-container overview"), N2Html::tag('div', array('class' => "n2-ss-slider-container"), $renderedSlider)); ?>
+            <div class="n2-clear"></div>
+        </div>
+        </div>
+
+
+        <div id="n2-ss-slide-vertical-bar">
+            <div class="n2-ss-slide-vertical-bar-inner">
+                <div class="n2-ss-addlayer">
+                    <a href="#" class="n2-ss-add-layer-button n2-button n2-button-icon n2-button-m n2-button-green n2-radius-s n2-uc n2-h4" data-n2tip="<?php n2_e('Add layer'); ?>"><i class="n2-i n2-i-addlayer2"></i></a>
+                    <div class="n2-ss-available-layers">
+                        <?php
+                        ob_start();
+                        echo N2Html::openTag('div', array('class' => 'n2-ss-available-layers-container'));
+                        $class = 'N2SSPluginType' . $slider->data->get('type');
+
+                        N2Loader::importPath(call_user_func(array(
+                                $class,
+                                "getPath"
+                            )) . NDS . 'type');
+
+                        N2Loader::import(array(
+                            'models.css'
+                        ), 'system');
+                        $cssModel = new N2SystemCssModel();
+
+                        $itemDefaults = call_user_func(array(
+                            'N2SmartSliderType' . $slider->data->get('type'),
+                            'getItemDefaults'
+                        ));
+                        ?>
+                        <?php
+                        $items = array();
+                        N2Plugin::callPlugin('ssitem', 'onNextendSliderItemList', array(&$items));
+                        N2SSPluginItemAbstract::sortItems($items);
+                        $groups = array();
+
+                        foreach ($items as $type => $item) {
+                            if (!isset($groups[$item[7]])) {
+                                $groups[$item[7]] = array();
+                            }
+
+                            $groups[$item[7]][$type] = $item;
+
+                        }
+
+                        foreach ($groups AS $groupName => $group) {
+                            echo N2Html::tag('div', array('class' => 'n2-h5 n2-uc n2-ss-slide-item-group'), n2_($groupName));
+                            foreach ($group AS $type => $item) {
+                                $visualKey = 'ss3item' . $type;
+                                $visuals   = $cssModel->getVisuals($visualKey);
+                                N2Pluggable::doAction($visualKey . 'Storage', array(
+                                    &$visuals
+                                ));
+                                N2JS::addInline('window["' . $visualKey . '"] = ' . json_encode($visuals) . ';');
+                                echo N2Html::tag('div', array(
+                                    'class'                => 'n2-h5 n2-ss-core-item n2-ss-core-item-' . $type,
+                                    'data-layerproperties' => json_encode((object)array_merge($item[5], $itemDefaults)),
+                                    'data-item'            => $type
+                                ), N2Html::tag('div', array(), $item[0]));
+                            }
+                        }
+
+                        echo N2Html::closeTag('div');
+                        $layersHTML = ob_get_clean();
+                        ?>
+                        <div id="n2-ss-layers-switcher">
+                            <div class="n2-table n2-table-fixed n2-labels n2-sidebar-tab-switcher n2-tab-bordered n2-sidebar-tab-bg n2-has-underline">
+                                <div class="n2-tr">
+                                    <div data-tab="layers" class="n2-td n2-h3 n2-uc n2-has-underline n2-active"><span class="n2-underline">Layers</span></div>
+                                </div>
+                            </div>
+                            <div class="n2-tabs">
+                                <div id="n2-ss-layers-switcher_0" style="display: block;" data-tab="layers">
+                                    <?php echo $layersHTML; ?>
+                                </div>
+                            </div>
+                        </div>
+                        <?php
+                    
+
+                        ?>
+                    </div>
+                </div>
+                <a href="#" data-n2tip="<?php n2_e('Heading layer'); ?>" data-n2tipv="0" onclick="n2('.n2-ss-core-item-heading').trigger('click');return false;" class="n2-button n2-button-icon n2-button-m n2-h4"><i class="n2-i n2-i-layer-heading"></i></a>
+                <a href="#" data-n2tip="<?php n2_e('Text layer'); ?>" data-n2tipv="0" onclick="n2('.n2-ss-core-item-text').trigger('click');return false;" class="n2-button n2-button-icon n2-button-m n2-h4"><i class="n2-i n2-i-layer-text"></i></a>
+                <a href="#" data-n2tip="<?php n2_e('Image layer'); ?>" data-n2tipv="0" onclick="n2('.n2-ss-core-item-image').trigger('click');return false;" class="n2-button n2-button-icon n2-button-m n2-h4"><i class="n2-i n2-i-layer-image"></i></a>
+                <a href="#" data-n2tip="<?php n2_e('Button layer'); ?>" data-n2tipv="0" onclick="n2('.n2-ss-core-item-button').trigger('click');return false;" class="n2-button n2-button-icon n2-button-m n2-h4"><i class="n2-i n2-i-layer-button"></i></a>
+            </div>
+        </div>
+<?php
+
+N2Localization::addJS(array(
+    'Add',
+    'Clear',
+    'in',
+    'loop',
+    'out',
+    'LOOP',
+    'Show',
+    'Hide'
+));
+
+$options = array(
+    'slideAsFile' => intval(N2SmartSliderSettings::get('slide-as-file', 0))
+);
+
+echo N2Html::script("
+            nextend.ready(function($){
+                var cb = function(){
+                    nextend.smartSlider.slideBackgroundMode = '" . $slider->params->get('backgroundMode', 'fill') . "';
+                    nextend.smartSlider.startEditor('" . $slider->elementId . "', 'slideslide', " . (defined('N2_IMAGE_UPLOAD_DISABLE') ? 1 : 0) . ", '" . N2Base::getApplication('system')->router->createAjaxUrl(array('browse/upload')) . "', 'slider" . $slider->sliderId . "', " . json_encode($options) . ");
+                };
+                if(typeof nextend.fontsDeferred !== 'undefined'){
+                    nextend.fontsDeferred.done(cb);
+                }else {
+                    cb();
+                }
+            });
+        ");
+?>
+</div>
+    <div id='n2-ss-layers' class="unselectable">
+        <div id="n2-ss-layers-table" class="n2-table n2-table-fixed">
+            <div class="n2-tr">
+                <div class="n2-td n2-ss-layers-sidebar">
+                    <div class="n2-ss-layer-list-top-bar n2-ss-layer-list-layers-top-bar">
+                        <?php
+                        ?>
+                        <a href="#" data-n2tip="<?php n2_e('Layer List'); ?>" data-n2tipv="-20" class="n2-button n2-button-icon n2-button-m n2-radius-s n2-button-grey n2-ss-layer-list-opener">
+                                <i class="n2-i n2-i-layerlist"></i>
+                            </a>
+                        <div class="n2-h2"><?php n2_e('Layer List'); ?></div>
+                        <?php
+                        ?>
+                    </div>
+
+                    <div class="n2-ss-layer-list-top-bar n2-ss-layer-list-bulk-top-bar">
+                        <a href="#" class="n2-button n2-button-icon n2-button-s n2-button-darker" data-action="group">
+                            <i class="n2-i n2-i-folderclosed"></i>
+                        </a><a href="#" class="n2-button n2-button-icon n2-button-s n2-button-darker" data-action="duplicate">
+                            <i class="n2-i n2-i-duplicate"></i>
+                        </a><a href="#" class="n2-button n2-button-icon n2-button-s n2-button-darker" data-action="delete">
+                            <i class="n2-i n2-i-delete"></i>
+                        </a><a href="#" class="n2-button n2-button-normal n2-button-m n2-radius-s n2-button-grey n2-h4 n2-uc" data-action="cancel">
+                            Cancel
+                        </a>
+                    </div>
+
+                    <div id="n2-ss-layer-list" class="n2-ss-layers-sidebar-rows">
+                        <ul class="n2-list n2-h4 n2-list-orderable">
+
+                        </ul>
+                    </div>
+                </div>
+
+                <?php
+                ?>
+            </div>
+        </div>
+</div>

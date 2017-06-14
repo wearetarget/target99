@@ -14,24 +14,6 @@ function my_scripts_method()
 add_action('wp_enqueue_scripts', 'my_scripts_method');
 
 
-// ------
-// JQuery
-// ------
-
-// Force Wordpress to use the latest version of JQuery
-// if we're not logged in as an admin...
-// ...it seems like Wordpress is touchy about it's version of JQuery there.
-if (!is_admin()) {
-    function latest_jquery_method()
-    {
-        wp_deregister_script('jquery');
-        wp_register_script('jquery', ("https://code.jquery.com/jquery-3.2.1.min.js"), '', true);
-        wp_enqueue_script('jquery');
-    }
-
-    add_action('wp_enqueue_scripts', 'latest_jquery_method');
-}
-
 // -----------------
 // Custom Post Types
 // -----------------
@@ -55,7 +37,7 @@ function create_post_types()
         )
     ));
 
-    register_post_type('achievements', array(
+    register_post_type('achievement', array(
         'labels' => array(
             'name' => __('Достижения'),
             'singular_name' => __('Достижение')
@@ -101,6 +83,8 @@ add_action('init', 'create_post_types');
 
 function my_custom_register($wp_customize)
 {
+
+    //Logo texts
     $wp_customize->add_section('target99_logo_text', array(
         'title' => __('Логотип'),
         'priority' => 30
@@ -126,6 +110,17 @@ function my_custom_register($wp_customize)
         'label' => __('Мелкий текст'),
         'section' => 'target99_logo_text',
         'settings' => 'target99_logo_secondary'
+    )));
+
+    // Footer
+    $wp_customize->add_setting('target99_logo_footer', array(
+        'transport' => 'refresh'
+    ));
+
+    $wp_customize->add_control(new WP_Customize_Control($wp_customize, 'target99_logo_footer', array(
+        'label' => __('Подвал сайта'),
+        'section' => 'target99_logo_text',
+        'settings' => 'target99_logo_footer'
     )));
 
     // Social Media
@@ -168,6 +163,25 @@ function my_custom_register($wp_customize)
         'section' => 'target99_social_media',
         'description' => 'Ссылка на группу в vk.',
         'settings' => 'target99_media_vk'
+    )));
+
+    // Contacts
+    $wp_customize->add_section('target99_contacts', array(
+        'title' => __('Контакты'),
+        'priority' => 30
+    ));
+
+    // Facebook
+    $wp_customize->add_setting('target99_contact_info', array(
+        'transport' => 'refresh'
+    ));
+
+    $wp_customize->add_control(new WP_Customize_Control($wp_customize, 'target99_contact_info', array(
+        'label' => __('Контакты'),
+        'section' => 'target99_contacts',
+        'type' => 'textarea',
+        'description' => 'Текст для блока контактов.',
+        'settings' => 'target99_contact_info'
     )));
 }
 

@@ -1,0 +1,50 @@
+<div class="n2-sidebar-row n2-form-dark n2-sets-header" style="background: #3c4958;border-bottom: 1px solid #20282f;">
+    <div class="n2-table">
+        <div class="n2-tr">
+            <div class="n2-td n2-manage-set">
+                <?php
+                $model->renderSetsForm();
+                ?>
+            </div>
+            <div class="n2-td">
+                <div id="layoutset-manage"
+                     class="n2-button n2-button-icon n2-button-m n2-radius-s n2-button-grey n2-h5 n2-uc"><i class="n2-i n2-i-settings"></i></div>
+            </div>
+        </div>
+    </div>
+</div>
+<?php
+$ul = array();
+
+$ul[] = array(
+    'class'    => 'n2-button-container n2-save-as-new-container',
+    'contents' => N2Html::tag('a', array(
+        'class' => 'n2-button n2-button-normal n2-button-l n2-radius-s n2-button-green n2-uc n2-layout-save-as-new',
+        'href'  => '#'
+    ), n2_('Save as new layout')),
+);
+
+$this->widget->init("listn", array(
+    "ul" => $ul
+));
+?>
+<div class="n2-lightbox-sidebar-list">
+
+</div>
+
+<?php
+
+$sets  = $model->getSets();
+$setId = $sets[0]['id'];
+
+$layouts         = array();
+$layouts[$setId] = $model->getVisuals($setId);
+
+N2JS::addFirstCode("
+    new NextendLayoutManager({
+        setsIdentifier: '" . $model->type . "set',
+        sets: " . json_encode($sets) . ",
+        visuals: " . json_encode($layouts) . ",
+        ajaxUrl: '" . $this->appType->router->createAjaxUrl(array('layout/index')) . "'
+    });
+");

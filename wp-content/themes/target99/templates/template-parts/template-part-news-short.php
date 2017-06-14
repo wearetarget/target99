@@ -1,27 +1,15 @@
-<?php
-	/*
-		Example of the template-part
-	*/
-?>
-
-<div class="short-post">
-
-	<?php if ( $post_image_url ) : ?>
-        <div class="short-post__image-container">
-            <img class="short-post__image" src="<?php echo $post_image_url; ?>"/>
+<section class="short-news">
+    <div class="short-news__inner-container">
+        <div class="short-news__image-container">
+            <img src="<?php echo $news_image_url; ?>" class="short-news__image"/>
         </div>
-	<?php endif ?>
 
-
-	<div class="short-post__details <?php echo $content_width_class ?>">
-		<a class="short-post__title-link" href="<?php the_permalink(); ?>">
-			<h2 class="short-post__title"><?php echo trim_title(the_title()); ?></h2>
-		</a>
-		<div class="short-post__meta-info">
-			<span class="short-post__date"><?php the_time('M. d Y'); ?></span>
-		</div>
-		<p class="short-post__excerpt"><?php echo trim_excerpt( get_the_excerpt() ); ?></p>
-
-		<a class="short-post__link" href="<?php the_permalink(); ?>">Read Article</a>
-	</div>
-</div>
+        <div class="short-news__content">
+            <h3 class="short-news__content-title"><?php echo get_the_title(); ?></h3>
+            <p class="short-news__content-text">
+                <?php echo get_the_excerpt(); ?>
+            </p>
+            <span class="button button--dark">Читать дальше</span>
+        </div>
+    </div>
+</section>

@@ -13,7 +13,15 @@
     <title><?php wp_title('|', true, 'right'); ?></title>
     <link href="https://fonts.googleapis.com/css?family=PT+Sans:400,700" rel="stylesheet"/>
 
+    <?php wp_enqueue_script(“jquery”, 'https://code.jquery.com/jquery-3.2.1.min.js'); ?>
     <?php wp_head(); ?>
+
+    <script
+            src="https://code.jquery.com/jquery-migrate-3.0.0.min.js"
+            integrity="sha256-JklDYODbg0X+8sPiKkcFURb5z7RvlNMIaE3RA2z97vw="
+            crossorigin="anonymous">
+    </script>
+
 </head>
 <body <?php body_class(); ?>>
 <div class="layout">
