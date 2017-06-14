@@ -1,7 +1,7 @@
 <?php
 
 	/*
-		Template Name: Post page
+		Template Name: Waste Info
 	*/
 
 	// Post query arguments

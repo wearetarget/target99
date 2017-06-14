@@ -1,180 +1,265 @@
 <?php
 
-	// ----------------
-	// Scripts & Styles
-	// ----------------
+// ----------------
+// Scripts & Styles
+// ----------------
 
-	// Below is the proper way to load Javascript and CSS files. Stop loading them in your header/footer files!
-	function my_scripts_method() {
-		wp_enqueue_style( 'main-style', get_stylesheet_directory_uri() . '/css/main.min.css');
-		wp_enqueue_script('main-script', get_stylesheet_directory_uri() . '/js/main.min.js', array( 'jquery' ), '', true);
-	}
+// Below is the proper way to load Javascript and CSS files. Stop loading them in your header/footer files!
+function my_scripts_method()
+{
+    wp_enqueue_style('main-style', get_stylesheet_directory_uri() . '/css/main.min.css');
+    wp_enqueue_script('main-script', get_stylesheet_directory_uri() . '/js/main.min.js', array('jquery'), '', true);
+}
 
-	add_action( 'wp_enqueue_scripts', 'my_scripts_method' );
-
-
-	// ------
-	// JQuery
-	// ------
-
-	// Force Wordpress to use the latest version of JQuery
-	// if we're not logged in as an admin...
-	// ...it seems like Wordpress is touchy about it's version of JQuery there.
-	if( !is_admin() ){
-		function latest_jquery_method() {
-			wp_deregister_script('jquery');
-			wp_register_script('jquery', ("https://code.jquery.com/jquery-3.2.1.min.js"), '', true);
-			wp_enqueue_script('jquery');
-		}
-
-		add_action( 'wp_enqueue_scripts', 'latest_jquery_method' );
-	}
+add_action('wp_enqueue_scripts', 'my_scripts_method');
 
 
-	// ---------
-	// Admin Bar
-	// ---------
+// ------
+// JQuery
+// ------
 
-	// Remove "Comments" from the admin bar
-	function my_remove_menu_pages() {
-		remove_menu_page('edit-comments.php');
-	}
+// Force Wordpress to use the latest version of JQuery
+// if we're not logged in as an admin...
+// ...it seems like Wordpress is touchy about it's version of JQuery there.
+if (!is_admin()) {
+    function latest_jquery_method()
+    {
+        wp_deregister_script('jquery');
+        wp_register_script('jquery', ("https://code.jquery.com/jquery-3.2.1.min.js"), '', true);
+        wp_enqueue_script('jquery');
+    }
 
-	add_action( 'admin_menu', 'my_remove_menu_pages' );
+    add_action('wp_enqueue_scripts', 'latest_jquery_method');
+}
 
+// -----------------
+// Custom Post Types
+// -----------------
 
-	// ----------------
-	// Theme Extensions
-	// ----------------
+function create_post_types()
+{
+    // News
 
-	// Dislpay "Menus" under "Appearance" tab on the admin bar
-	add_theme_support( 'menus' );
+    register_post_type('waste-info', array(
+        'labels' => array(
+            'name' => __('Информация об отходах'),
+            'singular_name' => __('Информация об отходах')
+        ),
+        'description' => 'Краткая информация показывается на главной, полная - при переходе по ссылке.',
+        'public' => true,
+        'supports' => array(
+            'title',
+            'thumbnail',
+            'editor',
+            'excerpt'
+        )
+    ));
 
-	// Allow pages/posts to show "Featured Image"
-	add_theme_support( 'post-thumbnails' );
+    register_post_type('achievements', array(
+        'labels' => array(
+            'name' => __('Достижения'),
+            'singular_name' => __('Достижение')
+        ),
+        'description' => 'Отображается на главной в разделе достижений.',
+        'public' => true,
+        'supports' => array(
+            'title',
+            'excerpt',
+            'thumbnail'
+        )
+    ));
 
+    // Location
+    register_post_type('partner-info', array(
+        'labels' => array(
+            'name' => __('Партнёры'),
+            'singular_name' => __('Партнёр')
+        ),
+        'description' => 'Информация о партнёрах отображается на главной странице и в модальном окне там же.',
+        'public' => true,
+        'supports' => array(
+            'title',
+            'editor',
+            'thumbnail'
+        )
+    ));
 
-	// -------------------------------
-	// Custom Loop Advanced Pagination
-	// -------------------------------
+}
 
-	function custom_pagination($numpages = '', $pagerange = '', $paged='') {
-
-		if (empty($pagerange)) {
-			$pagerange = 2;
-		}
-
-		/**
-		* This first part of our function is a fallback
-		* for custom pagination inside a regular loop that
-		* uses the global $paged and global $wp_query variables.
-		*
-		* It's good because we can now override default pagination
-		* in our theme, and use this function in default quries
-		* and custom queries.
-		*/
-		global $paged;
-
-		if (empty($paged)) {
-			$paged = 1;
-		}
-
-		if ($numpages == '') {
-			global $wp_query;
-			$numpages = $wp_query->max_num_pages;
-
-			if(!$numpages) {
-				$numpages = 1;
-			}
-		}
-
-		/**
-		* We construct the pagination arguments to enter into our paginate_links
-		* function.
-		*/
-		$big = 999999999;
-
-		$pagination_args = array(
-			// 'base'            => get_pagenum_link(1) . '%_%',
-			'base'			  => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
-			'format'          => '/page/%#%',
-			// 'format' => '?paged=%#%',
-			'total'           => $numpages,
-			'current'         => $paged,
-			'show_all'        => False,
-			'end_size'        => 1,
-			'mid_size'        => $pagerange,
-			'post_status'     => array('publish'),
-			'prev_next'       => True,
-			'prev_text'       => __('&lt;'),
-			'next_text'       => __('&gt;'),
-			'type'            => 'plain',
-			'add_args'        => false,
-			'add_fragment'    => ''
-		);
-
-		// $pagination_args_2 = array(
-			// 'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
-		// 	'format' => '?paged=%#%',
-		// 	'current' => max( 1, get_query_var('paged') ),
-		// 	'total' => $search->max_num_pages
-		// );
-
-		$paginate_links = paginate_links($pagination_args);
-
-		if ($paginate_links) {
-			echo "<nav class='posts__pagination posts__pagination--advanced'>";
-			echo $paginate_links;
-			echo "<div class='page-numbers page-count'>Page " . $paged . " of " . $numpages . "</div> ";
-			echo "</nav>";
-		}
-
-	}
+add_action('init', 'create_post_types');
 
 
-	// ----------------
-	// Helper Functions
-	// ----------------
-
-	/*
-		Imploding an associative array will return both the key
-		and its associated value. Normal array implosion will just
-		return the value, but I want both values. Know what I'm sayin?
-	*/
-
-	function trim_title($title) {
-		return wp_trim_words( $title, 18, '...' );
-	}
-
-	function trim_excerpt($excerpt) {
-		return wp_trim_words( $excerpt, 55, '...' );
-	}
-
-// ---------------------
-// Remove Content Editor
-// ---------------------
+// -------------------------------------
+// Theme Appearance Customization Panels
+// -------------------------------------
 
 /*
-	Removes the WYSIWYG content editor box from certain pages because it's unused
+    Log into the site's admin section and go to Appearance - Customize.
+    There are a few options to edit - like "Site Identity" & "Static Front Page" and stuff.
+    Let's add some more
 */
 
-add_action('init', 'remove_editor_init');
+function my_custom_register($wp_customize)
+{
+    // Social Media
+    $wp_customize->add_section('target99_social_media', array(
+        'title' => __('Соц. сети'),
+        'priority' => 30
+    ));
 
-function remove_editor_init() {
-	// if post not set, just return
-	// fix when post not set, throws PHP's undefined index warning
-	if (isset($_GET['post'])) {
-		$post_id = $_GET['post'];
-	} else if (isset($_POST['post_ID'])) {
-		$post_id = $_POST['post_ID'];
-	} else {
-		return;
-	}
-	$template_path = 'templates/';
-	$template_file = get_post_meta($post_id, '_wp_page_template', true);
-	if ($template_file == 'templates/template-homepage.php') {
-		remove_post_type_support('page', 'editor');
-	}
+    // Facebook
+    $wp_customize->add_setting('target99_media_facebook', array(
+        'transport' => 'refresh'
+    ));
+
+    $wp_customize->add_control(new WP_Customize_Control($wp_customize, 'target99_media_facebook', array(
+        'label' => __('Facebook'),
+        'section' => 'target99_social_media',
+        'description' => 'Ссылка на группу в facebook.',
+        'settings' => 'target99_media_facebook'
+    )));
+
+    // Twitter
+    $wp_customize->add_setting('target99_media_twitter', array(
+        'transport' => 'refresh'
+    ));
+
+    $wp_customize->add_control(new WP_Customize_Control($wp_customize, 'target99_media_twitter', array(
+        'label' => __('Twitter'),
+        'section' => 'target99_social_media',
+        'description' => 'Ссылка на профиль в twitter.',
+        'settings' => 'target99_media_twitter'
+    )));
+
+    // Youtube
+    $wp_customize->add_setting('target99_media_youtube', array(
+        'transport' => 'refresh'
+    ));
+
+    $wp_customize->add_control(new WP_Customize_Control($wp_customize, 'target99_media_youtube', array(
+        'label' => __('Youtube'),
+        'section' => 'target99_social_media',
+        'description' => 'Ссылка на канал в youtube.',
+        'settings' => 'target99_media_youtube'
+    )));
+
+    // Вконтакте
+    $wp_customize->add_setting('target99_media_vk', array(
+        'transport' => 'refresh'
+    ));
+
+    $wp_customize->add_control(new WP_Customize_Control($wp_customize, 'target99_media_vk', array(
+        'label' => __('VK'),
+        'section' => 'target99_social_media',
+        'description' => 'Ссылка на группу в vk.',
+        'settings' => 'target99_media_vk'
+    )));
+}
+
+add_action('customize_register', 'my_custom_register');
+
+
+// ----------------
+// Theme Extensions
+// ----------------
+
+// Dislpay "Menus" under "Appearance" tab on the admin bar
+add_theme_support('menus');
+
+// Allow pages/posts to show "Featured Image"
+add_theme_support('post-thumbnails');
+
+
+// -------------------------------
+// Custom Loop Advanced Pagination
+// -------------------------------
+
+function custom_pagination($numpages = '', $pagerange = '', $paged = '')
+{
+
+    if (empty($pagerange)) {
+        $pagerange = 2;
+    }
+
+    /**
+     * This first part of our function is a fallback
+     * for custom pagination inside a regular loop that
+     * uses the global $paged and global $wp_query variables.
+     *
+     * It's good because we can now override default pagination
+     * in our theme, and use this function in default quries
+     * and custom queries.
+     */
+    global $paged;
+
+    if (empty($paged)) {
+        $paged = 1;
+    }
+
+    if ($numpages == '') {
+        global $wp_query;
+        $numpages = $wp_query->max_num_pages;
+
+        if (!$numpages) {
+            $numpages = 1;
+        }
+    }
+
+    /**
+     * We construct the pagination arguments to enter into our paginate_links
+     * function.
+     */
+    $big = 999999999;
+
+    $pagination_args = array(
+        // 'base'            => get_pagenum_link(1) . '%_%',
+        'base' => str_replace($big, '%#%', esc_url(get_pagenum_link($big))),
+        'format' => '/page/%#%',
+        // 'format' => '?paged=%#%',
+        'total' => $numpages,
+        'current' => $paged,
+        'show_all' => False,
+        'end_size' => 1,
+        'mid_size' => $pagerange,
+        'post_status' => array('publish'),
+        'prev_next' => True,
+        'prev_text' => __('&lt;'),
+        'next_text' => __('&gt;'),
+        'type' => 'plain',
+        'add_args' => false,
+        'add_fragment' => ''
+    );
+
+    // $pagination_args_2 = array(
+    // 'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+    // 	'format' => '?paged=%#%',
+    // 	'current' => max( 1, get_query_var('paged') ),
+    // 	'total' => $search->max_num_pages
+    // );
+
+    $paginate_links = paginate_links($pagination_args);
+
+    if ($paginate_links) {
+        echo "<nav class='posts__pagination posts__pagination--advanced'>";
+        echo $paginate_links;
+        echo "<div class='page-numbers page-count'>Page " . $paged . " of " . $numpages . "</div> ";
+        echo "</nav>";
+    }
+
+}
+
+/*
+    Functions to unify length of the excerpt and the title.
+*/
+
+function trim_title($title)
+{
+    return wp_trim_words($title, 18, '...');
+}
+
+function trim_excerpt($excerpt)
+{
+    return wp_trim_words($excerpt, 55, '...');
 }
 
 ?>
