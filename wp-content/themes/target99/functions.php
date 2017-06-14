@@ -101,6 +101,33 @@ add_action('init', 'create_post_types');
 
 function my_custom_register($wp_customize)
 {
+    $wp_customize->add_section('target99_logo_text', array(
+        'title' => __('Логотип'),
+        'priority' => 30
+    ));
+
+    // Main
+    $wp_customize->add_setting('target99_logo_title', array(
+        'transport' => 'refresh'
+    ));
+
+    $wp_customize->add_control(new WP_Customize_Control($wp_customize, 'target99_logo_title', array(
+        'label' => __('Главный текст'),
+        'section' => 'target99_logo_text',
+        'settings' => 'target99_logo_title'
+    )));
+
+    // Secondary
+    $wp_customize->add_setting('target99_logo_secondary', array(
+        'transport' => 'refresh'
+    ));
+
+    $wp_customize->add_control(new WP_Customize_Control($wp_customize, 'target99_logo_secondary', array(
+        'label' => __('Мелкий текст'),
+        'section' => 'target99_logo_text',
+        'settings' => 'target99_logo_secondary'
+    )));
+
     // Social Media
     $wp_customize->add_section('target99_social_media', array(
         'title' => __('Соц. сети'),
@@ -117,18 +144,6 @@ function my_custom_register($wp_customize)
         'section' => 'target99_social_media',
         'description' => 'Ссылка на группу в facebook.',
         'settings' => 'target99_media_facebook'
-    )));
-
-    // Twitter
-    $wp_customize->add_setting('target99_media_twitter', array(
-        'transport' => 'refresh'
-    ));
-
-    $wp_customize->add_control(new WP_Customize_Control($wp_customize, 'target99_media_twitter', array(
-        'label' => __('Twitter'),
-        'section' => 'target99_social_media',
-        'description' => 'Ссылка на профиль в twitter.',
-        'settings' => 'target99_media_twitter'
     )));
 
     // Youtube

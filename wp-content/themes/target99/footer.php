@@ -1,24 +1,22 @@
+    </div><!-- #page -->
 
+    <footer class="footer">
+        <div class="footer__inner-container layout__service">
+            <a href="#" class="footer__site-map-link">Карта сайта</a>
+            <div class="footer__logo-container">
+                <img class="footer__logo" src="<?php bloginfo('template_url'); ?>/images/logo.png"/>
+                <span class="footer__logo-text">&copy; Все права защищены target99.by</span>
+            </div>
 
-		</div><!-- #page -->
+            <div class="footer__socials-container">
+                <?php include('templates/template-parts/template-part-socials.php'); ?>
+            </div>
+        </div>
+        <?php wp_footer(); ?>
+    </footer>
 
-		<footer class="footer">
-				<div class="footer__inner-container">
+</div><!-- layout -->
 
-					<div class="footer__logo-container">
-					</div>
-
-					<div class="footer__socials-container">
-
-					</div>
-
-					<div class="footer__links">
-					</div>
-
-				</div>
-
-			<?php wp_footer(); ?>
-		</footer>
-
-	</div><!-- #wrapper -->
 </body>
+
+</html>

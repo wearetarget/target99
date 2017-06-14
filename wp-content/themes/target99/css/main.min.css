@@ -1,13 +1,145 @@
 @charset "UTF-8";
-@import 'base/reset.css';
+/**
+ * Global Reset of all HTML Elements
+ *
+ * Resetting all of our HTML Elements ensures a smoother
+ * visual transition between browsers. If you don't believe me,
+ * try temporarily commenting out this block of code, then go
+ * and look at Mozilla versus Safari, both good browsers with
+ * a good implementation of CSS. The thing is, all browser CSS
+ * defaults are different and at the end of the day if visual
+ * consistency is what we're shooting for, then we need to
+ * make sure we're resetting all spacing elements.
+ *
+ */
 @import 'base/icomoon/style.css';
+html,
+body {
+  border: 0;
+  font-family: "Helvetica-Neue", "Helvetica", Arial, sans-serif;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+}
+div,
+span,
+object,
+iframe,
+img,
+table,
+caption,
+thead,
+tbody,
+tfoot,
+tr,
+tr,
+td,
+article,
+aside,
+canvas,
+details,
+figure,
+hgroup,
+menu,
+nav,
+footer,
+header,
+section,
+summary,
+mark,
+audio,
+video {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+address,
+cit,
+code,
+del,
+dfn,
+em,
+ins,
+q,
+samp,
+small,
+strong,
+sub,
+sup,
+b,
+i,
+hr,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+legend,
+label {
+  border: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  margin: 0;
+  padding: 0;
+}
+article,
+aside,
+canvas,
+figure,
+figure img,
+figcaption,
+hgroup,
+footer,
+header,
+nav,
+section,
+audio,
+video {
+  display: block;
+}
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+table caption,
+table th,
+table td {
+  text-align: left;
+  vertical-align: middle;
+}
+a img {
+  border: 0;
+}
+:focus {
+  outline: 0;
+}
 body {
   font-family: 'PT Sans', sans-serif;
 }
+html,
+body {
+  height: 100%;
+}
 .layout {
   width: 100%;
+  height: 100%;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
+  position: relative;
+  padding-bottom: 220px;
   margin: 0 auto;
   min-width: 620px;
   max-width: 1920px;
@@ -317,6 +449,10 @@ body {
   text-align: right;
 }
 .footer {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
   padding-top: 50px;
   padding-bottom: 40px;
   background: url(../images/dark-forest-background.jpg) no-repeat;
@@ -428,7 +564,7 @@ body {
   }
 }
 .header .header__logo-text {
-  display: inline-block;
+  display: block;
   padding-bottom: 10px;
   font-family: 'PT Sans', sans-serif;
   color: white;
@@ -464,23 +600,23 @@ body {
   border-bottom: 18px solid #fbbc2d;
   border-left: 28px solid #fbbc2d;
 }
-.primary-menu .primary-menu__list {
+.menu-navigation-container #menu-navigation {
   display: table;
   width: 100%;
   list-style: none;
 }
-.primary-menu .primary-menu__list-item {
+.menu-navigation-container .menu-item {
   position: relative;
   display: table-cell;
   text-align: center;
-  width: auto;
+  min-width: 100px;
   padding: 5px;
   border-bottom: 1px solid white;
 }
-.primary-menu .primary-menu__list-item:after {
+.menu-navigation-container .menu-item:after {
   position: absolute;
   bottom: -7px;
-  left: 50%;
+  left: 45%;
   display: block;
   width: 13px;
   height: 13px;
@@ -489,10 +625,10 @@ body {
   border-radius: 50%;
   background-color: #362f2d;
 }
-.primary-menu .primary-menu__list-item:hover:after {
+.menu-navigation-container .menu-item:hover:after {
   position: absolute;
   bottom: -7px;
-  left: 50%;
+  left: 45%;
   display: block;
   width: 13px;
   height: 13px;
@@ -501,10 +637,10 @@ body {
   border-radius: 50%;
   background-color: #434343;
 }
-.primary-menu .primary-menu__list-item.primary-menu__list-item--active:after {
+.menu-navigation-container .menu-item.current-menu-item:after {
   position: absolute;
   bottom: -7px;
-  left: 50%;
+  left: 45%;
   display: block;
   width: 13px;
   height: 13px;
@@ -513,8 +649,9 @@ body {
   border-radius: 50%;
   background-color: #fbbc2d;
 }
-.primary-menu a.primary-menu__link {
+.menu-navigation-container .menu-item a {
   display: inline-block;
+  vertical-align: middle;
   width: 100%;
   height: 100%;
   padding: 10px;
@@ -527,7 +664,7 @@ body {
   box-sizing: border-box;
 }
 @media screen and (max-width: 799px) {
-  .primary-menu a.primary-menu__link {
+  .menu-navigation-container .menu-item a {
     font-size: 14px;
   }
 }
