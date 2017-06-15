@@ -2,101 +2,106 @@
 @import '../base/layout';
 
 .subscription {
-    height: 290px;
+  height: 290px;
 
-    background: url(../images/forest-background.jpg) no-repeat;
-    background-size: cover;
+  background: url(../images/forest-background.jpg) no-repeat;
+  background-size: cover;
 
-    .subscription__title-container {
-        width: 100%;
-        padding-top: 90px;
-        padding-bottom: 30px;
+  .subscription__inner-container {
+    padding: 50px 0;
+  }
 
-        text-align: center;
+  .subscription__title-container {
+    width: 100%;
+    padding-bottom: 30px;
+
+    text-align: center;
+
+    @media @small-screen {
+      font-size: 16px;
+    }
+  }
+
+  .subscription__title {
+    font-family: @main-control-font;
+    font-size: 22px;
+    font-weight: bold;
+
+    text-transform: uppercase;
+
+    color: @text-color-2;
+  }
+
+  .subscription__form-container {
+    width: 100%;
+    text-align: center;
+  }
+
+  .subscription__button-container {
+    display: inline-block;
+
+    vertical-align: middle;
+
+    @media @small-screen {
+      width: 100%;
+
+      text-align: center;
+    }
+  }
+
+  .subscription__email-container {
+    display: inline-block;
+
+    height: 54px;
+    padding-right: 20px;
+
+    @media @small-screen {
+      width: 100%;
+      padding-bottom: 20px;
+      padding-right: 0;
+    }
+  }
+
+  .subscription__email {
+    box-sizing: border-box;
+    min-width: 300px;
+    height: 100%;
+
+    font-family: @main-control-font;
+    font-size: 14px;
+    font-weight: bold;
+
+    text-align: center;
+
+    color: @text-color-2;
+    border: 5px solid @text-color-2;
+    background-color: transparent;
+
+    &:focus {
+      outline-width: 0;
     }
 
-    .subscription__title {
-        font-family: @main-control-font;
-        font-size: 22px;
-        font-weight: bold;
+    &::-webkit-input-placeholder {
+      text-transform: uppercase;
 
-        text-transform: uppercase;
-
-        color: @text-color-2;
+      color: @text-color-2;
     }
+    &::-moz-placeholder {
+      text-transform: uppercase;
 
-    .subscription__form-container {
-        width: 100%;
-        min-width: 460px;
-
-        text-align: center;
+      color: @text-color-2;
     }
+    /* Firefox 19+ */
+    &:-moz-placeholder {
+      text-transform: uppercase;
 
-    .subscription__button-container {
-        display: inline-block;
-
-        vertical-align: middle;
-
-        @media @small-screen {
-            width: 100%;
-
-            text-align: center;
-        }
+      color: @text-color-2;
     }
+    /* Firefox 18- */
+    &:-ms-input-placeholder {
+      text-transform: uppercase;
 
-    .subscription__email-container {
-        display: inline-block;
-
-        height: 54px;
-        padding-right: 20px;
-
-        @media @small-screen {
-            width: 100%;
-            padding-bottom: 20px;
-            padding-right: 0;
-        }
+      color: @text-color-2;
     }
-
-    .subscription__email {
-        box-sizing: border-box;
-        min-width: 300px;
-        height: 100%;
-
-        font-family: @main-control-font;
-        font-size: 14px;
-        font-weight: bold;
-
-        text-align: center;
-
-        color: @text-color-2;
-        border: 5px solid @text-color-2;
-        background-color: transparent;
-
-        &:focus {
-            outline-width: 0;
-        }
-
-        &::-webkit-input-placeholder {
-            text-transform: uppercase;
-
-            color: @text-color-2;
-        }
-        &::-moz-placeholder {
-            text-transform: uppercase;
-
-            color: @text-color-2;
-        }
-        /* Firefox 19+ */
-        &:-moz-placeholder {
-            text-transform: uppercase;
-
-            color: @text-color-2;
-        }
-        /* Firefox 18- */
-        &:-ms-input-placeholder {
-            text-transform: uppercase;
-
-            color: @text-color-2;
-        }
-    }
+  }
 }

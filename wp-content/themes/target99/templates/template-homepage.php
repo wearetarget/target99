@@ -8,7 +8,7 @@
 $waste_info_args = [
     'post_status' => array('publish'),
     'post_type' => array('waste-info'),
-    'order' => 'DSC',
+    'order' => 'ASC',
     'orderby' => 'date',
 ];
 
@@ -42,7 +42,7 @@ $events_query = new WP_Query($events_args);
 $achievements_args = [
     'post_status' => array('publish'),
     'post_type' => array('achievement'),
-    'order' => 'DSC',
+    'order' => 'ASC',
     'orderby' => 'date',
 ];
 
@@ -52,7 +52,7 @@ $achievements_query = new WP_Query($achievements_args);
 $partners_args = [
     'post_status' => array('publish'),
     'post_type' => array('partner-info'),
-    'order' => 'DSC',
+    'order' => 'ASC',
     'orderby' => 'date',
 ];
 
@@ -207,6 +207,7 @@ get_header();
 
 <section class="contact">
     <div class="contact__inner-container">
+        <?php echo do_shortcode('[google_map_easy id="1"]')?>
         <div class="contact__panel">
             <div class="contact-info">
                 <?php echo get_theme_mod('target99_contact_info'); ?>

@@ -2,6 +2,7 @@
 
 html, body {
   height: 100%;
+  background: @border-color-1;
 }
 
 .layout {
@@ -21,16 +22,8 @@ html, body {
   margin: 0 auto;
   box-sizing: border-box;
 
-  @media @large-screen {
-    max-width: @layout-max-width;
-  }
-
-  @media @small-screen {
+  @media @small-screen, @medium-screen {
     min-width: @mobile-min-width;
-  }
-
-  @media @medium-screen {
-    min-width: @mobile-max-width;
   }
 }
 
@@ -38,22 +31,15 @@ html, body {
   margin: 0 auto;
   box-sizing: border-box;
 
-  padding: 90px 15px 70px;
+  padding: 90px 20px 70px;
 
-  @media @large-screen {
-    min-width: @medium-content-layout-width;
+  @media @medium-screen, @large-screen, @xl-screen {
     max-width: @large-content-layout-width;
   }
 
   @media @small-screen {
     min-width: @mobile-min-width;
-    max-width: @mobile-max-width;
     padding-bottom: 90px;
-  }
-
-  @media @medium-screen {
-    min-width: @mobile-max-width;
-    max-width: @medium-content-layout-width;
   }
 }
 

@@ -2,76 +2,84 @@
 @import '../base/layout';
 
 .footer {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  padding-top: 50px;
+  padding-bottom: 40px;
+
+  background: url(../images/dark-forest-background.jpg) no-repeat;
+  background-size: cover;
+
+  .footer__inner-container {
+    position: relative;
+
+    &:after {
+      display: table;
+      visibility: hidden;
+      clear: both;
+
+      content: '';
+    }
+  }
+
+  .footer__site-map-link {
     position: absolute;
-    right: 0;
     bottom: 0;
-    left: 0;
+    left: 20px;
 
-    padding-top: 50px;
-    padding-bottom: 40px;
+    display: block;
 
-    background: url(../images/dark-forest-background.jpg) no-repeat;
-    background-size: cover;
+    font-family: @main-control-font;
+    font-size: 12px;
 
-    .footer__inner-container {
-        position: relative;
+    text-decoration: none;
+    text-transform: uppercase;
 
-        &:after {
-            display: table;
-            visibility: hidden;
-            clear: both;
+    color: @text-color-2;
 
-            content: '';
-        }
+    @media @small-screen {
+      display: none;
     }
+  }
 
-    .footer__site-map-link {
-        position: absolute;
-        bottom: 0;
-        left: 20px;
+  .footer__socials-container {
+    position: absolute;
+    right: 20px;
+    bottom: 0;
 
-        display: block;
+    display: block;
 
-        font-family: @main-control-font;
-        font-size: 12px;
-
-        text-decoration: none;
-        text-transform: uppercase;
-
-        color: @text-color-2;
+    @media @small-screen {
+      display: none;
     }
+  }
 
-    .footer__socials-container {
-        position: absolute;
-        right: 20px;
-        bottom: 0;
+  .footer__logo-container {
+    width: 220px;
+    margin: 0 auto;
 
-        display: block;
-    }
+    text-align: center;
+  }
 
-    .footer__logo-container {
-        width: 220px;
-        margin: 0 auto;
+  .footer__logo {
+    display: block;
 
-        text-align: center;
-    }
+    max-height: 90px;
+    margin: 0 auto;
+    padding-bottom: 16px;
+  }
 
-    .footer__logo {
-        display: block;
+  .footer__logo-text {
+    display: inline-block;
 
-        max-height: 90px;
-        margin: 0 auto;
-        padding-bottom: 16px;
-    }
+    font-family: @main-control-font;
+    font-size: 12px;
 
-    .footer__logo-text {
-        display: inline-block;
+    text-transform: uppercase;
 
-        font-family: @main-control-font;
-        font-size: 12px;
-
-        text-transform: uppercase;
-
-        color: @text-color-2;
-    }
+    color: @text-color-2;
+  }
 }

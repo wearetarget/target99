@@ -13,6 +13,22 @@ function my_scripts_method()
 
 add_action('wp_enqueue_scripts', 'my_scripts_method');
 
+// ------
+// JQuery
+// ------
+
+// Force Wordpress to use the latest version of JQuery
+// if we're not logged in as an admin...
+// ...it seems like Wordpress is touchy about it's version of JQuery there.
+if( !is_admin() ){
+    function latest_jquery_method() {
+        wp_deregister_script('jquery');
+        wp_register_script('jquery', ("https://code.jquery.com/jquery-3.2.1.min.js"), '', true);
+        wp_enqueue_script('jquery');
+    }
+
+    add_action( 'wp_enqueue_scripts', 'latest_jquery_method' );
+}
 
 // -----------------
 // Custom Post Types

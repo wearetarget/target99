@@ -1,27 +1,31 @@
 @import '../base/variables';
 
 .socials {
-    width: 100%;
+  width: 100%;
 
-    .socials__list {
-        display: block;
+  .socials__list {
+    display: block;
 
-        list-style: none;
+    list-style: none;
+  }
+
+  .socials__list-item {
+    display: inline-block;
+
+    padding-left: 10px;
+
+    font-size: 25px;
+
+    color: @text-color-2;
+
+    > a {
+      text-decoration: none;
+
+      color: @text-color-2;
     }
 
-    .socials__list-item {
-        display: inline-block;
-
-        padding-left: 10px;
-
-        font-size: 25px;
-
-        color: @text-color-2;
-
-        > a {
-            text-decoration: none;
-
-            color: @text-color-2;
-        }
+    @media @small-screen, @medium-screen {
+      font-size: 30px;
     }
+  }
 }

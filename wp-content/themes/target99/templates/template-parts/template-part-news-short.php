@@ -9,7 +9,7 @@
             <p class="short-news__content-text">
                 <?php echo get_the_excerpt(); ?>
             </p>
-            <span class="button button--dark">Читать дальше</span>
+            <a href="<?php echo get_the_permalink(); ?>"><span class="button button--dark">Читать дальше</span></a>
         </div>
     </div>
 </section>

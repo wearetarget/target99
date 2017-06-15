@@ -1,7 +1,7 @@
 <?php
-    $navigation_menu_args = array(
-        'menu' => 'Navigation',
-    );
+$navigation_menu_args = array(
+    'menu' => 'Navigation',
+);
 ?>
 
 <!DOCTYPE html>
@@ -13,7 +13,6 @@
     <title><?php wp_title('|', true, 'right'); ?></title>
     <link href="https://fonts.googleapis.com/css?family=PT+Sans:400,700" rel="stylesheet"/>
 
-    <?php wp_enqueue_script(“jquery”, 'https://code.jquery.com/jquery-3.2.1.min.js'); ?>
     <?php wp_head(); ?>
 
     <script
@@ -27,14 +26,16 @@
 <div class="layout">
     <header class="header">
         <div class="header__inner-container layout__service">
-            <a href="/">
-                <div class="header__logo-container">
+            <div class="header__logo-container">
+                <a href="/">
+
                     <img class="header__logo" src="<?php bloginfo('template_url'); ?>/images/logo.png"/>
 
                     <span class="header__logo-text header__logo-text--primary"><?php echo get_theme_mod('target99_logo_title'); ?></span>
                     <span class="header__logo-text header__logo-text--secondary"><?php echo get_theme_mod('target99_logo_secondary'); ?></span>
-                </div>
-            </a>
+                </a>
+
+            </div>
             <div class="header__socials-container">
                 <?php include('templates/template-parts/template-part-socials.php'); ?>
             </div>

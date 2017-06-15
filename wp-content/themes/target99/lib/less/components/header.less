@@ -6,10 +6,14 @@
 
   .header__inner-container {
     margin: 0 auto;
-    padding: 10px 130px 25px 130px;
+    padding: 10px 50px;
 
-    @media @small-screen, @medium-screen {
-      padding: 10px 10px 50px 10px;
+    @media @medium-screen {
+      padding: 10px 10px 50px;
+    }
+
+    @media @small-screen {
+      padding: 10px;
     }
 
     &:after {
@@ -23,31 +27,48 @@
   .header__logo-container {
     float: left;
 
-    max-width: 310px;
+    max-width: 400px;
 
     text-align: center;
+    padding-bottom: 6px;
 
-    @media @small-screen, @medium-screen {
-      max-width: 410px;
-      padding-bottom: 40px;
+    @media @xl-screen {
+      padding-bottom: 13px;
+      margin-top: 30px;
 
       text-align: left;
+    }
+
+    @media @medium-screen {
+      padding-bottom: 13px;
+      text-align: left;
+    }
+
+    @media @small-screen {
+      float: none;
+      max-width: none;
     }
   }
 
   .header__socials-container {
     float: right;
 
-    padding-bottom: 30px;
-
     text-align: right;
+
+    @media @small-screen {
+      display: none;
+    }
   }
 
   .header__menu-container {
     float: right;
     clear: right;
 
-    max-width: 640px;
+    max-width: 600px;
+
+    @media @xl-screen {
+      max-width: 650px;
+    }
 
     @media @small-screen, @medium-screen {
       display: block;
@@ -57,10 +78,6 @@
     }
   }
 
-  .header__slider-container {
-    width: 100%;
-  }
-
   .header__logo {
     display: block;
 
@@ -68,7 +85,7 @@
     margin: 0 auto;
     padding-bottom: 15px;
 
-    @media @small-screen, @medium-screen {
+    @media @medium-screen, @xl-screen {
       float: left;
 
       padding-right: 15px;
@@ -76,7 +93,7 @@
   }
 
   .header__logo-text {
-    display: block;
+    display: inline-block;
 
     padding-bottom: 10px;
 
@@ -85,18 +102,22 @@
     color: @text-color-2;
 
     &.header__logo-text--primary {
-      font-size: 22px;
+      font-size: 18px;
       font-weight: bold;
 
       text-transform: uppercase;
+
+      @media @xl-screen {
+        font-size: 24px;
+      }
     }
 
     &.header__logo-text--secondary {
       font-size: 12px;
-    }
 
-    @media @small-screen, @medium-screen {
-      display: inline-block;
+      @media @small-screen, @large-screen {
+        display: none;
+      }
     }
   }
 }
