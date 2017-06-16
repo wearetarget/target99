@@ -44,6 +44,13 @@ $achievements_args = [
     'post_type' => array('achievement'),
     'order' => 'ASC',
     'orderby' => 'date',
+    'meta_query'     => array(
+        array(
+            'key'       => 'show_in_achievement_panel',
+            'value'     => '1',
+            'compare'   => '='
+        )
+    )
 ];
 
 $achievements_query = new WP_Query($achievements_args);
@@ -158,7 +165,6 @@ get_header();
                 <?php
                 while ($achievements_query->have_posts()) {
                     $achievements_query->the_post();
-                    $achievements_image = wp_get_attachment_image_src(get_post_thumbnail_id(), 'full')[0];
 
                     include('template-parts/template-part-achievement.php');
                 }

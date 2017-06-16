@@ -225,8 +225,9 @@ body {
   text-align: center;
 }
 .achievement .achievement__icon {
-  font-size: 90px;
-  color: #362f2d;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto;
 }
 .achievement .achievement__title-container {
   display: block;
