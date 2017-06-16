@@ -62,7 +62,13 @@ get_header();
 ?>
 
 <section class="slider-panel">
-    <?php echo do_shortcode('[smartslider3 slider=1]'); ?>
+    <div class="desktop-slider">
+        <?php echo do_shortcode('[smartslider3 slider=1]'); ?>
+    </div>
+
+    <div class="mobile-slider">
+        <img class="mobile-slider__image" src="<?php echo get_field('mobile_slider_image'); ?>" />
+    </div>
 </section>
 
 <?php if ($waste_info_query->have_posts()) : ?>

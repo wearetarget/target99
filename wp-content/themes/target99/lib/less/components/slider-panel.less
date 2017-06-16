@@ -2,28 +2,42 @@
 @import '../base/layout';
 
 .slider-panel {
-    padding-bottom: 50px;
+  padding-bottom: 50px;
 
-    background-color: @background-color-1;
+  background-color: @background-color-1;
+}
 
-    @media @small-screen {
-        display: none;
-    }
+.desktop-slider {
+  @media @small-screen {
+    display: none;
+  }
+}
+
+.mobile-slider {
+
+  .mobile-slider__image {
+    width: 100%;
+    height: auto;
+  }
+
+  @media @medium-screen,@large-screen, @xl-screen {
+    display: none;
+  }
 }
 
 .slider {
-    .slider__image-container {
-        display: block;
+  .slider__image-container {
+    display: block;
 
-        margin: 0 auto;
-    }
+    margin: 0 auto;
+  }
 
-    .slider__image {
-        width: 100%;
-        max-width: 1920px;
-        max-height: 600px;
+  .slider__image {
+    width: 100%;
+    max-width: 1920px;
+    max-height: 600px;
 
-        object-fit: cover;
-        object-position: 0 0;
-    }
+    object-fit: cover;
+    object-position: 0 0;
+  }
 }

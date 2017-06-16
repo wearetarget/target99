@@ -14,6 +14,7 @@ $navigation_menu_args = array(
     <link href="https://fonts.googleapis.com/css?family=PT+Sans:400,700" rel="stylesheet"/>
 
     <?php wp_head(); ?>
+    <?php wp_enqueue_script('jqueryUI', 'https://code.jquery.com/ui/1.12.1/jquery-ui.min.js', 'jquery'); ?>
 
     <script
             src="https://code.jquery.com/jquery-migrate-3.0.0.min.js"
@@ -41,7 +42,26 @@ $navigation_menu_args = array(
             </div>
 
             <div class="header__menu-container">
-                <?php wp_nav_menu($navigation_menu_args); ?>
+                <script>
+                    $(function () {
+                        $(".mobile-menu").accordion({
+                            collapsible: true,
+                            autoHeight: false,
+                            active: false
+                        });
+                    });
+                </script>
+
+                <div class="mobile-menu">
+                    <h3 class="mobile-menu__main-button">Меню</h3>
+                    <div class="mobile-menu__inner-container">
+                        <?php wp_nav_menu($navigation_menu_args); ?>
+                    </div>
+                </div>
+
+                <div class="desktop-menu">
+                    <?php wp_nav_menu($navigation_menu_args); ?>
+                </div>
             </div>
         </div>
     </header>

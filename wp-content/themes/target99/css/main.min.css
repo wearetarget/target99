@@ -560,7 +560,14 @@ body {
     max-width: 650px;
   }
 }
-@media screen and (max-width: 599px), screen and (min-width: 600px) and (max-width: 899px) {
+@media screen and (min-width: 600px) and (max-width: 899px) {
+  .header .header__menu-container {
+    display: block;
+    float: none;
+    max-width: none;
+  }
+}
+@media screen and (max-width: 599px) {
   .header .header__menu-container {
     display: block;
     float: none;
@@ -685,7 +692,7 @@ body {
   width: 8px;
   height: 8px;
   content: '';
-  border: none;
+  border: 2px solid #fbbc2d;
   border-radius: 50%;
   background-color: #fbbc2d;
 }
@@ -701,16 +708,16 @@ body {
   height: 100%;
   padding: 10px;
   font-family: 'PT Sans', sans-serif;
-  font-size: 16px;
+  font-size: 14px;
   text-decoration: none;
   text-transform: uppercase;
   color: white;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
-@media screen and (max-width: 599px), screen and (min-width: 600px) and (max-width: 899px) {
+@media screen and (min-width: 1367px) {
   .menu-navigation-container .menu-item a {
-    font-size: 14px;
+    font-size: 18px;
   }
 }
 @media screen and (min-width: 900px) and (max-width: 1366px), screen and (min-width: 1367px) {
@@ -729,6 +736,26 @@ body {
     display: block;
     border: 1px solid white;
     margin: 10px 0;
+  }
+}
+@media screen and (max-width: 599px) {
+  .desktop-menu {
+    display: none;
+  }
+}
+.mobile-menu .mobile-menu__main-button {
+  text-align: center;
+  padding: 15px;
+  border: 1px solid white;
+  font-family: 'PT Sans', sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  text-transform: uppercase;
+  color: white;
+}
+@media screen and (min-width: 600px) and (max-width: 899px), screen and (min-width: 900px) and (max-width: 1366px), screen and (min-width: 1367px) {
+  .mobile-menu {
+    display: none;
   }
 }
 .short-news-panel {
@@ -852,7 +879,16 @@ body {
   background-color: #362f2d;
 }
 @media screen and (max-width: 599px) {
-  .slider-panel {
+  .desktop-slider {
+    display: none;
+  }
+}
+.mobile-slider .mobile-slider__image {
+  width: 100%;
+  height: auto;
+}
+@media screen and (min-width: 600px) and (max-width: 899px), screen and (min-width: 900px) and (max-width: 1366px), screen and (min-width: 1367px) {
+  .mobile-slider {
     display: none;
   }
 }
