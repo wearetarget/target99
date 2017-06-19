@@ -4,6 +4,11 @@
 .short-news-panel {
   background: white;
 
+  .short-news-panel__inner-container {
+    position: relative;
+    width: 100%;
+  }
+
   .short-news-panel__title-container {
     padding-bottom: 50px;
 
@@ -31,6 +36,13 @@
 
   .short-news-panel__footer {
     text-align: center;
+
+    @media @small-screen {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+    }
   }
 }
 
@@ -59,9 +71,13 @@
       text-align: left;
 
       @media @small-screen {
-        padding: 10px;
+        padding: 0;
 
         text-align: center;
+      }
+
+      @media @medium-screen {
+        padding-right: 0;
       }
     }
 
@@ -86,15 +102,17 @@
 
     @media @small-screen {
       width: 100%;
-      padding: 10px;
-
       text-align: center;
+      padding: 0;
+    }
+
+    @media @medium-screen {
+      padding-left: 0;
     }
   }
 
   .short-news__content-title {
     display: block;
-
     padding-bottom: 20px;
 
     font-family: @main-control-font;
@@ -105,12 +123,21 @@
     text-transform: uppercase;
 
     color: @text-color-1;
+
+    & a {
+      color: @text-color-1;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
 
   .short-news__content-text {
     display: block;
 
-    padding-bottom: 50px;
+    padding-bottom: 20px;
 
     font-family: @main-control-font;
     font-size: 14px;
@@ -128,12 +155,8 @@
     width: 40%;
 
     @media @small-screen {
+      position: relative;
       width: 100%;
-      max-height: none;
-      margin: 0 auto;
-      padding: 10px;
-
-      text-align: center;
     }
   }
 
@@ -144,5 +167,28 @@
       max-height: none;
     }
   }
-}
 
+  .short-news__content-link-container {
+    @media @small-screen {
+      position: absolute;
+      width: 100%;
+      bottom: 6px;
+      left: 0;
+    }
+  }
+
+  .short-news__content-link {
+    @media @small-screen {
+      display: block;
+      padding: 15px;
+      color: white;
+      font-family: @main-control-font;
+      text-align: center;
+      text-decoration: none;
+      text-transform: uppercase;
+
+      background: rgba(251, 188, 45, 0.5);
+
+    }
+  }
+}

@@ -50,6 +50,19 @@
     }
   }
 
+  .header__search-container {
+    float: right;
+
+    text-align: right;
+
+    @media @small-screen, @medium-screen {
+      display: block;
+      margin-bottom: 10px;
+      width: 100%;
+      float: none;
+    }
+  }
+
   .header__socials-container {
     float: right;
 
@@ -77,7 +90,7 @@
       max-width: none;
     }
 
-    @media @small-screen{
+    @media @small-screen {
       display: block;
       float: none;
 

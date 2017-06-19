@@ -43,5 +43,24 @@ html, body {
   }
 }
 
+.visibility-layout {
+  display: none;
 
+  &.visibility-layout--desktop {
+    @media @large-screen, @xl-screen {
+      display: block;
+    }
+  }
 
+  &.visibility-layout--tablet {
+    @media @medium-screen {
+      display: block;
+    }
+  }
+
+  &.visibility-layout--mobile {
+    @media @small-screen {
+      display: block;
+    }
+  }
+}

@@ -83,7 +83,6 @@ function create_post_types()
         'public' => true,
         'supports' => array(
             'title',
-            'editor',
             'thumbnail'
         )
     ));

@@ -3,8 +3,8 @@ Contributors: YurchenkoEV
 Donate link: http://yur4enko.com/
 Tags: translate, rus-to-lat, cyr-to-lat, Seo, tag, record, page, transliterate, transliteration, bg, bulgarian
 Requires at least: 3.2
-Tested up to: 4.8
-Stable tag: 170510
+Tested up to: 4.9
+Stable tag: p.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -27,6 +27,21 @@ Automatical from repository or unzip in plugins and activate in ACP.
 == Screenshots ==
 
 == Changelog ==
+
+= p1.0 =
+* обновлен домен переводов (переводы)
+* новая нумерация версий плагина (прочее)
+* новый модуль обновления плагина (ядро)
+* добавлены полные комментарии к коду (разработка)
+* новый модуль форсированной транслитерации (ядро)
+* добавлена обработка установки плагина (ядро)
+* ---
+* Updated translation domain (translations)
+* New numbering of plug-in versions (other)
+* A new module update of plug-in (core)
+* Added full comments to the code (development)
+* New module of forced transliteration (core)
+* Added processing plugin installation (kernel)
 
 = 170510 =
 * исправлена инициализация локализации для болгарского (транслитерации) https://wordpress.org/support/topic/wrong-locale-string/

@@ -85,6 +85,8 @@
 
     @media @medium-screen {
       min-width: 0;
+      padding-right: 15px;
+      padding-left: 15px;
     }
 
     @media @small-screen {
@@ -96,14 +98,10 @@
   }
 }
 
-.desktop-menu {
-  @media @small-screen {
-    display: none;
-  }
-}
-
 .mobile-menu {
   .mobile-menu__main-button {
+    cursor: pointer;
+    position: relative;
     text-align: center;
 
     padding: 15px;
@@ -118,7 +116,10 @@
     color: white;
   }
 
-  @media @medium-screen,@large-screen, @xl-screen {
-    display: none;
+  .fa {
+    position: absolute;
+    left: 10px;
+    top: 14px;
+    font-size: 24px;
   }
 }

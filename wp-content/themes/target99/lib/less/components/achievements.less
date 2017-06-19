@@ -47,8 +47,16 @@
   padding: 10px;
 
   .achievement__content {
+    display: inline-block;
     box-sizing: border-box;
+    padding: 15px;
     width: 210px;
+    text-decoration: none;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+    }
   }
 
   .achievement__icon-container {
@@ -71,6 +79,7 @@
     padding-bottom: 15px;
 
     text-align: center;
+
   }
 
   .achievement__title {
@@ -79,6 +88,10 @@
     font-weight: bold;
 
     color: @text-color-2;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 
   .achievement__description-container {

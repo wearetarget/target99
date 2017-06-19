@@ -30,7 +30,7 @@ $news_query = new WP_Query($news_args);
 $events_args = [
     'post_status' => array('publish'),
     'post_type' => array('post'),
-    'category_name' => 'events',
+    'category_name' => 'event',
     'posts_per_page' => get_field('amount_of_events'),
     'order' => 'DSC',
     'orderby' => 'date',
@@ -44,11 +44,11 @@ $achievements_args = [
     'post_type' => array('achievement'),
     'order' => 'ASC',
     'orderby' => 'date',
-    'meta_query'     => array(
+    'meta_query' => array(
         array(
-            'key'       => 'show_in_achievement_panel',
-            'value'     => '1',
-            'compare'   => '='
+            'key' => 'show_in_achievement_panel',
+            'value' => '1',
+            'compare' => '='
         )
     )
 ];
@@ -69,13 +69,14 @@ get_header();
 ?>
 
 <section class="slider-panel">
-    <div class="desktop-slider">
+    <div class="visibility-layout visibility-layout--desktop visibility-layout--tablet">
         <?php echo do_shortcode('[smartslider3 slider=1]'); ?>
     </div>
 
-    <div class="mobile-slider">
-        <img class="mobile-slider__image" src="<?php echo get_field('mobile_slider_image'); ?>" />
+    <div class="visibility-layout visibility-layout--mobile">
+        <img class="slider-panel__image" src="<?php echo get_field('mobile_slider_image'); ?>"/>
     </div>
+
 </section>
 
 <?php if ($waste_info_query->have_posts()) : ?>
@@ -122,7 +123,7 @@ get_header();
             </div>
 
             <div class="short-news-panel__footer">
-                <span class="button button--warning">Смотреть всю информацию</span>
+                <span class="button button--warning button--mobile-full">Смотреть всю информацию</span>
             </div>
         </div>
     </section>
@@ -149,7 +150,7 @@ get_header();
             </div>
 
             <div class="events__footer">
-                <span class="button button--warning">Смотреть все мероприятия</span>
+                <span class="button button--warning button--mobile-full">Смотреть все мероприятия</span>
             </div>
         </div>
     </section>
@@ -207,10 +208,12 @@ get_header();
                 <input type="hidden" name="id" value="d67980ed43">
 
                 <div class="subscription__email-container">
-                    <input type="email" class="subscription__email" autocapitalize="off" autocorrect="off" name="MERGE0" id="MERGE0" size="25" value="" placeholder="EMAIL"/>
+                    <input type="email" class="subscription__email" autocapitalize="off" autocorrect="off" name="MERGE0"
+                           id="MERGE0" size="25" value="" placeholder="EMAIL"/>
                 </div>
                 <div class="subscription__button-container">
-                    <input type="submit" class="button button--warning" name="submit" value="Подписаться" >
+                    <input type="submit" class="button button--warning button--mobile-full" name="submit"
+                           value="Подписаться">
                 </div>
             </form>
         </div>
@@ -219,7 +222,7 @@ get_header();
 
 <section class="contact">
     <div class="contact__inner-container">
-        <?php echo do_shortcode('[google_map_easy id="1"]')?>
+        <?php echo do_shortcode('[google_map_easy id="1"]') ?>
         <div class="contact__panel">
             <div class="contact-info">
                 <?php echo get_theme_mod('target99_contact_info'); ?>

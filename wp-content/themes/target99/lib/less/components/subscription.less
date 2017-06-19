@@ -2,10 +2,10 @@
 @import '../base/layout';
 
 .subscription {
-  height: 290px;
 
   background: url(../images/forest-background.jpg) no-repeat;
   background-size: cover;
+  position: relative;
 
   .subscription__inner-container {
     padding: 50px 0;
@@ -43,9 +43,12 @@
     vertical-align: middle;
 
     @media @small-screen {
+      text-align: center;
       width: 100%;
 
-      text-align: center;
+      position: absolute;
+      bottom: 0;
+      left: 0;
     }
   }
 
@@ -103,5 +106,9 @@
 
       color: @text-color-2;
     }
+  }
+
+  @media @small-screen {
+    min-height: 350px;
   }
 }

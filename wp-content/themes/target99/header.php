@@ -12,6 +12,7 @@ $navigation_menu_args = array(
 
     <title><?php wp_title('|', true, 'right'); ?></title>
     <link href="https://fonts.googleapis.com/css?family=PT+Sans:400,700" rel="stylesheet"/>
+    <link rel="stylesheet" href="<?php bloginfo('template_url'); ?>/css/fa/css/font-awesome.min.css">
 
     <?php wp_head(); ?>
     <?php wp_enqueue_script('jqueryUI', 'https://code.jquery.com/ui/1.12.1/jquery-ui.min.js', 'jquery'); ?>
@@ -27,6 +28,12 @@ $navigation_menu_args = array(
 <div class="layout">
     <header class="header">
         <div class="header__inner-container layout__service">
+            <div class="visibility-layout visibility-layout--mobile visibility-layout--tablet">
+                <div class="header__search-container">
+                    <?php get_search_form(); ?>
+                </div>
+            </div>
+
             <div class="header__logo-container">
                 <a href="/">
 
@@ -37,29 +44,45 @@ $navigation_menu_args = array(
                 </a>
 
             </div>
+
             <div class="header__socials-container">
                 <?php include('templates/template-parts/template-part-socials.php'); ?>
             </div>
 
+            <div class="visibility-layout visibility-layout--desktop">
+                <div class="header__search-container">
+                    <?php get_search_form(); ?>
+                </div>
+            </div>
+
+
             <div class="header__menu-container">
                 <script>
-                    $(function () {
-                        $(".mobile-menu").accordion({
+                    $( function() {
+                        var icons = {
+                            header: "fa fa-bars",
+                            activeHeader: "fa fa-minus"
+                        };
+                        $( ".mobile-menu" ).accordion({
+                            icons: icons,
                             collapsible: true,
                             autoHeight: false,
-                            active: false
+                            active: false,
+                            heightStyle: "content"
                         });
-                    });
+                    } );
                 </script>
 
-                <div class="mobile-menu">
-                    <h3 class="mobile-menu__main-button">Меню</h3>
-                    <div class="mobile-menu__inner-container">
-                        <?php wp_nav_menu($navigation_menu_args); ?>
+                <div class="visibility-layout visibility-layout--mobile">
+                    <div class="mobile-menu">
+                        <h3 class="mobile-menu__main-button">Меню</h3>
+                        <div class="mobile-menu__inner-container">
+                            <?php wp_nav_menu($navigation_menu_args); ?>
+                        </div>
                     </div>
                 </div>
 
-                <div class="desktop-menu">
+                <div class="visibility-layout visibility-layout--desktop visibility-layout--tablet">
                     <?php wp_nav_menu($navigation_menu_args); ?>
                 </div>
             </div>

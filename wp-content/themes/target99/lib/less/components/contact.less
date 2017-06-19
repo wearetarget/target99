@@ -2,70 +2,74 @@
 @import '../base/layout';
 
 .contact {
-    .contact__inner-container {
-        position: relative;
+  .contact__inner-container {
+    position: relative;
 
-        width: 100%;
-        min-width: @mobile-min-width;
+    width: 100%;
+    min-width: @mobile-min-width;
 
-        @media @small-screen {
-            height: inherit;
-        }
+    @media @small-screen {
+      height: 250px;
+    }
+  }
+
+  .contact__panel {
+    position: absolute;
+    top: 50px;
+    right: 0;
+
+    box-sizing: border-box;
+    height: 365px;
+    padding: 100px 150px 50px 50px;
+
+    background-color: rgba(255, 255, 255, .75);
+
+    @media @small-screen {
+      top: 0;
+
+      width: 100%;
+      height: 100%;
+      padding: 10px;
+
+      background-color: rgba(255, 255, 255, .33);
     }
 
-    .contact__panel {
-        position: absolute;
-        top: 50px;
-        right: 0;
-
-        box-sizing: border-box;
-        height: 365px;
-        padding: 100px 150px 50px 50px;
-
-        background-color: rgba(255, 255, 255, .75);
-
-        @media @small-screen {
-            top: 0;
-
-            width: 100%;
-            height: 100%;
-            padding: 50px;
-
-            background-color: rgba(255, 255, 255, .33);
-        }
-
-        @media @medium-screen {
-            background-color: rgba(255, 255, 255, .50);
-        }
+    @media @medium-screen {
+      background-color: rgba(255, 255, 255, .50);
     }
+  }
 
-    .contact__map {
-        width: 100%;
-        height: 100%;
-    }
+  .contact__map {
+    width: 100%;
+    height: 100%;
+  }
 }
 
 .contact-info {
-    display: inline-block;
+  display: inline-block;
 
+  width: 100%;
+
+  font-family: @main-control-font;
+  font-size: 22px;
+  font-weight: bold;
+
+  text-align: center;
+  text-transform: uppercase;
+
+  color: @text-color-1;
+
+  overflow-wrap: break-word;
+
+  > span {
+    display: block;
+
+    box-sizing: border-box;
     width: 100%;
+    padding-bottom: 20px;
+  }
 
-    font-family: @main-control-font;
-    font-size: 22px;
-    font-weight: bold;
-
-    text-align: center;
-    text-transform: uppercase;
-
-    color: @text-color-1;
-
-    overflow-wrap: break-word;
-
-    > span {
-        display: block;
-
-        box-sizing: border-box;
-        width: 100%;
-        padding-bottom: 20px;
-    }
+  @media @small-screen {
+    font-size: 16px;
+  }
 }

@@ -8,7 +8,7 @@
 ?>
 
 <div class="achievement">
-    <div class="achievement__content">
+    <a href="<?php echo get_the_permalink(); ?>" class="achievement__content">
         <div class="achievement__icon-container">
             <div class="achievement__icon" style="background:url('<?php echo $achievements_image_url; ?>');"></div>
         </div>
@@ -20,5 +20,5 @@
                 <?php echo get_field('achievement_result_desc'); ?>
             </span>
         </div>
-    </div>
+    </a>
 </div>

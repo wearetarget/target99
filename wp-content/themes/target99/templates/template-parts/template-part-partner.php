@@ -1,3 +1,5 @@
 <div class="partner">
-    <a href="#" class="partner__banner"><img src="<?php echo $partner_image; ?>"/></a>
+    <a href="<?php echo get_field('partner_link'); ?>" class="partner__banner" target="_blank">
+        <img src="<?php echo $partner_image; ?>"/>
+    </a>
 </div>

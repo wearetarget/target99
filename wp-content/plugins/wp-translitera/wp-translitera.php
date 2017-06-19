@@ -3,9 +3,9 @@
 Plugin Name: WP Translitera
 Plugin URI: http://yur4enko.com/category/moi-proekty/wp-translitera
 Description: Plug-in for transliteration permanent permalink records , pages, and tag
-Version: 170510
+Version: p1.0
 Author: Evgen Yurchenko
-Text Domain: wp_translitera
+Text Domain: wp-translitera
 Domain Path: /languages/
 Author URI: http://yur4enko.com/
 */
@@ -30,10 +30,12 @@ Author URI: http://yur4enko.com/
 class wp_translitera {//wp=>3.2 php=>5.2.4
     
     //Создаем локализации
+    // добавлено 160306
+    // возвращает МАССИВ правил транслитерации
     protected static function createlocale() {//wp=>3.2 php=>5.2.4
         $loc = get_locale();
         $ret = array();
-        if ($loc == 'ru_RU') {//Русская локализация
+        if ($loc == 'ru_RU') {//Русская локализация 
             $ret = array(
                 'А'=>'A','а'=>'a','Б'=>'B','б'=>'b','В'=>'V','в'=>'v','Г'=>'G',
                 'г'=>'g','Д'=>'D','д'=>'d','Е'=>'E','е'=>'e','Ё'=>'Jo','ё'=>'jo',
@@ -46,7 +48,7 @@ class wp_translitera {//wp=>3.2 php=>5.2.4
                 'ъ'=>'','Ы'=>'Y','ы'=>'y','Ь'=>'','ь'=>'','Э'=>'Je','э'=>'je',
                 'Ю'=>'Ju','ю'=>'ju','Я'=>'Ja','я'=>'ja'
             );
-        } elseif ($loc == 'uk') {//Украинская локализация
+        } elseif ($loc == 'uk') {//Украинская локализация Добавлено 160415
             $ret = array(
                 'А'=>'A','а'=>'a','Б'=>'B','б'=>'b','В'=>'V','в'=>'v','Г'=>'H',
                 'г'=>'h','Ґ'=>'G','ґ'=>'g','Д'=>'D','д'=>'d','Е'=>'E','е'=>'e',
@@ -59,7 +61,7 @@ class wp_translitera {//wp=>3.2 php=>5.2.4
                 'Ш'=>'Sh','ш'=>'sh','Щ'=>'Shch','щ'=>'shch','Ь'=>'','ь'=>'','Ю'=>'Iu',
                 'ю'=>'iu','Я'=>'Ia','я'=>'ia',"'"=>''
             );
-        } elseif($loc == 'bg' || $loc == 'bg_BG') {//bulgarian locale
+        } elseif($loc == 'bg' || $loc == 'bg_BG') {//bulgarian locale добавлено 170114
             $ret = array(
                 'А'=>'A','а'=>'a','Б'=>'B','б'=>'b','В'=>'V','в'=>'v','Г'=>'G',
                 'г'=>'g','Д'=>'D','д'=>'d','Е'=>'E','е'=>'e','Ё'=>'Jo','ё'=>'jo',
@@ -73,7 +75,8 @@ class wp_translitera {//wp=>3.2 php=>5.2.4
                 'Ю'=>'Ju','ю'=>'ju','Я'=>'Ja','я'=>'ja'
             );
         }
-        //Глобальная локализация
+        //Глобальная локализация 
+        // добалено 160306, Обновлено 160415/
         $ret = $ret + array(
             'А'=>'A','а'=>'a','Б'=>'B','б'=>'b','В'=>'V','в'=>'v','Г'=>'G',
             'г'=>'g','Д'=>'D','д'=>'d','Е'=>'E','е'=>'e','Ё'=>'Jo','ё'=>'jo',
@@ -88,6 +91,7 @@ class wp_translitera {//wp=>3.2 php=>5.2.4
             'є'=>'ie','І'=>'I','і'=>'i','Ї'=>'I','ї'=>'i',"'"=>''
         );
         //Кстомные правила транслитерации
+        // добавлено 170510
         $ret = wp_translitera::get_custom_rules_for_transliterate() + $ret;
         return $ret;
     }
@@ -109,12 +113,17 @@ class wp_translitera {//wp=>3.2 php=>5.2.4
     }
 
     //Проставляем галочки в чебоксах
+    // добавлено 160128
+    // принимает СТРОКА имя настройки
+    // возвращает СТРОКА "флаг" для чебокса
     protected static function getchebox($name){//wp=>3.2 php=>5.2.4
         $value = wp_translitera::getset($name);
         return (empty($value))?'':' checked';
     }
     
     //Форма админки
+    // добавлено 160119
+    // возвращает HTML форму настроек плагина 
     protected static function GetForm() {//wp=>3.2 php=>5.2.4
         $noparsevar = wp_translitera::getset('fileext');
         $extforform = '';
@@ -133,26 +142,30 @@ class wp_translitera {//wp=>3.2 php=>5.2.4
         foreach ($customrulesarray as $key => $value) {
             $customrulesstring .=$key.'='.$value.PHP_EOL;
         }
-        $ret = '<h2>'.__('Convert existing','wp_translitera').':</h2></br>'
+        $ret = '<h2>'.__('Convert existing','wp-translitera').':</h2></br>'
                 . '<form method=POST> '
-                . '<input type="checkbox" name="r1" value="1">'.__('Pages and posts','wp_translitera').'</br>'
-                . '<input type="checkbox" name="r2" value="1">'.__('Headings, tags etc...','wp_translitera').'</br>'
-                . '<input type="submit" value="'.__('Transliterate','wp_translitera').'" name="transliterate">'
+                . '<input type="checkbox" name="r1" value="1">'.__('Pages and posts','wp-translitera').'</br>'
+                . '<input type="checkbox" name="r2" value="1">'.__('Headings, tags etc...','wp-translitera').'</br>'
+                . '<input type="submit" value="'.__('Transliterate','wp-translitera').'" name="transliterate">'
                 . '</form>'
-                . '<p><h2>'.__('Settings','wp_translitera').':</h2></br>'
+                . '<p><h2>'.__('Settings','wp-translitera').':</h2></br>'
                 . '<form method=POST> '
-                . '<input type="checkbox" name="use_force_transliterations" value="1"'.wp_translitera::getchebox("use_force_transliterations").'>'.__('Use forces transliteration for title','wp_translitera').'</br>'
-                . '<input type="checkbox" name="tranliterate_uploads_file" value="1"'.wp_translitera::getchebox("tranliterate_uploads_file").'>'.__('Transliterate names of uploads files','wp_translitera').'</br>'
-                . '<input type="checkbox" name="tranliterate_404" value="1"'.wp_translitera::getchebox("tranliterate_404").'>'.__('Transliterate 404 url','wp_translitera').'</br>'
-                . '<input type="checkbox" name="init_in_front" value="1"'.wp_translitera::getchebox("init_in_front").'>'.__('Use transliteration in frontend for transliteration title out ACP (enable if use bbPress, buddypress, woocommerce etc)','wp_translitera').'</br>'
-                . __('File extensions, separated by commas , titles that do not need to transliterate','wp_translitera').'<input type="text" size="80" name="typefiles" value="'.$extforform.'"></br>'
-                . '<label style="color:red;font-weight:800">'.__('Custom transliteration rules, in format я=ja (Everyone ruled from a new line!)','wp_translitera').'</label></br><textarea name="customrules" cols="30" rows="10">'.$customrulesstring.'</textarea></br>'
-                . '<input type="submit" value="'.__('Apply','wp_translitera').'" name="apply">'
+                . '<input type="checkbox" name="use_force_transliterations" value="1"'.wp_translitera::getchebox("use_force_transliterations").'>'.__('Use forces transliteration for title','wp-translitera').'</br>'
+                . '<input type="checkbox" name="tranliterate_uploads_file" value="1"'.wp_translitera::getchebox("tranliterate_uploads_file").'>'.__('Transliterate names of uploads files','wp-translitera').'</br>'
+                . '<input type="checkbox" name="tranliterate_404" value="1"'.wp_translitera::getchebox("tranliterate_404").'>'.__('Transliterate 404 url','wp-translitera').'</br>'
+                . '<input type="checkbox" name="init_in_front" value="1"'.wp_translitera::getchebox("init_in_front").'>'.__('Use transliteration in frontend for transliteration title out ACP (enable if use bbPress, buddypress, woocommerce etc)','wp-translitera').'</br>'
+                . __('File extensions, separated by commas , titles that do not need to transliterate','wp-translitera').'<input type="text" size="80" name="typefiles" value="'.$extforform.'"></br>'
+                . '<label style="color:red;font-weight:800">'.__('Custom transliteration rules, in format я=ja (Everyone ruled from a new line!)','wp-translitera').'</label></br><textarea name="customrules" cols="30" rows="10">'.$customrulesstring.'</textarea></br>'
+                . '<input type="submit" value="'.__('Apply','wp-translitera').'" name="apply">'
                 . '</form>';
         return $ret;                
     }
     
     //Транслитерация в БД
+    // добавлено 160119
+    // принимает:   - table СТРОКА с именем таблицы БД с которой проводим операции
+    //              - id СТРОКА с именем индекса таблицы
+    //              - name СТРОКА с именем столбца значения которого необходимо транслитерировать
     protected static function do_transliterate($table,$id,$name) {//wp=>3.2 php=>5.2.4
         global $wpdb;
         $rez = $wpdb->get_results("SELECT {$id}, {$name} FROM {$table} WHERE 1",ARRAY_A);
@@ -165,6 +178,8 @@ class wp_translitera {//wp=>3.2 php=>5.2.4
     }
     
     //Получаем настройки
+    // добавлено 160128
+    // возвращает МАССИВ настроек плагина
     protected static function getoptions() {//wp=>3.2 php=>5.2.4
         if (is_multisite()) {
             $set = get_site_option('wp_translitera');
@@ -178,12 +193,17 @@ class wp_translitera {//wp=>3.2 php=>5.2.4
     }
 
     //Получаем значение настройки
+    // добалено 160128
+    // принимает: СТРОКА с названием настройки плагина
+    // возвращает: MIXED значение настройки плагина или NULL если не установлено
     protected static function getset($name) {//wp=>3.2 php=>5.2.4
         $set = wp_translitera::getoptions();
         return (array_key_exists($name,$set))?$set[$name]:NULL;
     }
     
     //Записываем опцию
+    // добавлено 170212
+    // принимает: МАССИВ с настройками плагина
     protected static function updateoption($set) {//wp=>3.2 php=>5.2.4
         if (is_multisite()) {
             update_site_option('wp_translitera',$set);
@@ -193,13 +213,18 @@ class wp_translitera {//wp=>3.2 php=>5.2.4
     }
 
     //Записываем настройку
+    // добавлено 160128
+    // принимает:   - name СТРОКА с названием настройки
+    //              - value MIXED значение настроки
     protected static function updset($name,$value) {//wp=>3.2 php=>5.2.4
         $set = wp_translitera::getoptions();
         $set[$name] = $value;
         wp_translitera::updateoption($set);
     }
     
-    //Записываем настройки
+    //Записываем настройки переданные в массиве не изменяя остальных
+    // добавлено 160212
+    // принимает: МАССИВ со значениями настроек
     protected static function updsets($sets) {//wp=>3.2 php=>5.2.4
         if (gettype($sets) != 'array') {
             $sets = array();
@@ -210,19 +235,21 @@ class wp_translitera {//wp=>3.2 php=>5.2.4
     
     //Выводим сообщение об обновлении 
     // добавлено в 170510
-    // принимает БУЛЕВО необходимость выводить сообщение
+    // принимает БУЛЕВО необходимость выводить сообщение, с версии p1.0 - значение по умолчанию TRUE
     // возвращает БУЛЕВО необходимость выводить сообщение
-    protected static function updnotice($need_notice) {//wp=>3.2 php=>5.2.4
+    protected static function updnotice($need_notice=TRUE) {//wp=>3.2 php=>5.2.4
         if ($need_notice) {
             add_action('admin_notices',array('wp_translitera','notice_admin_plugin_updated'));
         }
-        
         return FALSE;
     }
 
     //Обнволение БД
-    protected static function update_bd($from) {//wp=>3.2 php=>5.2.4
-        $need_notice = TRUE;
+    //добавлено 170212
+    //Принимает:
+    // from - текущая версия плагина
+    // for - параметр принимающий актуальную версию плагина (добавлен p1.0)
+    protected static function update_bd($from,$for) {//wp=>3.2 php=>5.2.4
         if (empty($from)) {
             $from = 160819;
         }
@@ -230,7 +257,6 @@ class wp_translitera {//wp=>3.2 php=>5.2.4
             if (wp_translitera::getset('fileext') == NULL) {
                 wp_translitera::updset('fileext', array());
             }
-            wp_translitera::updnotice($need_notice);
             $from = 161011;
         }
         if ($from == 161011) {
@@ -248,33 +274,36 @@ class wp_translitera {//wp=>3.2 php=>5.2.4
 
         	switch_to_blog( $original_blog_id );
             }
-            
-            wp_translitera::updnotice($need_notice);
             $from = 170212;
         }
         if ($from == 170212) {
             if (file_exists(__DIR__.'/unistall.php')) {
                 unlink(__DIR__.'/unistall.php');
             }
-            wp_translitera::updnotice($need_notice);
             $from = 170510;
         }
-        
-        wp_translitera::updset('version', $from);
+        if ($for !=$from) {
+            wp_translitera::updnotice();
+            $from = $for;
+            wp_translitera::updset('version', $from);
+        }
     }
 
     //Вызываемые дочерние функции
+    
     //Уведомление о необходимости проверить настройки
+    //добавлено 170212
     static function notice_admin_plugin_updated() {
-        echo '<div class="updated" style="padding-top: 15px; padding-bottom:15px">'.__('Plugin WP Translitera has been updated,','wp_translitera').' <a href="options-general.php?page=wp-translitera%2Fwp-translitera">'.__('update settings','wp_translitera').'</a></div>';
+        echo '<div class="updated" style="padding-top: 15px; padding-bottom:15px">'.__('Plugin WP Translitera has been updated,','wp-translitera').' <a href="options-general.php?page=wp-translitera%2Fwp-translitera">'.__('update settings','wp-translitera').'</a></div>';
     }
     
-    //Модуль формы админки
+    //Модуль формы админки -выводит форму
+    // добавлено 160119
     public static function main_settings() {//wp=>3.2 php=>5.2.4
         global $wpdb;
         
         //инициализация языка
-        load_plugin_textdomain('wp_translitera', false, dirname(plugin_basename(__FILE__)).'/languages');
+        load_plugin_textdomain('wp-translitera', false, dirname(plugin_basename(__FILE__)).'/languages');
         
         $act = filter_input(INPUT_POST,'transliterate');
         if (!empty($act)) {
@@ -314,7 +343,12 @@ class wp_translitera {//wp=>3.2 php=>5.2.4
     
     //Вызываемые функции
     //Процедура преобразования символов
+    // добавлено в 150712
+    // принимает : title - СТРОКА которую необходимо транслитерировать
+    // возвращает : СТРОКА
     public static function transliterate($title) {//wp=>3.2 php=>5.2.4
+        //Отбрасывает файлы с расширениями для который отключена трнаслитерация 
+        // добавлено 161011
         $type = substr(filter_input(INPUT_POST, 'name'),-3);
         if (!empty($type)) {
             if (in_array($type, wp_translitera::getset('fileext'))) {
@@ -325,22 +359,29 @@ class wp_translitera {//wp=>3.2 php=>5.2.4
     }
     
     //Процедура преобразования символов форсированный режим
+    // добавлен 161114
+    // принимает:   - title СТРОКА стандартной транслитерации
+    //              - raw_title СТРОКА для форсированной транслитерации
+    // возвращает: СТРОКА транслитерированная строка
     public static function transliterate_force($title, $raw_title) {//wp=>3.2 php=>5.2.4
-        $type = substr(filter_input(INPUT_POST, 'name'),-3);
+        return wp_translitera::transliterate(sanitize_title_with_dashes($raw_title));
+        /*$type = substr(filter_input(INPUT_POST, 'name'),-3);
         if (!empty($type)) {
             if (in_array($type, wp_translitera::getset('fileext'))) {
                 return $title;
             }
         }
-        return sanitize_title_with_dashes(strtr($raw_title, wp_translitera::createlocale()));
+        return sanitize_title_with_dashes(strtr($raw_title, wp_translitera::createlocale()));*/
     }
     
     //Добавляем раздел в админку
+    // добавлено 150119    
     public static function add_menu(){//wp=>3.2 php=>5.2.4
         add_options_page('WP Translitera', 'Translitera', 'activate_plugins', __FILE__, array('wp_translitera','main_settings'));
     }
         
     //Попытка транслитерировать урл
+    // добавлено 160707
     public static function init404(){//wp=>3.2 php=>5.2.4
         if (is_404()){
             if (wp_translitera::getset('tranliterate_404')){
@@ -355,6 +396,10 @@ class wp_translitera {//wp=>3.2 php=>5.2.4
     }
     
     //Обработка файлов загружаемых из форм
+    // добавлено 160521
+    // принимает    - value СТРОКА имя файла для транслитерации
+    //              - filename_raw СТРОКА имя файла RAW
+    // возвращает СТРОКА траслитерированное имя файла
     public static function rename_uploads_additional($value, $filename_raw) {//wp=>3.2 php=>5.2.4
         if (wp_translitera::getset('tranliterate_uploads_file')){
             $value = wp_translitera::transliterate($value);
@@ -363,14 +408,17 @@ class wp_translitera {//wp=>3.2 php=>5.2.4
     }
     
     //провека необходимости обновить БД
+    //Добавлено 170212
     static function needupdate() {//wp=>3.2 php=>5.2.4
         $from = wp_translitera::getset('version');
-        if ($from != 170212) {
-            wp_translitera::update_bd($from);
+        $plugindata = get_plugin_data(__FILE__) ;
+        if ($from != $plugindata['Version']) {
+            wp_translitera::update_bd($from,$plugindata['Version']);
         }
     }
     
     //инициализация метода транслитерации
+    // Добавлено 170212
     static function prepare_transliterate() {//wp=>3.2 php=>5.2.4
         if (wp_translitera::getset('use_force_transliterations') === '1') {
             add_filter('sanitize_title', array('wp_translitera','transliterate_force'), 25, 2);
@@ -380,13 +428,15 @@ class wp_translitera {//wp=>3.2 php=>5.2.4
     }
     
     //Добавляем ссылку на страницу настроек
+    // Добавлено 170212
     static function add_plugin_settings_link($links) {//wp=>3.2 php=>5.2.4
-        $addlink['settings'] = '<a href="options-general.php?page=wp-translitera%2Fwp-translitera">'.__('Settings','wp_translitera').'</a>';
+        $addlink['settings'] = '<a href="options-general.php?page=wp-translitera%2Fwp-translitera">'.__('Settings','wp-translitera').'</a>';
         $links = $addlink + $links;
         return $links;
     }
 
     //Инициализация ядра
+    // добавлено 161114
     static function init() {//wp=>3.2 php=>5.2.4
         //Проверка необходимости обновить БД
         add_action('admin_init', array('wp_translitera', 'needupdate'));
@@ -403,6 +453,13 @@ class wp_translitera {//wp=>3.2 php=>5.2.4
             add_action('admin_init',array('wp_translitera', 'prepare_transliterate'));
         }
     }
+    
+    //Установка плагина
+    // добавлено p1.0
+    static function install() {
+        $plugindata = get_plugin_data(__FILE__) ;
+        wp_translitera::updset('version', $plugindata['Version']);
+    }
 }
 
 //wp=>3.2 php=>5.2.4
@@ -412,3 +469,5 @@ add_action('init', array('wp_translitera', 'init'));
 add_action('wp',array('wp_translitera','init404'));
 //Переименовываение загружаемых файлов
 add_filter('sanitize_file_name',array('wp_translitera', 'rename_uploads_additional'),10,2);
+//Установка плагина
+register_activation_hook(__FILE__, array('wp_translitera','install'));
