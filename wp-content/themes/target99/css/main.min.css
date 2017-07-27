@@ -189,6 +189,56 @@ body {
     display: block;
   }
 }
+.about-us {
+  background: white;
+}
+.about-us .about-us__inner-container {
+  padding-top: 0;
+}
+.about-us .about-us__title-container {
+  padding-bottom: 50px;
+  text-align: center;
+}
+@media screen and (max-width: 599px) {
+  .about-us .about-us__title-container {
+    text-align: center;
+  }
+}
+.about-us .about-us__center {
+  text-align: center;
+}
+.about-us .about-us__title {
+  margin-top: 40px;
+  display: inline-block;
+  min-width: 210px;
+  padding-bottom: 12px;
+  font-family: 'PT Sans', sans-serif;
+  font-size: 24px;
+  text-transform: uppercase;
+}
+.about-us .about-us__title .about-us__title-module {
+  color: #fbbc2d;
+  border-bottom: 1px solid #1f1f1f;
+}
+.about-us .about-us__title .about-us__title-question {
+  color: #00ab8f;
+}
+.about-us .about-us__text-answer {
+  font-family: 'PT Sans', sans-serif;
+  font-weight: bold;
+  color: #1f1f1f;
+  margin: 0 40px;
+}
+@media screen and (min-width: 600px) and (max-width: 899px) {
+  .about-us .about-us__text-answer {
+    margin: 0 20px;
+  }
+}
+@media screen and (max-width: 599px) {
+  .about-us .about-us__text-answer {
+    margin: 0;
+  }
+}
 .achievements {
   background-color: #34c1a9;
 }
