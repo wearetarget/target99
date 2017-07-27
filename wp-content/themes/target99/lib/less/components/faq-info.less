@@ -1,0 +1,49 @@
+@import '../base/variables';
+@import '../base/layout';
+
+.faq-info {
+  background-color: @background-color-3;
+
+  .faq-info__title-container {
+    padding-bottom: 50px;
+
+    text-align: center;
+
+    @media @small-screen {
+      text-align: center;
+    }
+  }
+
+  .faq-info__inner-container {
+    padding: 50px 0;
+  }
+
+  .faq-info__title {
+    display: inline-block;
+
+    min-width: 210px;
+    padding-bottom: 12px;
+
+    font-family: @main-control-font;
+    font-size: 24px;
+
+    text-transform: uppercase;
+
+    color: @text-color-3;
+    border-bottom: 1px solid @text-color-1;
+  }
+
+}
+
+#accordions-76 {
+  margin: 0 40px;
+
+  .ui-accordion-content-active {
+
+    height: auto !important; //TODO How better
+    & > p {
+      font-weight: bold;
+    }
+  }
+}
+

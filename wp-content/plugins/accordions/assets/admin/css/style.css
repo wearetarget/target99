@@ -1,0 +1,251 @@
+@charset "utf-8";
+/* CSS Document */
+
+
+/*Admin CSS*/
+
+#accordions_metabox {
+  background: #f1f1f1 none repeat scroll 0 0;
+  border: medium none;
+  box-shadow: none;
+}
+
+#accordions_metabox .hndle {
+  background: rgb(96, 173, 252) none repeat scroll 0 0;
+  color: rgb(255, 255, 255);
+}
+
+#accordions_metabox .handlediv{
+  color: rgb(255, 255, 255);
+}
+
+
+
+
+
+#accordions_metabox .accordions_icons_custom {
+  margin-top: 15px;
+}
+
+#accordions_metabox .accordions_icons_custom_plus {
+  background: none repeat scroll 0 0 / 100% auto rgb(221, 221, 221);
+  display: inline-block;
+  height: 30px;
+  margin-right: 5px;
+  width: 30px;
+  cursor: pointer;
+  border: 1px solid rgb(255, 89, 16);
+  font-size: 30px;
+  vertical-align: top;
+  text-align: center;
+}
+
+#accordions_metabox .accordions_icons_custom_minus {
+  background: none repeat scroll 0 0 / 100% auto rgb(221, 221, 221);
+  display: inline-block;
+  height: 30px;
+  margin-right: 5px;
+  width: 30px;
+  cursor: pointer;
+  border: 1px solid rgb(255, 89, 16);
+  font-size: 30px;
+  vertical-align: top;
+  text-align: center;
+}
+
+
+
+#accordions_metabox .section-icon-plus{}
+#accordions_metabox .section-icon-plus i {
+  border: 1px solid #fff;
+  font-size: 14px;
+  padding: 5px;
+}
+
+
+#accordions_metabox .section-icon-minus{}
+#accordions_metabox .section-icon-minus i {
+  border: 1px solid #fff;
+  font-size: 14px;
+  padding: 5px;
+}
+
+
+
+#accordions_metabox .accordions-content input{}
+
+ #accordions_metabox .accordions-content textarea {
+
+  width: 95%;
+}
+
+
+
+
+#accordions_metabox .accordions-content .removeaccordions:hover {
+  background: none repeat scroll 0 0 rgb(255, 134, 87);
+}
+
+
+
+
+
+
+#accordions_metabox .accordions-content {
+
+}
+
+#accordions_metabox .accordions-content tr {
+  background: none repeat scroll 0 0 rgb(255, 255, 255);
+  border-bottom: 1px solid rgb(153, 153, 153);
+  margin-bottom: 10px;
+  padding: 0;
+}
+
+#accordions_metabox .accordions-content .section-dragHandle {
+  cursor: move;
+  text-align: center;
+  vertical-align: middle;
+  width: 20px;
+}
+
+
+#accordions_metabox .accordions-content .section-header {
+  background: #a7e1ff none repeat scroll 0 0;
+  padding: 10px;
+}
+
+#accordions_metabox .accordions-content .section-header:hover {
+
+  padding: 10px;
+}
+#accordions_metabox .accordions-content .section-header .move {
+	cursor: move;
+	padding: 10px;
+}
+
+
+#accordions_metabox .expand-compress {
+  cursor: pointer;
+  padding: 10px;
+}
+#accordions_metabox .items .expand-compress .fa-expand{ display:inline-block;}
+#accordions_metabox .items .expand-compress .fa-compress{ display:none;}
+
+#accordions_metabox .items.active .expand-compress .fa-expand{ display:none;}
+#accordions_metabox .items.active .expand-compress .fa-compress{ display:inline-block;}
+
+
+
+#accordions_metabox .accordions-content .accordions-title-preview {
+  display: inline-block;
+}
+
+#accordions_metabox .accordions-content .section-header .removeaccordions {
+	background: rgb(255, 91, 64) none repeat scroll 0 0;
+	color: #fff;
+	cursor: pointer;
+	display: inline-block;
+	float: right;
+	padding: 2px 5px;
+	text-align: center;
+}
+
+
+
+#accordions_metabox .accordions-content .section-header label {
+  float: right;
+  margin-right: 10px;
+}
+
+#accordions_metabox .accordions-content .accordions_bg_color {
+
+}
+
+
+
+
+#accordions_metabox .accordions-content .section-panel {
+  display: none;
+}
+
+
+#accordions_metabox .accordions-content .active .section-panel {
+  display: block;
+  padding: 25px 10px;
+  text-align: left;
+  background:#bde6fc;
+}
+
+#accordions_metabox .accordions-content .active .section-header{
+	background:#a7e1ff;
+
+}
+
+
+#accordions_metabox .bg_image_src {
+  border: 1px solid rgb(221, 221, 221);
+  cursor: pointer;
+  height: 50px;
+  margin: 5px;
+  vertical-align: top;
+  width: 50px;
+}
+
+
+
+
+.accordions-license{}
+
+.accordions-license .license-status{}
+
+.accordions-license .license-status.Active {
+  color: #07c802;
+}
+.accordions-license .license-status.Inactive {
+  color: #ff5240;
+}
+
+
+.accordions-license .license-message {
+  color: #3ab5cf !important;
+  text-decoration: underline;
+}
+
+
+
+.our-plugins {
+  padding-top: 20px;
+}
+
+.our-plugins .single {
+  display: inline-block;
+  margin: 15px;
+  vertical-align: top;
+  width: 300px;
+}
+.our-plugins .single .thumb{}
+.our-plugins .single .title {
+  font-size: 15px;
+  font-weight: bold;
+  margin: 7px 0;
+}
+.our-plugins .single .content {
+  margin: 10px 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

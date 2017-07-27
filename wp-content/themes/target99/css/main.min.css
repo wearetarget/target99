@@ -488,6 +488,191 @@ body {
 .event .event__date [class*='fa-'] {
   padding: 5px;
 }
+.faq-ask-question {
+  background-color: #34c1a9;
+  display: block;
+}
+.faq-ask-question .faq-ask-question__inner-container {
+  padding: 50px 0;
+  position: relative;
+}
+.faq-ask-question .faq-ask-question__title-container {
+  padding-bottom: 30px;
+  text-align: center;
+}
+@media screen and (max-width: 599px) {
+  .faq-ask-question .faq-ask-question__title-container {
+    font-size: 16px;
+  }
+}
+.faq-ask-question .faq-ask-question__title {
+  font-family: 'PT Sans', sans-serif;
+  font-size: 22px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: white;
+}
+@media screen and (max-width: 599px) {
+  .faq-ask-question .faq-ask-question__title {
+    margin-bottom: 20px;
+  }
+}
+.faq-ask-question .faq-ask-question__form-container {
+  width: 100%;
+  text-align: center;
+  margin-bottom: -60px;
+}
+.faq-ask-question .faq-ask-question__button {
+  width: 20%;
+}
+@media screen and (max-width: 599px) {
+  .faq-ask-question .faq-ask-question__button {
+    text-align: center;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+  }
+}
+.faq-ask-question .faq-ask-question__footer {
+  text-align: center;
+}
+.faq-ask-question .faq-ask-question__footer span {
+  padding: 20px 75px;
+}
+@media screen and (max-width: 599px) {
+  .faq-ask-question .faq-ask-question__footer {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+  }
+}
+.faq-ask-question .faq-ask-question__forms {
+  -ms-flex-line-pack: center;
+  align-content: center;
+  display: table;
+  margin: 0 auto;
+  clear: both;
+}
+.faq-ask-question .faq-ask-question__forms .right {
+  float: right;
+}
+@media screen and (max-width: 599px) {
+  .faq-ask-question .faq-ask-question__forms .right {
+    float: none;
+  }
+}
+@media screen and (max-width: 599px) {
+  .faq-ask-question .faq-ask-question__forms {
+    width: 100%;
+  }
+}
+.faq-ask-question .faq-ask-question__sm__input {
+  display: inline-block;
+  width: 49%;
+  height: 54px;
+  margin: 20px 0;
+  float: left;
+}
+@media screen and (max-width: 599px) {
+  .faq-ask-question .faq-ask-question__sm__input {
+    margin-top: 0;
+  }
+}
+.faq-ask-question .faq-ask-question__input {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  font-family: 'PT Sans', sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  padding-left: 20px;
+  padding-top: 5px;
+  color: #1f1f1f;
+  border: 1px solid white;
+  background-color: white;
+  /* Firefox 19+ */
+  /* Firefox 18- */
+}
+.faq-ask-question .faq-ask-question__input:focus {
+  outline-width: 0;
+}
+.faq-ask-question .faq-ask-question__input::-webkit-input-placeholder {
+  text-transform: uppercase;
+  color: #1f1f1f;
+}
+.faq-ask-question .faq-ask-question__input::-moz-placeholder {
+  text-transform: uppercase;
+  color: #1f1f1f;
+}
+.faq-ask-question .faq-ask-question__input:-moz-placeholder {
+  text-transform: uppercase;
+  color: #1f1f1f;
+}
+.faq-ask-question .faq-ask-question__input:-ms-input-placeholder {
+  text-transform: uppercase;
+  color: #1f1f1f;
+}
+@media screen and (max-width: 599px) {
+  .faq-ask-question .faq-ask-question__input {
+    width: 80%;
+    padding-bottom: 20px;
+    float: none;
+  }
+}
+.faq-ask-question .faq-ask-question__big__input {
+  height: 108px;
+  width: 100%;
+  padding-top: 15px;
+  margin-bottom: 40px;
+}
+@media screen and (max-width: 599px) {
+  .faq-ask-question .faq-ask-question__big__input {
+    width: 80%;
+    padding-bottom: 20px;
+    float: none;
+    margin-bottom: 65px;
+  }
+}
+@media screen and (max-width: 599px) {
+  .faq-ask-question {
+    min-height: 350px;
+  }
+}
+.faq-info {
+  background-color: #f1f1f1;
+}
+.faq-info .faq-info__title-container {
+  padding-bottom: 50px;
+  text-align: center;
+}
+@media screen and (max-width: 599px) {
+  .faq-info .faq-info__title-container {
+    text-align: center;
+  }
+}
+.faq-info .faq-info__inner-container {
+  padding: 50px 0;
+}
+.faq-info .faq-info__title {
+  display: inline-block;
+  min-width: 210px;
+  padding-bottom: 12px;
+  font-family: 'PT Sans', sans-serif;
+  font-size: 24px;
+  text-transform: uppercase;
+  color: #fbbc2d;
+  border-bottom: 1px solid #1f1f1f;
+}
+#accordions-76 {
+  margin: 0 40px;
+}
+#accordions-76 .ui-accordion-content-active {
+  height: auto !important;
+}
+#accordions-76 .ui-accordion-content-active > p {
+  font-weight: bold;
+}
 .footer {
   position: absolute;
   right: 0;
