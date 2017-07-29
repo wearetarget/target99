@@ -30,7 +30,10 @@ get_header();
                 </div>
             </div>
 
-            <iframe width="100%" height="640px" src="https://www.youtube.com/embed/wuTs2bTKZwY" frameborder="0" allowfullscreen></iframe>
+            <div class="about-us__videoWrapper">
+                <!-- Copy & Pasted from YouTube -->
+                <iframe width="100%"  src="http://www.youtube.com/embed/n_dZNLr2cME?rel=0&hd=1" frameborder="0" allowfullscreen></iframe>
+            </div>
 
         </div>
         <div class="about-us__inner-container layout__content">
