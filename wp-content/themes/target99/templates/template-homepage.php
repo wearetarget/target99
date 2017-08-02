@@ -19,7 +19,7 @@ $news_args = [
     'post_status' => array('publish'),
     'post_type' => array('post'),
     'category_name' => 'news',
-    'posts_per_page' => get_field('amount_of_news'),
+    'posts_per_page' => 2,
     'order' => 'DSC',
     'orderby' => 'date',
 ];
@@ -31,7 +31,7 @@ $events_args = [
     'post_status' => array('publish'),
     'post_type' => array('post'),
     'category_name' => 'event',
-    'posts_per_page' => get_field('amount_of_events'),
+    'posts_per_page' => 2,
     'order' => 'DSC',
     'orderby' => 'date',
 ];

@@ -290,9 +290,8 @@ function custom_pagination($numpages = '', $pagerange = '', $paged = '')
     $paginate_links = paginate_links($pagination_args);
 
     if ($paginate_links) {
-        echo "<nav class='posts__pagination posts__pagination--advanced'>";
+        echo "<nav class='pagination'>";
         echo $paginate_links;
-        echo "<div class='page-numbers page-count'>Page " . $paged . " of " . $numpages . "</div> ";
         echo "</nav>";
     }
 
