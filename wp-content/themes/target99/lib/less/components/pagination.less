@@ -1,0 +1,21 @@
+@import '../base/variables';
+
+.pagination {
+	margin: 10px;
+
+	.page-numbers {
+		display: inline-block;
+		padding: 5px;
+
+		font-family: @main-control-font;
+		font-size: 22px;
+		font-weight: bold;
+		line-height: 28px;
+		color: @text-color-1;
+		text-decoration: none;
+
+		&.current {
+			color: @background-color-2;
+		}
+	}
+}

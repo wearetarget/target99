@@ -6,9 +6,10 @@
 
 	// Post query arguments
 	$paged = ( get_query_var('paged') ) ? get_query_var('paged') : 1;
+	$posts_per_page = get_option( 'posts_per_page' );
 	$post_args = [
 		'post_status'       => array('publish'),
-		'posts_per_page'    => 10,
+		'posts_per_page'    => 6,
 		'post_type'         => array( 'post'),
 		'order'             => 'DSC',
 		'orderby'           => 'date',
@@ -20,17 +21,18 @@
 	get_header();
 ?>
 
-<section class="post-page">
+<section class="post-list">
 
-	<section class="post-page__posts-container">
+	<section class="post-list__inner-container layout__content">
 			<?php
 				if ( $the_query->have_posts() ) {
 					while ( $the_query->have_posts() ) {
 						$the_query->the_post();
-						$post_image_url = wp_get_attachment_image_src( get_post_thumbnail_id(), 'medium')[0];
-						$content_width_class = (bool)$post_image_url ? '' : 'news-post-single__details--full';
+						$post_image_url = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'thumbnail' )[0];
 
-						include('template-parts/template-part-news-short.php');
+						echo '<div class="post-list__post-container">';
+						include('template-parts/template-part-post-short.php');
+						echo "</div>";
 					}
 
 					wp_reset_postdata();
@@ -41,7 +43,8 @@
 
 	</section>
 
-	<div class="post-page__pagination-container">
+	<div class="post-list__pagination-container">
+		<?php custom_pagination($the_query->max_num_pages, "", $paged); ?>
 	</div>
 
 </section>
