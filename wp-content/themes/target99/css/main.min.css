@@ -1453,6 +1453,10 @@ body {
 .full-post .full-post__date [class*='fa-'] {
   padding: 5px;
 }
+.full-post .full-post__content {
+  word-wrap: break-word;
+  overflow: hidden;
+}
 .full-post .full-post__share-container {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
