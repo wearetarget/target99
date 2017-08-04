@@ -43,6 +43,7 @@ class N2SSPluginWidgetBarHorizontal extends N2SSPluginWidgetAbstract {
             self::$key . 'position-',
             'bar'
         );
+
         return $positions;
     }
 
@@ -93,13 +94,13 @@ class N2SSPluginWidgetBarHorizontal extends N2SSPluginWidgetAbstract {
             $html = '';
             if ($showTitle) {
                 $html .= N2Html::tag('span', array(
-                    'class' => $fontTitle
+                    'class' => $fontTitle . ' n2-ow'
                 ), N2Translation::_($slider->slides[$i]->getTitle()));
             }
 
             $description = $slider->slides[$i]->getDescription();
             if ($showDescription && !empty($description)) {
-                $html .= N2Html::tag('span', array('class' => $fontDescription), (!empty($html) ? $separator : '') . N2Translation::_($description));
+                $html .= N2Html::tag('span', array('class' => $fontDescription . ' n2-ow'), (!empty($html) ? $separator : '') . N2Translation::_($description));
             }
 
             $slides[$i] = array(
@@ -114,13 +115,13 @@ class N2SSPluginWidgetBarHorizontal extends N2SSPluginWidgetAbstract {
             'animate' => intval($params->get(self::$key . 'animate'))
         );
 
-        N2JS::addInline('new NextendSmartSliderWidgetBarHorizontal("' . $id . '", ' . json_encode($slides) . ', ' . json_encode($parameters) . ');');
+        N2JS::addInline('new N2Classes.SmartSliderWidgetBarHorizontal("' . $id . '", ' . json_encode($slides) . ', ' . json_encode($parameters) . ');');
 
         return N2Html::tag("div", $displayAttributes + $attributes + array(
-                "class" => $displayClass . "nextend-bar nextend-bar-horizontal",
+                "class" => $displayClass . "nextend-bar nextend-bar-horizontal n2-ow",
                 "style" => $style
             ), N2Html::tag("div", array(
-            "class" => $styleClass,
+            "class" => $styleClass . ' n2-ow',
             "style" => $innerStyle . ($slides[$slider->_activeSlide]['hasLink'] ? 'cursor:pointer;' : '')
         ), $slides[$slider->_activeSlide]['html']));
     }

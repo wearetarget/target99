@@ -17,6 +17,8 @@ class SmartSlider3 {
 
         add_action('init', 'SmartSlider3::_init');
 
+        add_action('init', 'SmartSlider3::preRender');
+
         add_action('admin_menu', 'SmartSlider3::nextendAdminInit');
 
         add_action('network_admin_menu', 'SmartSlider3::nextendNetworkAdminInit');
@@ -32,25 +34,29 @@ class SmartSlider3 {
         require_once dirname(NEXTEND_SMARTSLIDER_3__FILE__) . DIRECTORY_SEPARATOR . 'includes/widget.php';
         require_once dirname(NEXTEND_SMARTSLIDER_3__FILE__) . DIRECTORY_SEPARATOR . 'editor' . DIRECTORY_SEPARATOR . 'shortcode.php';
 
-        add_action('et_builder_ready', 'SmartSlider3::Divi_load_module');
+        add_action('et_builder_ready', 'SmartSlider3::divi');
 
-        add_action('vc_after_set_mode', 'SmartSlider3::initVisualComposer');
+        add_action('vc_after_set_mode', 'SmartSlider3::visualComposer');
 
         if (class_exists('FLBuilderModel', false)) {
-            add_action('fl_builder_before_render_module', 'SmartSlider3::removeShortcodeBeaverBuilder');
+            SmartSlider3::beaverBuilder();
         }
 
-        add_action('elementor/init', 'SmartSlider3::initElementor');
+        add_action('elementor/init', 'SmartSlider3::elementor');
+
+        add_action('tailor_init', 'SmartSlider3::tailor');
 
         add_filter('wpseo_xml_sitemap_post_url', 'SmartSlider3::wpseo_xml_sitemap_post_url', 10, 2);
-
-
         add_filter('fw_extensions_locations', 'SmartSlider3::unyson_extension');
+
+        if (class_exists('MPCEShortcode', false)) {
+            SmartSlider3::motoPressCE();
+        }
     }
 
     public static function unyson_extension($locations) {
-        $path             = dirname(__FILE__) . '/extensions';
-        $locations[$path] = plugin_dir_url(__FILE__) . 'extensions';
+        $path             = dirname(__FILE__) . '/integrations/unyson';
+        $locations[$path] = plugin_dir_url(__FILE__) . 'integrations/unyson';
 
         return $locations;
     }
@@ -63,12 +69,6 @@ class SmartSlider3 {
         $shortcode_tags     = $_shortcode_tags;
 
         return $permalink;
-    }
-
-    public static function removeShortcodeBeaverBuilder() {
-        if (FLBuilderModel::is_builder_active()) {
-            SmartSlider3::removeShortcode();
-        }
     }
 
     public static function removeShortcode() {
@@ -84,6 +84,24 @@ class SmartSlider3 {
         N2Loader::import('libraries.settings.settings', 'smartslider');
         if (current_user_can('smartslider_edit') && intval(N2SmartSliderSettings::get('wp-adminbar', 1))) {
             add_action('admin_bar_menu', 'SmartSlider3::admin_bar_menu', 81);
+        }
+    }
+
+    public static function preRender() {
+        if (isset($_GET['n2prerender']) && isset($_GET['n2app']) && current_user_can('smartslider')) {
+            try {
+                N2Base::getApplication($_GET['n2app'])
+                      ->getApplicationType(N2Platform::$isAdmin ? 'backend' : 'frontend')
+                      ->setCurrent()
+                      ->render(array(
+                          "prerender"  => true,
+                          "controller" => $_GET['n2controller'],
+                          "action"     => $_GET['n2action']
+                      ));
+                n2_exit(true);
+            } catch (Exception $e) {
+                exit;
+            }
         }
     }
 
@@ -238,16 +256,28 @@ class SmartSlider3 {
         return false;
     }
 
-    public static function Divi_load_module() {
-        require_once dirname(__FILE__) . '/divi.php';
+    public static function divi() {
+        require_once dirname(__FILE__) . '/integrations/Divi.php';
     }
 
-    public static function initVisualComposer() {
-        require_once dirname(__FILE__) . '/vc.php';
+    public static function visualComposer() {
+        require_once dirname(__FILE__) . '/integrations/VisualComposer.php';
     }
 
-    public static function initElementor() {
-        require_once dirname(__FILE__) . '/elementor.php';
+    public static function elementor() {
+        require_once dirname(__FILE__) . '/integrations/Elementor.php';
+    }
+
+    public static function beaverBuilder() {
+        require_once dirname(__FILE__) . '/integrations/BeaverBuilder.php';
+    }
+
+    public static function tailor() {
+        require_once dirname(__FILE__) . '/integrations/tailor.php';
+    }
+
+    public static function motoPressCE() {
+        require_once dirname(__FILE__) . '/integrations/MotoPressCE.php';
     }
 
     /**

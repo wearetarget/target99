@@ -1,55 +1,67 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: wp_translitera\n"
-"POT-Creation-Date: 2017-05-10 22:56+0300\n"
-"PO-Revision-Date: 2017-05-10 23:14+0300\n"
+"POT-Creation-Date: 2017-07-08 14:32+0300\n"
+"PO-Revision-Date: 2017-07-08 14:33+0300\n"
+"Last-Translator: \n"
 "Language-Team: \n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.1\n"
+"X-Generator: Poedit 2.0.2\n"
 "X-Poedit-Basepath: ..\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __\n"
-"Last-Translator: \n"
-"Language: uk\n"
 "X-Poedit-SearchPath-0: wp-translitera.php\n"
 
-#: wp-translitera.php:131
+#: wp-translitera.php:142
+msgid "WPForo"
+msgstr "WPForo"
+
+#: wp-translitera.php:143
+msgid "Forums"
+msgstr "Форуми"
+
+#: wp-translitera.php:144
+msgid "Topics"
+msgstr "Теми"
+
+#: wp-translitera.php:146
 msgid "Convert existing"
 msgstr "Перетворити існуючі"
 
-#: wp-translitera.php:133
+#: wp-translitera.php:148
 msgid "Pages and posts"
 msgstr "Сторінки та записи"
 
-#: wp-translitera.php:134
+#: wp-translitera.php:149
 msgid "Headings, tags etc..."
-msgstr "Категорії, позначки та інше"
+msgstr "Категорії, позначки та інше..."
 
-#: wp-translitera.php:135
+#: wp-translitera.php:151
 msgid "Transliterate"
 msgstr "Траслітерувати"
 
-#: wp-translitera.php:137 wp-translitera.php:362
+#: wp-translitera.php:153 wp-translitera.php:467
 msgid "Settings"
 msgstr "Налаштування"
 
-#: wp-translitera.php:139
+#: wp-translitera.php:155
 msgid "Use forces transliteration for title"
 msgstr "Використовувати примусове транслітерування у назвах"
 
-#: wp-translitera.php:140
+#: wp-translitera.php:156
 msgid "Transliterate names of uploads files"
 msgstr "Транслітерувати назви завантаженних файлів"
 
-#: wp-translitera.php:141
+#: wp-translitera.php:157
 msgid "Transliterate 404 url"
 msgstr "Транслитерувати 404 посилання"
 
-#: wp-translitera.php:142
+#: wp-translitera.php:158
 msgid ""
 "Use transliteration in frontend for transliteration title out ACP (enable if "
 "use bbPress, buddypress, woocommerce etc)"
@@ -58,14 +70,14 @@ msgstr ""
 "панелі керування (вімкнути якщо використовуєте bbPress, buddypress, "
 "woocommerce etc)"
 
-#: wp-translitera.php:143
+#: wp-translitera.php:159
 msgid ""
 "File extensions, separated by commas , titles that do not need to "
 "transliterate"
 msgstr ""
 "Розширення файлів, назви яких не треба транслітерувати, розділені комами"
 
-#: wp-translitera.php:144
+#: wp-translitera.php:160
 msgid ""
 "Custom transliteration rules, in format я=ja (Everyone ruled from a new "
 "line!)"
@@ -73,19 +85,14 @@ msgstr ""
 "Налаштовані користувачем правила транслітерації у форматі я=ja (кожне "
 "правило з нового рядка)"
 
-#: wp-translitera.php:145
+#: wp-translitera.php:161
 msgid "Apply"
 msgstr "Прийняти"
 
-#: wp-translitera.php:247
+#: wp-translitera.php:300
 msgid "Plugin WP Translitera has been updated,"
-msgstr "Плагін WP Translitera оновлено"
+msgstr "Плагін WP Translitera оновлено,"
 
-#: wp-translitera.php:247
+#: wp-translitera.php:300
 msgid "update settings"
 msgstr "Оновити налаштування"
-
-msgid ""
-"Use transliteration in frontend for transliteration title out ACP (enable if "
-"use bbPress, buddypress etc)"
-msgstr ""

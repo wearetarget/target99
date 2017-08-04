@@ -19,7 +19,16 @@ class N2ElementMixed extends N2Element {
         $this->_elements = array();
         $i               = 0;
         foreach ($this->_xml->param AS $element) {
-            $html .= "<div class='n2-mixed-group " . N2XmlHelper::getAttribute($element, 'class') . "' style='" . N2XmlHelper::getAttribute($element, 'mixedstyle') . "'>";
+            $attrs = array();
+            if (isset($element->attribute)) {
+                foreach ($element->attribute AS $attr) {
+                    $attrs[N2XmlHelper::getAttribute($attr, 'type')] = (string)$attr;
+                }
+            }
+            $html .= N2Html::openTag('div', $attrs + array(
+                    'class' => "n2-mixed-group " . N2XmlHelper::getAttribute($element, 'class'),
+                    'style' => N2XmlHelper::getAttribute($element, 'mixedstyle')
+                ));
 
             $class = N2Form::importElement(N2XmlHelper::getAttribute($element, 'type'));
 
@@ -45,7 +54,7 @@ class N2ElementMixed extends N2Element {
         $html .= $hiddenhtml[1];
         $html .= "</div>";
 
-        N2JS::addInline('new NextendElementMixed("' . $this->_id . '", ' . json_encode($this->_elements) . ', "' . $this->_separator . '");');
+        N2JS::addInline('new N2Classes.FormElementMixed("' . $this->_id . '", ' . json_encode($this->_elements) . ', "' . $this->_separator . '");');
 
         return $html;
     }

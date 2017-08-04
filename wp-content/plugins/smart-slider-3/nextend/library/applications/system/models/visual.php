@@ -45,7 +45,7 @@ class N2SystemVisualModel extends N2Model
 
     public function createSet($name) {
 
-        $setId = $this->storage->add($this->type . 'set', null, $name);
+        $setId = $this->storage->add($this->type . 'set', '', $name);
 
         $set = $this->storage->getById($setId, $this->type . 'set');
         if (!empty($set) && $set['section'] == $this->type . 'set') {

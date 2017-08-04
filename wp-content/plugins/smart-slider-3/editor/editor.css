@@ -53,3 +53,11 @@
     width: 100%;
     height: 500px;
 }
+
+#elementor-panel .elementor-button-smartslider {
+    background-color: #a4afb7;
+    color: #fff;
+    line-height: 26px;
+    padding: 0 15px;
+    text-transform: uppercase;
+}

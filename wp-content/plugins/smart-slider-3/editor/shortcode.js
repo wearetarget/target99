@@ -16,8 +16,8 @@
             return {
                 longname: "Smart Slider 3",
                 author: 'Nextendweb',
-                authorurl: 'http://www.nextendweb.com',
-                infourl: 'http://smartslider3.com',
+                authorurl: 'https://smartslider3.com',
+                infourl: 'https://smartslider3.com',
                 version: "3.0"
             };
         }

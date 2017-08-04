@@ -36,6 +36,47 @@ function remove_admin_login_header() {
 }
 
 // -----------------
+// Override template for the related posts plugin
+// -----------------
+
+// Return posts with post thumbnails for the thumbnail_excerpt format.
+add_filter( 'related_posts_by_taxonomy_shortcode_atts', 'rpbt_thumbnails_target99_args' ); // shortcode
+add_filter( 'related_posts_by_taxonomy_widget_args', 'rpbt_thumbnails_target99_args' ); // widget
+
+function rpbt_thumbnails_target99_args( $args ) {
+    if (  'thumbnails_target99' === $args['format'] ) {
+        $args['post_thumbnail'] = true;
+    }
+
+    return $args;
+}
+
+// Create new format thumbnails_target99 for use in widget and shortcode
+add_action( 'wp_loaded', 'rpbt_thumbnails_target99_format', 11 );
+
+function rpbt_thumbnails_target99_format() {
+
+    if ( !class_exists( 'Related_Posts_By_Taxonomy_Defaults' ) ) {
+        return;
+    }
+
+    $defaults = Related_Posts_By_Taxonomy_Defaults::get_instance();
+
+    // Add the new format .
+    $defaults->formats['thumbnails_target99'] = __( 'Thumbnail for target99' );
+}
+
+add_filter( 'related_posts_by_taxonomy_template', 'rpbt_thumbnails_target99_format_template', 10, 3 );
+
+// Return the right template for the thumbnail_excerpt format
+function rpbt_thumbnails_target99_format_template( $template, $type, $format ) {
+    if ( isset( $format ) && ( 'thumbnails_target99' === $format ) ) {
+        return 'related-posts-thumbnails_target99.php';
+    }
+    return $template;
+}
+
+// -----------------
 // Custom Post Types
 // -----------------
 

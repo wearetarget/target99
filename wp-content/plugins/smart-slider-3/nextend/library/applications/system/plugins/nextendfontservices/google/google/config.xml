@@ -6,7 +6,7 @@
             <param type="onoff" name="google-style-100italic" label="100 Italic" default="0"/>
             <param type="onoff" name="google-style-200" label="200" default="0"/>
             <param type="onoff" name="google-style-200italic" label="200 Italic" default="0"/>
-            <param type="onoff" name="google-style-300" label="300" default="0"/>
+            <param type="onoff" name="google-style-300" label="300" default="1"/>
             <param type="onoff" name="google-style-300italic" label="300 Italic" default="0"/>
             <param type="onoff" name="google-style-400" label="Normal" default="1"/>
             <param type="onoff" name="google-style-400italic" label="Normal Italic" default="0"/>

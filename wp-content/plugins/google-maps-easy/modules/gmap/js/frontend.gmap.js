@@ -1,4 +1,18 @@
 var g_gmlAllMaps = [];
+function gmpGetMembershipGmeViewId(map, oldViewId) {
+	var newViewId = oldViewId;
+	if(map && map.getParam && map.getParam('membershipEnable') == '1') {
+		// prepare view id
+		if(map._elementId && map._elementId.id && map._elementId.id.substr) {
+			var viewIdKey = 'google_map_easy_'
+			,	newIdPos = map._elementId.id.substr(viewIdKey.length);
+			if(newIdPos) {
+				newViewId = newIdPos;
+			}
+		}
+	}
+	return newViewId;
+}
 jQuery(document).ready(function(){
 	if(typeof(gmpAllMapsInfo) !== 'undefined' && gmpAllMapsInfo && gmpAllMapsInfo.length) {
 		for(var i = 0; i < gmpAllMapsInfo.length; i++) {
@@ -12,9 +26,23 @@ function gmpInitMapOnPage(mapData) {
 	var additionalData = {
 		markerGroups: typeof(mapData.marker_groups) != 'undefined' ? mapData.marker_groups : []
 	}
-	,	newMap = new gmpGoogleMap('#'+ mapData.view_html_id, mapData.params, additionalData)
+	,	newMap = null
 	,	mapMarkersIds = []
 	,	markerIdToShow = gmpIsMarkerToShow();
+
+	if(mapData && mapData.view_html_mbs_id) {
+		// for membership Activity ajax load
+		newMap = new gmpGoogleMap(mapData.view_html_mbs_id, mapData.params, additionalData);
+		newMap.setParam('view_html_mbs_id', mapData.view_html_mbs_id);
+		newMap.refreshWithCenter(mapData.params.center.lat(), mapData.params.center.lng(), mapData.params.zoom);
+	} else {
+		newMap = new gmpGoogleMap('#'+ mapData.view_html_id, mapData.params, additionalData);
+	}
+
+	// for membership Google Maps "Get original"
+	if(mapData.mbs_presets == 1) {
+		newMap.setParam('mbs_presets', 1);
+	}
 
 	if(mapData.markers && mapData.markers.length) {
 		mapData.markers = _gmpPrepareMarkersList( mapData.markers );
@@ -121,7 +149,11 @@ function gmpGetMapById(id) {
 function gmpGetMapByViewId(viewId) {
 	var allMaps = gmpGetAllMaps();
 	for(var i = 0; i < allMaps.length; i++) {
-		if(allMaps[i].getViewId() == viewId) {
+		var currViewId = allMaps[i].getViewId();
+		if(window.gmpGetMembershipGmeViewId) {
+			currViewId = gmpGetMembershipGmeViewId(allMaps[i], currViewId);
+		}
+		if(currViewId == viewId) {
 			return allMaps[i];
 		}
 	}

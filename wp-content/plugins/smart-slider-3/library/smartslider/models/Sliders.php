@@ -25,6 +25,7 @@ class N2SmartsliderSlidersModel extends N2Model {
 
     public function getWithThumbnail($id) {
         $slidesModel = new N2SmartsliderSlidesModel();
+
         return $this->db->queryRow("SELECT sliders.*, IF(sliders.thumbnail != '',sliders.thumbnail,(SELECT slides.thumbnail from " . $slidesModel->getTable() . " AS slides WHERE slides.slider = sliders.id AND slides.published = 1 AND slides.generator_id = 0 AND slides.thumbnail NOT LIKE '' ORDER BY  slides.first DESC, slides.ordering ASC LIMIT 1)) AS thumbnail,
          IF(sliders.type != 'group', 
                         (SELECT count(*) FROM " . $slidesModel->getTable() . " AS slides2 WHERE slides2.slider = sliders.id GROUP BY slides2.slider),
@@ -72,12 +73,13 @@ class N2SmartsliderSlidersModel extends N2Model {
             LEFT JOIN " . $this->xref->getTable() . " AS xref ON xref.slider_id = sliders.id
             WHERE " . ($groupID == 0 ? "xref.group_id IS NULL OR xref.group_id = 0" : "xref.group_id = '" . $groupID . "'") . "
             ORDER BY " . $_orderby);
-        return $sliders;
-    }	
 
-	public function _getAll(){
+        return $sliders;
+    }
+
+    public function _getAll() {
         return $this->db->queryAll("SELECT sliders.* FROM " . $this->getTable() . " AS sliders");
-	}
+    }
 
     public function getGroups() {
         return $this->db->queryAll("SELECT id, title FROM " . $this->getTable() . " WHERE type LIKE 'group' ORDER BY title ASC");
@@ -94,6 +96,7 @@ class N2SmartsliderSlidersModel extends N2Model {
         $data['title']     = $slider['title'];
         $data['type']      = $slider['type'];
         $data['thumbnail'] = $slider['thumbnail'];
+
         return self::editForm($data);
     }
 
@@ -151,9 +154,11 @@ class N2SmartsliderSlidersModel extends N2Model {
         }
     }
 
-    function restore($slider) {
+    function restore($slider, $groupID) {
 
         if (isset($slider['id']) && $slider['id'] > 0) {
+
+            $groups = $this->xref->getGroups($slider['id']);
 
             $this->delete($slider['id']);
 
@@ -167,7 +172,19 @@ class N2SmartsliderSlidersModel extends N2Model {
                     'time'      => date('Y-m-d H:i:s', N2Platform::getTime())
                 ));
 
-                return $this->db->insertId();
+                $sliderID = $this->db->insertId();
+
+                if ($groupID) {
+                    $this->xref->add($groupID, $sliderID);
+                }
+
+                if (!empty($groups)) {
+                    foreach ($groups AS $group) {
+                        $this->xref->add($group['group_id'], $sliderID);
+                    }
+                }
+
+                return $sliderID;
             } catch (Exception $e) {
                 throw new Exception($e->getMessage());
             }
@@ -290,6 +307,7 @@ class N2SmartsliderSlidersModel extends N2Model {
     function duplicate($id, $withGroup = true) {
 
         $slider = $this->get($id);
+
         unset($slider['id']);
 
         $slider['title'] .= n2_(' - copy');
@@ -306,21 +324,31 @@ class N2SmartsliderSlidersModel extends N2Model {
             return false;
         }
 
-        $slidesModel = new N2SmartsliderSlidesModel();
+        if ($slider['type'] == 'group') {
+            $subSliders = $this->xref->getSliders($id);
 
-        foreach ($slidesModel->getAll($id) AS $slide) {
-            $slidesModel->copy($slide['id'], $newSliderId);
-        }
+            foreach ($subSliders AS $subSlider) {
+                $newSubSliderID = $this->duplicate($subSlider['slider_id'], false);
+                $this->xref->add($newSliderId, $newSubSliderID);
+            }
 
-        if ($withGroup) {
-            $groups = $this->xref->getGroups($id);
-            foreach ($groups AS $group) {
-                $this->xref->add($group['group_id'], $newSliderId);
+        } else {
+
+            $slidesModel = new N2SmartsliderSlidesModel();
+
+            foreach ($slidesModel->getAll($id) AS $slide) {
+                $slidesModel->copy($slide['id'], $newSliderId);
+            }
+
+            if ($withGroup) {
+                $groups = $this->xref->getGroups($id);
+                foreach ($groups AS $group) {
+                    $this->xref->add($group['group_id'], $newSliderId);
+                }
             }
         }
 
         return $newSliderId;
-
     }
 
     function redirectToCreate() {
@@ -400,7 +428,7 @@ class N2SmartsliderSlidersModel extends N2Model {
         ));
     }
 
-    public static function embedBox($slider, $widget, $appType) {
+    public static function embedBox($mode, $slider, $widget, $appType) {
         $lt = array();
 
         $rt = array();
@@ -430,7 +458,7 @@ class N2SmartsliderSlidersModel extends N2Model {
 
         if ($slider['type'] == 'group') {
             $attributes['onclick'] = 'window.location="' . $appType->router->createUrl(array(
-                    'sliders/embed',
+                    'sliders/' . $mode,
                     array(
                         'groupID' => $slider['id']
                     )
@@ -487,8 +515,10 @@ class N2SmartsliderSlidersModel extends N2Model {
                     $i++;
                 }
             }
+
             return $i;
         }
+
         return false;
     }
 
@@ -498,6 +528,7 @@ class N2SmartsliderSlidersModel extends N2Model {
         $result = $this->db->queryRow($query);
 
         if (isset($result['ordering'])) return $result['ordering'] + 1;
+
         return 0;
     }
 
@@ -508,6 +539,7 @@ class N2SmartsliderSlidersModel extends N2Model {
         $data['title']     = $slider['title'];
         $data['type']      = $slider['type'];
         $data['thumbnail'] = $slider['thumbnail'];
+
         return self::editGroupForm($data);
     }
 

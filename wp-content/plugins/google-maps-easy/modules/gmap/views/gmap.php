@@ -32,6 +32,9 @@ class gmapViewGmp extends viewGmp {
 		if(!empty($params))
 			self::$_mapsData[] = $params;
 	}
+	public function getMapData(){
+		return self::$_mapsData;
+	}
 	public function getMapsObj() {
 		if(empty($this->_mapsObj)) {
 			$mapsInPosts = $this->getModule()->getMapsInPosts();
@@ -79,6 +82,17 @@ class gmapViewGmp extends viewGmp {
 		}
 		$mapObj = $this->applyShortcodeHtmlParams($mapObj, $params);
 		$mapObj = $this->applyShortcodeMapParams($mapObj, $params);
+
+		if(isset($params['plugin-info']) && $params['plugin-info'] == 'Membership-by-Supsystic' && isset($params['membership-params'])) {
+			$membershipModule = frameGmp::_()->getModule('membership');
+			if($membershipModule) {
+				$membershipModel = $membershipModule->getModel('membership_presets');
+				if($membershipModel) {
+					$params = $membershipModel->prepareParamsWithMarkers($params);
+					$membershipModel->replaceMapsParamsForMembership($mapObj, $params);
+				}
+			}
+		}
 
 		if(!empty($mapObj['markers'])) {
 			if(!empty($params['marker_show_description'])) {
@@ -130,9 +144,23 @@ class gmapViewGmp extends viewGmp {
 		$mapObj['params']['ss_html'] = $this->generateSocialSharingHtml($mapObj);
 
 		$this->connectMapsAssets( $mapObj['params'] );
-		$this->addMapData(dispatcherGmp::applyFilters('mapDataToJs', $mapObj));
+
+		// for Membership activity Map add window
+		if(!empty($params['membership-integrating'])) {
+			$this->assign('mbsIntegrating', $params['id']);
+			$mapObj['mbs_presets'] = 1;
+		}
+		// for Membership activity draw post
+		if(!empty($params['membership-id'])) {
+			$this->assign('mbsMapId', $params['membership-id']);
+			if(!empty($params['membership-params'])) {
+				$this->assign('mbsMapInfo', json_encode($params['membership-params']));
+			}
+			$mapObj['mbs_created'] = 1;
+		}
 
 		frameGmp::_()->addScript('frontend.gmap', $this->getModule()->getModPath(). 'js/frontend.gmap.js', array('jquery'), false, true);
+		$this->addMapData(dispatcherGmp::applyFilters('mapDataToJs', $mapObj));
 
 		$this->assign('markersDisplayType', $mapObj['params']['markers_list_type']);
 		$this->assign('currentMap', $mapObj);
@@ -316,6 +344,22 @@ class gmapViewGmp extends viewGmp {
 		}
 		$this->assign('isContactFormsInstalled', $isContactFormsInstalled);
 
+		$membershipModule = frameGmp::_()->getModule('membership');
+		if($membershipModule) {
+			$membershipModel = $membershipModule->getModel('membership_presets');
+			if(!$membershipModel) {
+				$this->assign('membershipPluginError', __('Error inside google maps plugin.', GMP_LANG_CODE));
+			} elseif($membershipModel->isPluginActive() === null) {
+				$this->assign('pluginInstallUrl', $membershipModel->getPluginInstallUrl());
+			} elseif(!$membershipModel->isPluginActive()) {
+				$this->assign('membershipPluginError', __('To use this feature, You need to reactivate your Google Maps Easy plugin.'), GMP_LANG_CODE );
+			} else {
+				$this->assign('canUseMembershipFeature', 1);
+			}
+		} else {
+			$this->assign('membershipPluginError', __('To use this feature, You need to reactivate your Google Maps Easy plugin.'), GMP_LANG_CODE );
+		}
+
 		return parent::getContent('gmapEditMap');
 	}
 	public function getAllContactForms() {
@@ -329,6 +373,7 @@ class gmapViewGmp extends viewGmp {
 		}
 		return $formsList;
 	}
+
 	public function connectMapsAssets($params, $forAdminArea = false) {
 		$params['language'] = isset($params['language']) && !empty($params['language']) ? $params['language'] : utilsGmp::getLangCode2Letter();
 

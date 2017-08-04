@@ -11,7 +11,7 @@ class N2ElementBackground extends N2ElementHidden {
         );
     
 
-        N2JS::addInline('new NextendElementBackground("' . $this->_id . '", "' . $this->getValue() . '");');
+        N2JS::addInline('new N2Classes.FormElementBackground("' . $this->_id . '", "' . $this->getValue() . '");');
 
 
         $html = '<div id="' . $this->_id . '-panel" class="n2-subform-image">';

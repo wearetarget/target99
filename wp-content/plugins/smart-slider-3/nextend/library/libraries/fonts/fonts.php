@@ -9,7 +9,7 @@ class N2Fonts {
         if (!$inited) {
             $inited       = true;
             self::$config = array(
-                'default-family'  => n2_x('Montserrat,Arial', 'Default font'),
+                'default-family'  => n2_x('Roboto,Arial', 'Default font'),
                 'preset-families' => n2_x(implode("\n", array(
                     "Abel",
                     "Arial",

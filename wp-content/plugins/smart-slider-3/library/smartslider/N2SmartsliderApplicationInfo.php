@@ -22,6 +22,7 @@ class N2SmartsliderApplicationInfo extends N2ApplicationInfo {
 
     public function getInstance() {
         require_once $this->path . NDS . "N2SmartsliderApplication.php";
+
         return new N2SmartSliderApplication($this);
     }
 
@@ -68,6 +69,34 @@ class N2SmartsliderApplicationInfo extends N2ApplicationInfo {
             'Find link',
             'Index'
         ));
+        wp_enqueue_script('nextend-ui-canvas', N2Uri::pathToUri($path . "/admin/js/jqueryui/jquery-ui.canvas.js"), array(
+            'jquery-ui-core',
+            'jquery-ui-widget',
+            'jquery-ui-mouse'
+        ), '1.0', 1);
+        wp_enqueue_script('nextend-ui-canvas-item', N2Uri::pathToUri($path . "/admin/js/jqueryui/jquery-ui.canvas-item.js"), array(
+            'jquery-ui-core',
+            'jquery-ui-widget',
+            'jquery-ui-mouse'
+        ), '1.0', 1);
+        wp_enqueue_script('nextend-ui-columns', N2Uri::pathToUri($path . "/admin/js/jqueryui/jquery-ui.columns.js"), array(
+            'jquery-ui-core',
+            'jquery-ui-widget',
+            'jquery-ui-mouse'
+        ), '1.0', 1);
+        wp_enqueue_script('nextend-ui-layer-list', N2Uri::pathToUri($path . "/admin/js/jqueryui/jquery-ui.layer-list.js"), array(
+            'jquery-ui-core',
+            'jquery-ui-widget',
+            'jquery-ui-mouse'
+        ), '1.0', 1);
+        wp_enqueue_script('nextend-ui-layer-list-item', N2Uri::pathToUri($path . "/admin/js/jqueryui/jquery-ui.layer-list-item.js"), array(
+            'jquery-ui-core',
+            'jquery-ui-widget',
+            'jquery-ui-mouse'
+        ), '1.0', 1);
+
+
+    
         N2JS::addStaticGroup($path . '/dist/smartslider-backend.min.js', 'smartslider-backend');
         if (!N2Base::getApplication('smartslider')->storage->get('free', 'subscribeOnImport')) {
             N2JS::addInline('

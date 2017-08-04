@@ -2,35 +2,39 @@
 @import '../base/layout';
 
 .post-list {
-	background-color: @background-color-3;
+  background-color: @background-color-3;
 
-	.post-list__inner-container {
-		position: relative;
-		display: flex;
-		flex-flow: row wrap;
-		justify-content: center;
-	}
+  .post-list__inner-container {
+    position: relative;
 
-	.post-list__post-container {
-		flex-basis: 25%;
-		text-align: center;
+    display: flex;
 
-		@media @large-screen {
-			flex-basis: 28%
-		}
+    flex-flow: row wrap;
+    justify-content: center;
+  }
 
-		@media @medium-screen {
-			flex-basis: 50%
-		}
+  .post-list__post-container {
+    text-align: center;
 
-		@media @small-screen {
-			flex-basis: 100%
-		}
-	}
+    flex-basis: 25%;
 
-	.post-list__pagination-container {
-		margin: 0 auto;
-		text-align: center;
-		padding-bottom: 50px;
-	}
+    @media @large-screen {
+      flex-basis: 28%;
+    }
+
+    @media @medium-screen {
+      flex-basis: 50%;
+    }
+
+    @media @small-screen {
+      flex-basis: 100%;
+    }
+  }
+
+  .post-list__pagination-container {
+    margin: 0 auto;
+    padding-bottom: 50px;
+
+    text-align: center;
+  }
 }

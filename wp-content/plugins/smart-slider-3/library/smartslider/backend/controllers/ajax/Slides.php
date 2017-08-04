@@ -151,6 +151,59 @@ class N2SmartsliderBackendSlidesControllerAjax extends N2SmartSliderControllerAj
         $this->response->respond();
     }
 
+    public function actionCopy() {
+        $this->validateToken();
+
+        $this->validatePermission('smartslider_edit');
+
+        $slideId = N2Request::getInt('slideid');
+        $this->validateVariable($slideId > 0, 'Slide');
+
+        $sliderID = N2Request::getInt('targetSliderID');
+        $this->validateVariable($sliderID > 0, 'Slider ID');
+
+        $slidesModel = new N2SmartsliderSlidesModel();
+        $newSlideId  = $slidesModel->copy($slideId, $sliderID);
+        $slide       = $slidesModel->get($newSlideId);
+
+        $this->validateDatabase($slide);
+
+        N2Message::success(n2_('Slide(s) copied.'));
+
+
+        $this->response->redirect(array(
+            "slider/edit",
+            array(
+                "sliderid" => $sliderID
+            )
+        ));
+    }
+
+    public function actionCopySlides() {
+        $this->validateToken();
+
+        $this->validatePermission('smartslider_edit');
+
+        $ids = array_map('intval', array_filter((array)N2Request::getVar('slides'), 'is_numeric'));
+
+        $this->validateVariable(count($ids), 'Slides');
+
+        $sliderID = N2Request::getInt('targetSliderID');
+        $this->validateVariable($sliderID > 0, 'Slider ID');
+
+        $slidesModel = new N2SmartsliderSlidesModel();
+        foreach ($ids AS $id) {
+            $slidesModel->copy($id, $sliderID);
+        }
+        N2Message::success(n2_('Slide(s) copied.'));
+
+        $this->response->redirect(array(
+            "slider/edit",
+            array(
+                "sliderid" => $sliderID
+            )
+        ));
+    }
 
     public function actionDuplicate() {
         $this->validateToken();

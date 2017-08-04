@@ -29,7 +29,7 @@ class N2SmartSliderFeatureControls
     public function makeJavaScriptProperties(&$properties) {
         $properties['controls'] = array(
             'scroll'   => $this->scroll,
-            'drag'     => $this->drag,
+            'drag'     => count($this->slider->slides) > 1 ? $this->drag : 0,
             'touch'    => $this->touch,
             'keyboard' => $this->keyboard,
             'tilt'     => $this->tilt

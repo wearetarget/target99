@@ -48,6 +48,39 @@ class N2GeneratorPostsPosts extends N2GeneratorAbstract {
             }
         }
 
+        $allTerms = $this->data->get('postcustomtaxonomy', ''); 
+        $term_query = '';
+        if (!empty($allTerms)) {
+            $terms = explode('||', $allTerms);
+            if (!in_array('0', $terms)) {
+                $termarray = array();
+                foreach ($terms as $key => $value) {
+                    $term = explode("_x_", $value);
+                    if (array_key_exists($term[0],$termarray)){
+                        $termarray[$term[0]][] = $term[1];
+                    } else {
+                        $termarray[$term[0]] = array();
+                        $termarray[$term[0]][] = $term[1];
+                    }
+                }
+
+                $term_helper = array();
+                foreach ($termarray as $taxonomy => $termids) {
+                    $term_helper[] = array(
+                        'taxonomy' => $taxonomy,
+                        'terms'    => $termids,
+                        'field'    => 'id'
+                    );
+                }
+                if(!empty($tax_query)){
+                    array_unshift($tax_query, array('relation' => 'AND'));
+                } else {
+                    $tax_query = array('relation' => 'AND'); 
+                }
+                $tax_query = array_merge($tax_query, $term_helper);
+            }
+        }
+
         $postsFilter = array(
             'include'          => '',
             'exclude'          => '',
@@ -157,6 +190,11 @@ class N2GeneratorPostsPosts extends N2GeneratorAbstract {
                 if (isset($thumbnail_meta['sizes'])) {
                     $sizes = $this->getImageSizes($thumbnail_id, $thumbnail_meta['sizes']);
                     $record = array_merge($record, $sizes);
+                }
+                $record['alt'] = '';
+                $alt = get_post_meta($thumbnail_id, '_wp_attachment_image_alt', true);
+                if(isset($alt)){
+                    $record['alt'] = $alt;
                 }
             }
 

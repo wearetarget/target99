@@ -6,7 +6,7 @@ N2Loader::import('libraries.slider.type', 'smartslider');
 N2Loader::import('libraries.slider.css', 'smartslider');
 N2Loader::import('libraries.slider.group', 'smartslider');
 N2Loader::importAll('libraries.slider.features', 'smartslider');
-N2Loader::importAll('libraries.slider.slide', 'smartslider');
+N2Loader::importAll("libraries.slider.slides", "smartslider");
 N2Loader::import('libraries.settings.settings', 'smartslider');
 N2Loader::import('libraries.slider.widget.widgets', 'smartslider');
 
@@ -176,11 +176,13 @@ abstract class N2SmartSliderAbstract {
 
             $this->initSlides();
         }
+
         return true;
     }
 
     private function initSlides() {
         if ($this->isAdmin) {
+            N2Loader::importAll("libraries.slider.slides.admin", "smartslider");
             $this->slidesBuilder = new N2SmartSliderSlidesAdmin($this);
         } else {
             $this->slidesBuilder = new N2SmartSliderSlides($this);
@@ -192,6 +194,7 @@ abstract class N2SmartSliderAbstract {
         if ($this->isGroup) {
             return $this->sliderType->getNextCacheRefresh();
         }
+
         return $this->slidesBuilder->getNextCacheRefresh();
     }
 
@@ -204,7 +207,6 @@ abstract class N2SmartSliderAbstract {
         if (!$this->isGroup && count($this->slides) == 0) {
             return false;
         }
-
         $this->assets = $this->getSliderTypeResource('css');
         $this->assets->render();
         if (!$this->isGroup) {
@@ -230,7 +232,7 @@ abstract class N2SmartSliderAbstract {
         if (!N2Platform::$isAdmin) {
             $rocketAttributes = '';
             $dependency       = max(0, intval($this->params->get('dependency')));
-            if ($dependency) {
+            if ($dependency && ($dependency != $this->sliderId)) {
                 $rocketAttributes .= 'data-dependency="' . $dependency . '"';
             } else {
                 $delay = max(0, intval($this->params->get('delay'), 0));
@@ -259,6 +261,11 @@ abstract class N2SmartSliderAbstract {
 
             $slider .= $this->features->fadeOnLoad->renderPlaceholder($this->assets->sizes);
         }
+		
+		if (intval($this->params->get('clear-both', 0))) {
+            $slider = '<div class="n2-clear"></div>' . $slider;
+        }
+
         return "\n<!-- Nextend Smart Slider 3 #" . $this->sliderId . " - BEGIN -->\n" . $slider . "\n<!-- Nextend Smart Slider 3 #" . $this->sliderId . " - END -->\n";
     }
 
@@ -284,6 +291,7 @@ abstract class N2SmartSliderAbstract {
         if ($this->_activeSlide == 0) {
             return $this->slides[$length - 1];
         }
+
         return $this->slides[$this->_activeSlide - 1];
     }
 
@@ -295,6 +303,7 @@ abstract class N2SmartSliderAbstract {
         if ($this->_activeSlide == $length - 1) {
             return $this->slides[0];
         }
+
         return $this->slides[$this->_activeSlide + 1];
     }
 
@@ -302,6 +311,7 @@ abstract class N2SmartSliderAbstract {
         $content = preg_replace('/smartslider3\[([0-9]+)\]/', '', $content);
         $content = preg_replace('/\[smartslider3 slider="([0-9]+)"\]/', '', $content);
         $content = preg_replace('/\[smartslider3 slider=([0-9]+)\]/', '', $content);
+
         return $content;
     }
 

@@ -1,7 +1,6 @@
 <?php
 
-class N2SystemPluginFontServiceGoogle extends N2PluginBase
-{
+class N2SystemPluginFontServiceGoogle extends N2PluginBase {
 
     //<editor-fold desc="Google font list">
     /*
@@ -856,6 +855,7 @@ console.log(JSON.stringify(f));
             $fontsSets[$i] = 'google-set-' . $fontsSets[$i];
         }
         $defaults += array_fill_keys($fontsSets, 1);
+
         return $defaults;
     }
 
@@ -880,6 +880,7 @@ console.log(JSON.stringify(f));
                     $this->addStyle($parameters, $i . 'italic');
                 }
                 if (empty(self::$styles)) {
+                    self::$styles[] = '300';
                     self::$styles[] = '400';
                 }
 

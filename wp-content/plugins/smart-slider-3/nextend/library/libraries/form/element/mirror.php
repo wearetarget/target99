@@ -5,7 +5,7 @@ class N2ElementMirror extends N2ElementOnOff
 {
 
     function fetchElement() {
-        N2JS::addInline('new NextendElementMirror("' . $this->_id . '");');
+        N2JS::addInline('new N2Classes.FormElementMirror("' . $this->_id . '");');
         return parent::fetchElement();
     }
 }

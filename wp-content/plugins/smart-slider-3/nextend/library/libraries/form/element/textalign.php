@@ -1,13 +1,13 @@
 <?php
 N2Loader::import('libraries.form.element.radiotab');
 
-class N2ElementTextAlign extends N2ElementRadioTab
-{
+class N2ElementTextAlign extends N2ElementRadioTab {
 
     protected $class = 'n2-form-element-radio-tab n2-form-element-textalign';
 
     function generateOptions(&$xml) {
         $options = array(
+            'inherit' => 'n2-i n2-it n2-i-none',
             'left'    => 'n2-i n2-it n2-i-left',
             'center'  => 'n2-i n2-it n2-i-center',
             'right'   => 'n2-i n2-it n2-i-right',

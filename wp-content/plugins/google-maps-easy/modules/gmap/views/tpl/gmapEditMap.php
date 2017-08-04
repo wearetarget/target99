@@ -11,6 +11,21 @@
 		<div id="containerWrapper">
 			<div id="gmpMapPropertiesTabs" class="supsistic-half-side-box" style="display: none;">
 				<button id="gmpInsertToContactForm" class="button"><?php _e('Insert to Contact Form', GMP_LANG_CODE)?></button>
+				<div class="mbs-turn-on-wrapper">
+					<?php
+					if(property_exists($this, 'membershipPluginError')) {
+						echo $this->membershipPluginError;
+					} else if(property_exists($this, 'pluginInstallUrl')) {
+						printf(__('Integrate with <a target="_blank" href="%s">Membership</a>', GMP_LANG_CODE), $this->pluginInstallUrl);
+					} else if(property_exists($this, 'canUseMembershipFeature') && $this->canUseMembershipFeature == 1) {
+						echo htmlGmp::checkboxHiddenVal('map_opts[membership-selectbox]', array(
+							'value' => isset($this->map['params']['membershipEnable']) ? $this->map['params']['membershipEnable'] : 0,
+							'attrs' => 'id="membershipPropEnable"',
+						));
+						echo '<label for="membershipPropEnable">' . _e('Enable for Membership', GMP_LANG_CODE) . '</label>';
+					}
+					?>
+				</div>
 				<h3 class="nav-tab-wrapper" style="margin-bottom: 0px; margin-top: 12px;">
 					<a class="nav-tab nav-tab-active" href="#gmpMapTab">
 						<p>
@@ -1070,6 +1085,7 @@
 						<?php echo htmlGmp::hidden('map_opts[id]', array('value' => $this->editMap ? $this->map['id'] : ''))?>
 						<?php echo htmlGmp::hidden('map_opts[map_center][coord_x]', array('value' => $this->editMap ? $this->map['params']['map_center']['coord_x'] : ''))?>
 						<?php echo htmlGmp::hidden('map_opts[map_center][coord_y]', array('value' => $this->editMap ? $this->map['params']['map_center']['coord_y'] : ''))?>
+						<?php echo htmlGmp::hidden('map_opts[membershipEnable]', array('value' => isset($this->map['params']['membershipEnable']) ? $this->map['params']['membershipEnable'] : 0, 'attrs' => 'id="membershipHiddenEnable"'))?>
 						<?php echo htmlGmp::hidden('map_opts[zoom]', array('value' => $this->editMap ? $this->map['params']['zoom'] : ''))?>
 					</form>
 				</div>
@@ -1624,7 +1640,7 @@
 						<div style="clear: both;"></div>
 					</div>
 					<div id="gmpMarkerList">
-						<input id="gmpMarkersSearchInput" type="text" placeholder="<?php _e('Search by name', GMP_LANG_CODE)?>" style="display: none; width: 98%;" >
+						<input id="gmpMarkersSearchInput" type="text" placeholder="<?php _e('Search by name', GMP_LANG_CODE)?>" style="display: none; width: 100%; margin: 0;" >
 						<table id="gmpMarkersListGrid" class="supsystic-tbl-pagination-shell"></table>
 					</div>
 					<div id="gmpShapeList">

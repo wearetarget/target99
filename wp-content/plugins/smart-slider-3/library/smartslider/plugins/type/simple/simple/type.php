@@ -31,36 +31,37 @@ class N2SmartSliderTypeSimple extends N2SmartSliderType {
     protected function renderType() {
 
         $params = $this->slider->params;
-        N2JS::addStaticGroup(N2Filesystem::translate(dirname(__FILE__)) . '/dist/smartslider-simple-type-frontend.min.js', 'smartslider-simple-type-frontend');
-    
+
+        $this->loadResources();
 
         $background = $params->get('background');
-        $css        = $params->get('slider-css');
-        $slidecss   = $params->get('slide-css');
+        $sliderCSS  = $params->get('slider-css');
         if (!empty($background)) {
-            $css = 'background-image: url(' . N2ImageHelper::fixed($background) . ');';
+            $sliderCSS .= 'background-image: url(' . N2ImageHelper::fixed($background) . ');';
         }
+
+        $slideCSS = $params->get('slide-css');
 
         $this->initBackgroundAnimation();
         echo $this->openSliderElement();
         ?>
 
-        <div class="n2-ss-slider-1" style="<?php echo $css; ?>">
+        <div class="n2-ss-slider-1 n2-ow" style="<?php echo $sliderCSS; ?>">
             <?php
             echo $this->getBackgroundVideo($params);
             ?>
-            <div class="n2-ss-slider-2">
+            <div class="n2-ss-slider-2 n2-ow">
                 <?php if ($this->backgroundAnimation): ?>
-                    <div class="n2-ss-background-animation"></div>
+                    <div class="n2-ss-background-animation n2-ow"></div>
                 <?php endif; ?>
-                <div class="n2-ss-slider-3" style="<?php echo $slidecss; ?>">
+                <div class="n2-ss-slider-3 n2-ow" style="<?php echo $slideCSS; ?>">
 
                     <?php
                     echo $this->slider->staticHtml;
                     foreach ($this->slider->slides AS $i => $slide) {
 
                         echo N2Html::tag('div', $slide->attributes + array(
-                                'class' => 'n2-ss-slide n2-ss-canvas ' . $slide->classes,
+                                'class' => 'n2-ss-slide n2-ss-canvas n2-ow ' . $slide->classes,
                                 'style' => $slide->style
                             ), $slide->background . $slide->getHTML());
                     }
@@ -91,9 +92,14 @@ class N2SmartSliderTypeSimple extends N2SmartSliderType {
 
         N2Plugin::callPlugin('nextendslider', 'onNextendSliderProperties', array(&$this->javaScriptProperties));
 
-        N2JS::addFirstCode("new NextendSmartSliderSimple('#{$this->slider->elementId}', " . json_encode($this->javaScriptProperties) . ");");
+        N2JS::addFirstCode("new N2Classes.SmartSliderSimple('#{$this->slider->elementId}', " . json_encode($this->javaScriptProperties) . ");");
 
         echo N2Html::clear();
+    }
+
+    private function loadResources() {
+        N2JS::addStaticGroup(N2Filesystem::translate(dirname(__FILE__)) . '/dist/smartslider-simple-type-frontend.min.js', 'smartslider-simple-type-frontend');
+    
     }
 
     private function initBackgroundAnimation() {
@@ -148,42 +154,19 @@ class N2SmartSliderTypeSimple extends N2SmartSliderType {
 
             if (count($jsProps)) {
                 $this->backgroundAnimation = true;
+
                 return $jsProps;
             }
         }
+
         return 0;
     }
 
     private function getBackgroundVideo($params) {
-        $mp4  = $params->get('backgroundVideoMp4', '');
-        $webm = $params->get('backgroundVideoWebm', '');
-        $ogg  = $params->get('backgroundVideoOgg', '');
+        $mp4 = N2ImageHelper::fixed($params->get('backgroundVideoMp4', ''));
 
-        if (empty($mp4) && empty($webm) && empty($ogg)) {
+        if (empty($mp4)) {
             return '';
-        }
-
-        $sources = '';
-
-        if ($mp4) {
-            $sources .= N2Html::tag("source", array(
-                "src"  => $mp4,
-                "type" => "video/mp4"
-            ), '', false);
-        }
-
-        if ($webm) {
-            $sources .= N2Html::tag("source", array(
-                "src"  => $webm,
-                "type" => "video/webm"
-            ), '', false);
-        }
-
-        if ($ogg) {
-            $sources .= N2Html::tag("source", array(
-                "src"  => $ogg,
-                "type" => "video/ogg"
-            ), '', false);
         }
 
         $attributes = array(
@@ -198,12 +181,15 @@ class N2SmartSliderTypeSimple extends N2SmartSliderType {
             $attributes['loop'] = 'loop';
         }
 
-        return N2Html::tag('div', array('class' => 'n2-ss-slider-background-video-container'), N2Html::tag('video', $attributes + array(
-                'class'              => 'n2-ss-slider-background-video',
+        return N2Html::tag('div', array('class' => 'n2-ss-slider-background-video-container n2-ow'), N2Html::tag('video', $attributes + array(
+                'class'              => 'n2-ss-slider-background-video n2-ow',
                 'data-mode'          => $params->get('backgroundVideoMode', 'fill'),
                 'playsinline'        => 1,
                 'webkit-playsinline' => 1
-            ), $sources));
+            ), N2Html::tag("source", array(
+            "src"  => $mp4,
+            "type" => "video/mp4"
+        ), '', false)));
 
     }
 }

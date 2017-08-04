@@ -132,6 +132,9 @@ gmpGoogleMarker.prototype.getRawMarkerInstance = function() {
 gmpGoogleMarker.prototype.getRawMarkerParams = function() {
 	return this._markerParams;
 };
+gmpGoogleMarker.prototype.getIcon = (function() {
+	return this._markerObj.getIcon();
+});
 gmpGoogleMarker.prototype.setIcon = function(iconPath) {
 	this._markerObj.setIcon( iconPath );
 };
@@ -346,3 +349,5 @@ function _gmpPrepareMarkersList(markers, params) {
 	}
 	return markers;
 }
+
+window.gmpGoogleMarker = gmpGoogleMarker;

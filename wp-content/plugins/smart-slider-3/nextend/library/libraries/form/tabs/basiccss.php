@@ -7,7 +7,7 @@ class N2TabBasicCSS extends N2Tab {
     function render($control_name) {
         $this->initTabs();
 
-        N2JS::addInline('new NextendBasicCSS("n2-css-' . $this->_name . '", "' . N2Base::getApplication('system')->router->createUrl('css/index') . '");');
+        N2JS::addInline('new N2Classes.BasicCSS("n2-css-' . $this->_name . '", "' . N2Base::getApplication('system')->router->createUrl('css/index') . '");');
 
         echo N2Html::openTag('div', array(
             'id'    => 'n2-css-' . $this->_name,

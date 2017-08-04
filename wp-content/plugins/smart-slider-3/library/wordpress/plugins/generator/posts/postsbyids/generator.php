@@ -56,6 +56,11 @@ class N2GeneratorPostsPostsByIDs extends N2GeneratorAbstract
                     $sizes = $this->getImageSizes($thumbnail_id, $thumbnail_meta['sizes']);
                     $record = array_merge($record, $sizes);
                 }
+                $record['alt'] = '';
+                $alt = get_post_meta($thumbnail_id, '_wp_attachment_image_alt', true);
+                if(isset($alt)){
+                    $record['alt'] = $alt;
+                }
             }
 
             $record['thumbnail'] = $record['image'] = $record['featured_image'];

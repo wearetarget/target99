@@ -29,6 +29,7 @@ class N2ImageHelperAbstract {
                 break;
             }
         }
+
         return $image;
     }
 
@@ -39,6 +40,7 @@ class N2ImageHelperAbstract {
                 break;
             }
         }
+
         return $image;
     }
 
@@ -55,6 +57,7 @@ class N2ImageHelperAbstract {
         if (self::$protocolRelative) {
             return preg_replace('/^http(s)?:\/\//', '//', $url);
         }
+
         return $url;
     }
 
@@ -63,6 +66,7 @@ class N2ImageHelperAbstract {
         for ($i = 0; $i < count(self::$siteKeywords); $i++) {
             $def[self::$siteKeywords[$i]] = self::$imageUrls[$i];
         }
+
         return $def;
     }
 
@@ -100,7 +104,12 @@ class N2ImageHelperAbstract {
         if (substr($image, 0, 1) == '$' && $ext == 'svg') {
             return 'data:image/svg+xml;base64,' . base64_encode(N2Filesystem::readFile(N2ImageHelper::fixed($image, true)));
         }
+
         return N2ImageHelper::fixed($image);
+    }
+
+    public static function readSVG($image) {
+        return N2Filesystem::readFile(N2ImageHelper::fixed($image, true));
     }
 
     public static function onImageUploaded($filename) {

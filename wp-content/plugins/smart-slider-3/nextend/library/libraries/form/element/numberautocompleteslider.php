@@ -13,7 +13,7 @@ class N2ElementNumberAutocompleteSlider extends N2ElementNumber {
                 $units[N2XmlHelper::getAttribute($unit, 'value') . 'max'] = floatval(N2XmlHelper::getAttribute($unit, 'slmax'));
             }
         }
-        N2JS::addInline('new NextendElementAutocompleteSlider("' . $this->_id . '", ' . json_encode(array(
+        N2JS::addInline('new N2Classes.FormElementAutocompleteSlider("' . $this->_id . '", ' . json_encode(array(
                 'min'   => floatval(N2XmlHelper::getAttribute($this->_xml, 'min')),
                 'max'   => floatval(N2XmlHelper::getAttribute($this->_xml, 'slmax')),
                 'step'  => floatval(N2XmlHelper::getAttribute($this->_xml, 'step')),

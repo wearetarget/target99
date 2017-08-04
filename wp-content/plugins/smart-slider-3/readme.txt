@@ -1,26 +1,28 @@
 === Smart Slider 3 ===
 Contributors: nextendweb
 Tags: slider, gallery slider, image slider, layer slider, responsive slider, slideshow, fullwidth slider, post slider, horizontal slider, vertical slider, photo slider, video slider
-Donate link: https://www.facebook.com/nextendweb
+Donate link: https://sites.fastspring.com/nextend/product/smartslider3donate
 Requires at least: 4.0
-Tested up to: 4.8
-Stable tag: 3.1.10
+Tested up to: 4.8.0
+Stable tag: 3.2.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Responsive slider plugin to create beautiful sliders in the next generation visual editor. Awesome sliders, no compromises!
+Responsive slider plugin to create sliders in visual editor easily. Build beautiful image slider, layer slider, video slider, post slider, and more.
 
 == Description ==
 
-> [See what's new in Smart Slider 3.1](https://nextendweb.com/smart-slider-3-1-supernova/)
+> [See what's new in Smart Slider 3.2](https://nextendweb.com/smart-slider-3-2-beta/)
 
 Smart Slider 3 is a brand new and intuitive WordPress plugin to create sliders which was never possible before with any free slider plugins. Smart Slider 3 has every feature what you can expect from a free slider plugin. Besides that Smart Slider gives you the tool to create YouTube and Vimeo slides, create slides from your WordPress posts, even more it has a complete easy-to-use slide editor with different layers. Don't hesitate install the Smart Slider 3 and enjoy the next generation plugin experience!
 
->[Sample sliders](https://smartslider3.com/tag/free)  |  [Introduction video](https://www.youtube.com/watch?v=MKmIwHAFjSU)  |  [Documentation](https://smartslider3.helpscoutdocs.com/)  |  [Support](https://smartslider3.com/contact-us)
+>[Sample sliders](https://smartslider3.com/tag/free)  |  [Tutorial videos](https://www.youtube.com/watch?v=lsq09izc1H4&list=PLSawiBnEUNfvzcI3pBHs4iKcbtMCQU0dB)  |  [Documentation](https://smartslider3.helpscoutdocs.com/)  |  [Support](https://smartslider3.com/contact-us)  |  [PRO features](https://smartslider3.com/features/)
 
-[youtube https://www.youtube.com/watch?v=fjmENHah_oY]
+[youtube https://www.youtube.com/watch?v=lsq09izc1H4]
 
 #### Most powerful features:
+* **NEW: Content slide builder** - Edit your slides as you used to in page builders. Drop layers after each other and structure them with rows and columns.
+* **NEW: Slide library** - [Slide Library](https://smartslider3.com/slide-library/) provides several pre-made slides to kickstart your work.
 * **User-friendly Editor** - Anyone can build with Smart Slider. The interface comes with drag&drop builder and live preview.
 * **Totally integrated with WordPress** - media manager, shortcode, widget, post permalinks, post editor
 * **Totally responsive and touch friendly** -  Sliders can be enjoyed in any environment, be it a mobile, tablet or desktop.
@@ -29,7 +31,7 @@ Smart Slider 3 is a brand new and intuitive WordPress plugin to create sliders w
 * **Slide backgrounds** - 9 Super smooth background animations
 * **Layers** - Build unique design with 6 varied layers: Image, Heading, Text, Button, Vimeo, YouTube
 * **Font and Style manager system** - Change easily all the details that really matter in typography and style.
-* **Sample sliders** - [4 sliders](https://smartslider3.com/tag/free) to start
+* **Sample sliders** - [6 sliders](https://smartslider3.com/tag/free) to start
 
 #### Testimonials
 
@@ -85,7 +87,7 @@ Smart Slider 3 is a community-driven project that would not be the same without 
 
 
 #### Smart Slider 3 Pro Features:
-* [All sample sliders](https://smartslider3.com/tag/premium/)
+* [All sample sliders](https://smartslider3.com/sample-sliders/)
 * Layer animation builder
 * Live Timeline
 * 9 extra layer types
@@ -97,11 +99,7 @@ Smart Slider 3 is a community-driven project that would not be the same without 
 * Advanced controls and much more control presets
 * Ton of expert settings
 * Premium support
-* [Full List of Pro Features](https://smartslider3.com/why-upgrade-to-pro/)
-
-[youtube https://www.youtube.com/watch?v=Tj_KSNzVB4g]
-
-Upgrade to [Pro Version](https://smartslider3.com/pricing/)
+* [Full list of PRO features](https://smartslider3.com/features/)
 
 
 #### Use-cases for Dynamic slide sources in FREE version
@@ -130,10 +128,13 @@ Upgrade to [Pro Version](https://smartslider3.com/pricing/)
 #### Translations
 
 * English
-* Traditional chinese (zh_tw) 90%
-* German (de_DE) 90%
+* French (fr_FR) 87%
 * Hungarian (hu_HU) 85%
-* Spanish (es_ES) 99%
+* Traditional Chinese (zh_tw) 83%
+* Italian (it_IT) 70%
+* Russian (ru_RU) 68%
+* German (de_DE) 65%
+* Spanish (es_ES) 67%
 
 == Installation ==
 [Check our official documentation for more information](https://smartslider3.helpscoutdocs.com/)
@@ -192,15 +193,63 @@ Of course! Smart Slider use protocol relative urls which works fine on http:// a
 
 == Screenshots ==
 
-1. Smart Slider 3 the perfect all-in-one responsive slider solution for WordPress.
-2. Next generation intuitive slider editor.
-3. Perfect responsive slider solution.
-4. [Layer slider](https://smartslider3.com/free-layers/) - sample slider included
-5. [Full width slider](https://smartslider3.com/free-full-width/) - sample slider included
-6. [Thumbnail slider](https://smartslider3.com/free-thumbnail/) - sample slider included
-7. [Static slider](https://smartslider3.com/free-static/) - sample slider included
+1. How to create unique image slider under 2 minutes.
+2. Edit layers with the intuitive slide editor.
+3. Customize and style layers in the slide editor.
+4. Full width responsive slider with gradient and layers. Made with FREE version.
+5. Simple image slider with caption and arrows. Made with FREE version.
+6. Thumbnail image slider. Made with FREE version.
+7. Image slider with static slide on it. Made with FREE version.
+8. Full width content post slider. Made with FREE version.
+9. Layer slider with layers styles. Made with FREE version.
 
 == Changelog ==
+
+= 3.2.4 - 27. June 2017. =
+* Feature: Content builder mode in slide editor https://www.youtube.com/watch?v=2nRabX8miDY
+* Feature: Slide library with tons of new premade slides https://www.youtube.com/watch?v=zzdoYHOqLnI
+* Feature: Structure - build slides with rows and columns https://www.youtube.com/watch?v=Aj5BieYjxnc
+* Feature: Blur effect for slide backgrounds
+* Feature: Blur layer animation
+* Feature: Copy and paste slides
+* Feature: Move slide between sliders
+* Feature: Slider displays itself in the live editor of different page builders. (Beaver Builder, Elementor, Visual Composer)
+* Feature: Google font family list updated
+* Feature: Adjust slider width to parent selector option for the Fullwidth and Fullpage responsive mode
+* Feature: Column count is not limited anymore
+* Feature: Italian translation
+* Feature: Clear: both option before the slider
+* Feature: font-weight: 100 now selectable
+* Feature: Slide bulk select improved
+* Feature: Grab cursor will only appear if slide count is greater than 1
+* Feature: Other minor CSS and speed improvements
+* Feature: Admin label for Smart Slider 3 Divi module
+* Feature: WordPress generator featured image alt tag
+* Feature: Divi/Extra Layout Injector compatibility
+* Feature: Beaver Builder 2.0 alpha patch compatibility
+* Feature: Visual composer backend fix
+* Feature: Elementor 1.5 compatibility changes
+* Feature: Tailor Page Builder compatibility 
+* Feature: Unyson framework - builder compatibility
+* Feature: MotoPress CE compatibility
+* Fix: YouTube layer Play button
+* Fix: Content mode fixes in Internet Explorer
+* Fix: GSAP conflict prevented
+* Fix: Static slide and content mode
+* Fix: Invalid item data fix
+* Fix: Pre load slider id
+* Fix: IOS static slide fix
+* Fix: Tooltip
+* Fix: Column show/hide on different devices
+* Fix: Text layer
+* Fix: Elementor Pro template does not show sliders in certain settings
+* Fix: Show editor icon fix
+* Fix: Forcing MotoPress Content Editor to save down our shortcode and not just the html code
+* Fix: Lightbox fix
+* Fix: EasySocial album generator
+* Fix: Revolution slider compatibility fix
+* Removed: Weaker CSS selectors feature (not needed anymore)
+* Removed: Slide layouts are not available, use copy slides between sliders.
 
 = 3.1.10 - 20. May 2017. =
 * Feature: Google font families updated
@@ -219,7 +268,6 @@ Of course! Smart Slider use protocol relative urls which works fine on http:// a
 * Fix: Safari 10+ font loading issue
 * Fix: Global settings clear cache
 * Fix: WordPress posts generator possible warning
-* Fix: Magento product generator possible item duplication PHP error
 * Feature: Vimeo start parameter
 * Feature: Accessibility enhancements
 * Feature: Youtube play button image

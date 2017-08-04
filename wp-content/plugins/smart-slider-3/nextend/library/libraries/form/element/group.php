@@ -26,9 +26,17 @@ class N2ElementGroup extends N2Element {
 
             list($label, $field) = $el->render($this->control_name, $this->_translateable);
 
-            $html .= N2Html::tag('div', array(
-                'class' => 'n2-mixed-group ' . N2XmlHelper::getAttribute($element, 'class')
-            ), N2Html::tag('div', array('class' => 'n2-mixed-label'.(($el->hasLabel ? '' : ' n2-empty-group-label'))), $label) . N2Html::tag('div', array('class' => 'n2-mixed-element'), $field));
+
+            $attrs = array();
+            if (isset($element->attribute)) {
+                foreach ($element->attribute AS $attr) {
+                    $attrs[N2XmlHelper::getAttribute($attr, 'type')] = (string)$attr;
+                }
+            }
+
+            $html .= N2Html::tag('div', $attrs + array(
+                    'class' => 'n2-mixed-group ' . N2XmlHelper::getAttribute($element, 'class')
+                ), N2Html::tag('div', array('class' => 'n2-mixed-label' . (($el->hasLabel ? '' : ' n2-empty-group-label'))), $label) . N2Html::tag('div', array('class' => 'n2-mixed-element'), $field));
 
             if (N2XmlHelper::getAttribute($element, 'post') == 'break') {
                 $html .= '<br class="' . N2XmlHelper::getAttribute($element, 'class') . '" />';

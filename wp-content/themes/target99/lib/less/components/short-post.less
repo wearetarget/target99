@@ -2,68 +2,69 @@
 @import '../base/layout';
 
 .short-post {
-	display: inline-block;
-	background-color: @background-color-3;
-	position: relative;
+  position: relative;
 
-	margin: 10px;
+  display: inline-block;
 
-	.short-post__inner-container {
-		position: relative;
+  margin: 10px;
 
-		&:hover .short-post__meta-container {
-			background-color: @background-color-2;
-		}
+  background-color: @background-color-3;
 
-	}
+  .short-post__inner-container {
+    position: relative;
 
-	.short-post__image {
-		max-height: 100%;
-		min-height: 100%;
-		min-width: 100%;
-		max-width: 100%;
-	}
+    &:hover .short-post__meta-container {
+      background-color: @background-color-2;
+    }
+  }
 
-	.short-post__meta-container {
-		box-sizing: border-box;
-		position: absolute;
-		bottom: 0;
-		left: 0;
-		margin-bottom: 4px;
-		padding: 10px;
+  .short-post__image {
+    min-width: 100%;
+    max-width: 100%;
+    min-height: 100%;
+    max-height: 100%;
+  }
 
-		width: 100%;
+  .short-post__meta-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
 
-		background: rgba(0, 0, 0, 0.5);
-	}
+    box-sizing: border-box;
+    width: 100%;
+    margin-bottom: 4px;
+    padding: 10px;
 
-	.short-post__title-container {
-		text-align: center;
-	}
+    background: rgba(0, 0, 0, 0.5);
+  }
 
-	.short-post__title {
-		font-family: @main-control-font;
-		font-size: 16px;
-		font-weight: bold;
+  .short-post__title-container {
+    text-align: center;
+  }
 
-		text-transform: uppercase;
+  .short-post__title {
+    font-family: @main-control-font;
+    font-size: 16px;
+    font-weight: bold;
 
-		color: @text-color-2;
-	}
+    text-transform: uppercase;
 
-	.short-post__date-container {
-		text-align: center;
-	}
+    color: @text-color-2;
+  }
 
-	.short-post__date {
-		font-family: @main-control-font;
-		font-size: 16px;
-		font-weight: normal;
+  .short-post__date-container {
+    text-align: center;
+  }
 
-		color: @text-color-2;
+  .short-post__date {
+    font-family: @main-control-font;
+    font-size: 16px;
+    font-weight: normal;
 
-		[class*='fa-'] {
-			padding: 5px;
-		}
-	}
+    color: @text-color-2;
+
+    [class*='fa-'] {
+      padding: 5px;
+    }
+  }
 }

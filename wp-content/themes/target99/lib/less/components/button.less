@@ -27,7 +27,7 @@
 
   &.button--warning {
     color: white;
-    border: none;
+    border: 0;
     background-color: @text-color-3;
 
     &:hover {
@@ -37,11 +37,12 @@
 
   &.button--mobile-full {
     @media @small-screen {
-      width: 100%;
       display: block;
-      padding: 50px 0;
-      font-size: 20px;
 
+      width: 100%;
+      padding: 50px 0;
+
+      font-size: 20px;
     }
   }
 }

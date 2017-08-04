@@ -1,0 +1,68 @@
+@import '../base/variables';
+@import '../base/layout';
+
+.post-page {
+  background-color: @background-color-3;
+
+  .post-page__inner-container {
+    width: 85%;
+    padding-top: 50px;
+    padding-bottom: 50px;
+
+    &:after {
+      display: table;
+      visibility: hidden;
+      clear: both;
+
+      content: '';
+    }
+
+    @media @medium-screen, @small-screen {
+      width: 98%;
+      padding-top: 20px;
+    }
+  }
+
+  .post-page__article-container {
+    float: left;
+
+    box-sizing: border-box;
+    width: 80%;
+    padding-right: 40px;
+
+    @media @large-screen {
+      width: 70%;
+    }
+
+    @media @medium-screen, @small-screen {
+      float: none;
+
+      width: 100%;
+      padding: 10px;
+    }
+
+    &.post-page__article-container--full {
+      @media @xl-screen, @large-screen {
+        width: 100%;
+      }
+    }
+  }
+
+  .post-page__advice-container {
+    float: right;
+
+    box-sizing: border-box;
+    width: 20%;
+
+    @media @large-screen {
+      width: 30%;
+    }
+
+    @media @medium-screen, @small-screen {
+      float: none;
+
+      width: 100%;
+      padding: 10px;
+    }
+  }
+}

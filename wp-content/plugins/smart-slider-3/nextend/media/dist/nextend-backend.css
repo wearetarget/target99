@@ -1,10 +1,10 @@
 @font-face {
     font-family: 'Nextend';
-    src: url('../fonts/Nextend.eot?v06w92');
-    src: url('../fonts/Nextend.eot?v06w92#iefix') format('embedded-opentype'),
-    url('../fonts/Nextend.ttf?v06w92') format('truetype'),
-    url('../fonts/Nextend.woff?v06w92') format('woff'),
-    url('../fonts/Nextend.svg?v06w92#Nextend') format('svg');
+    src: url('../fonts/Nextend.eot?jk6d47');
+    src: url('../fonts/Nextend.eot?jk6d47#iefix') format('embedded-opentype'),
+    url('../fonts/Nextend.ttf?jk6d47') format('truetype'),
+    url('../fonts/Nextend.woff?jk6d47') format('woff'),
+    url('../fonts/Nextend.svg?jk6d47#Nextend') format('svg');
     font-weight: normal;
     font-style: normal;
 }
@@ -24,252 +24,180 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
-.n2-i-group:before {
-    content: "\e957";
+.n2-i-slidelibrary:before {
+    content: "\e97d";
 }
 
-.n2-i-group-up:before {
-    content: "\e958";
+.n2-i-newslide:before {
+    content: "\e981";
 }
 
-.n2-i-group-insert:before {
-    content: "\e959";
+.n2-i-canvas:before {
+    content: "\e916";
 }
 
-.n2-i-add-sample:before {
-    content: "\e951";
+.n2-i-builder:before {
+    content: "\e97c";
 }
 
-.n2-i-add-new:before {
-    content: "\e952";
+.n2-i-minimize:before {
+    content: "\e914";
 }
 
-.n2-i-a-license:before {
-    content: "\e953";
+.n2-i-maximize:before {
+    content: "\e915";
 }
 
-.n2-i-a-import:before {
-    content: "\e954";
+.n2-i-vertical-align-top:before {
+    content: "\e96c";
 }
 
-.n2-i-a-deauthorize:before {
-    content: "\e955";
+.n2-i-vertical-align-space-between:before {
+    content: "\e97a";
 }
 
-.n2-i-a-clear:before {
-    content: "\e956";
+.n2-i-vertical-align-space-around:before {
+    content: "\e97b";
 }
 
-.n2-i-imagearea-layer:before {
-    content: "\e950";
+.n2-i-vertical-align-center:before {
+    content: "\e97e";
 }
 
-.n2-i-window-settings:before {
-    content: "\e94c";
+.n2-i-vertical-align-bottom:before {
+    content: "\e97f";
 }
 
-.n2-i-window-animation:before {
-    content: "\e94d";
+.n2-i-mini-desktop-portrait:before {
+    content: "\e980";
 }
 
-.n2-i-window-design:before {
-    content: "\e94e";
+.n2-i-uplevel:before {
+    content: "\e979";
 }
 
-.n2-i-window-layer:before {
-    content: "\e94f";
+.n2-i-hidedesktoplandscape:before {
+    content: "\e95a";
 }
 
-.n2-i-dashboard:before {
-    content: "\e94a";
+.n2-i-mini-arrow-thin:before {
+    content: "\e926";
 }
 
-.n2-i-slider2:before {
-    content: "\e94b";
+.n2-i-mini-move:before {
+    content: "\e973";
 }
 
-.n2-i-area-layer:before {
-    content: "\e937";
+.n2-i-color:before {
+    content: "\e95b";
 }
 
-.n2-i-iframe-layer:before {
-    content: "\e938";
+.n2-i-col:before {
+    content: "\e95c";
 }
 
-.n2-i-input-layer:before {
-    content: "\e939";
+.n2-i-structure-Sb:before {
+    content: "\e95d";
 }
 
-.n2-i-html-layer:before {
-    content: "\e93a";
+.n2-i-structure-Sa:before {
+    content: "\e95e";
 }
 
-.n2-i-video-layer:before {
-    content: "\e93b";
+.n2-i-structure-4a:before {
+    content: "\e95f";
 }
 
-.n2-i-vimeo-layer:before {
-    content: "\e93c";
+.n2-i-structure-3b:before {
+    content: "\e960";
 }
 
-.n2-i-youtube-layer:before {
-    content: "\e93d";
+.n2-i-structure-3a:before {
+    content: "\e961";
 }
 
-.n2-i-list-layer:before {
-    content: "\e93e";
+.n2-i-structure-2e:before {
+    content: "\e962";
 }
 
-.n2-i-transition-layer:before {
-    content: "\e93f";
+.n2-i-structure-2d:before {
+    content: "\e963";
 }
 
-.n2-i-caption-layer:before {
-    content: "\e940";
+.n2-i-structure-2c:before {
+    content: "\e964";
 }
 
-.n2-i-icon-layer:before {
-    content: "\e941";
+.n2-i-structure-2b:before {
+    content: "\e965";
 }
 
-.n2-i-button-layer:before {
-    content: "\e942";
+.n2-i-structure-2a:before {
+    content: "\e966";
 }
 
-.n2-i-image-layer:before {
-    content: "\e943";
+.n2-i-structure-1a:before {
+    content: "\e967";
 }
 
-.n2-i-text-layer:before {
-    content: "\e944";
+.n2-i-mini-tablet-portrait:before {
+    content: "\e968";
 }
 
-.n2-i-heading-layer:before {
-    content: "\e945";
+.n2-i-mini-tablet-landscape:before {
+    content: "\e969";
 }
 
-.n2-i-preview:before {
-    content: "\e92d";
+.n2-i-mini-mobile-portrait:before {
+    content: "\e96a";
 }
 
-.n2-i-slides:before {
-    content: "\e91a";
+.n2-i-mini-mobile-landscape:before {
+    content: "\e96b";
 }
 
-.n2-i-slideedit:before {
-    content: "\e904";
+.n2-i-mini-desktop-landscape:before {
+    content: "\e96d";
 }
 
-.n2-i-help:before {
-    content: "\e644";
+.n2-i-video:before {
+    content: "\e96e";
 }
 
-.n2-i-v-tablet-landscape:before {
-    content: "\e63a";
+.n2-i-stretch:before {
+    content: "\e96f";
 }
 
-.n2-i-v-mobile-landscape:before {
-    content: "\e63b";
+.n2-i-row:before {
+    content: "\e970";
 }
 
-.n2-i-v-desktop-landscape:before {
-    content: "\e63c";
+.n2-i-none:before {
+    content: "\e971";
 }
 
-.n2-i-bulk:before {
-    content: "\e634";
+.n2-i-mini-trash:before {
+    content: "\e972";
 }
 
-.n2-i-notification:before {
-    content: "\e637";
+.n2-i-mini-duplicate:before {
+    content: "\e974";
 }
 
-.n2-i-v-tablet:before {
-    content: "\e616";
+.n2-i-mini-arrow-up:before {
+    content: "\e975";
 }
 
-.n2-i-v-mobile:before {
-    content: "\e617";
+.n2-i-mini-arrow-right:before {
+    content: "\e976";
 }
 
-.n2-i-v-desktop:before {
-    content: "\e618";
+.n2-i-mini-arrow-left:before {
+    content: "\e977";
 }
 
-.n2-i-v-all:before {
-    content: "\e619";
-}
-
-.n2-i-smart:before {
-    content: "\e61a";
-}
-
-.n2-i-slider:before {
-    content: "\e61b";
-}
-
-.n2-i-s-open:before {
-    content: "\e61c";
-}
-
-.n2-i-s-close:before {
-    content: "\e61d";
-}
-
-.n2-i-next:before {
-    content: "\e61e";
-}
-
-.n2-i-n-success:before {
-    content: "\e61f";
-}
-
-.n2-i-n-notice:before {
-    content: "\e620";
-}
-
-.n2-i-n-error:before {
-    content: "\e621";
-}
-
-.n2-i-n-close:before {
-    content: "\e622";
-}
-
-.n2-i-drag:before {
-    content: "\e623";
-}
-
-.n2-i-a-text:before {
-    content: "\e624";
-}
-
-.n2-i-a-refresh:before {
-    content: "\e625";
-}
-
-.n2-i-a-html:before {
-    content: "\e626";
-}
-
-.n2-i-a-export:before {
-    content: "\e627";
-}
-
-.n2-i-a-duplicate:before {
-    content: "\e628";
-}
-
-.n2-i-a-deletes:before {
-    content: "\e629";
-}
-
-.n2-i-a-delete:before {
-    content: "\e62a";
-}
-
-.n2-i-a-back:before {
-    content: "\e62b";
+.n2-i-mini-arrow-down:before {
+    content: "\e978";
 }
 
 .n2-i-chainsmall:before {
@@ -346,18 +274,6 @@
 
 .n2-i-newdrag:before {
     content: "\e913";
-}
-
-.n2-i-attach:before {
-    content: "\e914";
-}
-
-.n2-i-detach:before {
-    content: "\e915";
-}
-
-.n2-i-minimize:before {
-    content: "\e916";
 }
 
 .n2-i-addlayer:before {
@@ -648,12 +564,8 @@
     content: "\e924";
 }
 
-.n2-i-hidedesktoplandscape:before {
-    content: "\e925";
-}
-
 .n2-i-hidedesktopportrait:before {
-    content: "\e926";
+    content: "\e925";
 }
 
 .n2-i-hidetabletlandscape:before {
@@ -704,6 +616,274 @@
     content: "\e912";
 }
 
+.n2-i-group:before {
+    content: "\e957";
+}
+
+.n2-i-group-up:before {
+    content: "\e958";
+}
+
+.n2-i-group-insert:before {
+    content: "\e959";
+}
+
+.n2-i-add-sample:before {
+    content: "\e951";
+}
+
+.n2-i-add-new:before {
+    content: "\e952";
+}
+
+.n2-i-progressbar-layer:before {
+    content: "\e982";
+}
+
+.n2-i-imagebox-layer:before {
+    content: "\e983";
+}
+
+.n2-i-counter-layer:before {
+    content: "\e984";
+}
+
+.n2-i-circlecounter-layer:before {
+    content: "\e985";
+}
+
+.n2-i-audio-layer:before {
+    content: "\e986";
+}
+
+.n2-i-a-license:before {
+    content: "\e953";
+}
+
+.n2-i-a-import:before {
+    content: "\e954";
+}
+
+.n2-i-a-deauthorize:before {
+    content: "\e955";
+}
+
+.n2-i-a-clear:before {
+    content: "\e956";
+}
+
+.n2-i-imagearea-layer:before {
+    content: "\e950";
+}
+
+.n2-i-window-settings:before {
+    content: "\e94c";
+}
+
+.n2-i-window-animation:before {
+    content: "\e94d";
+}
+
+.n2-i-window-design:before {
+    content: "\e94e";
+}
+
+.n2-i-window-layer:before {
+    content: "\e94f";
+}
+
+.n2-i-dashboard:before {
+    content: "\e94a";
+}
+
+.n2-i-slider2:before {
+    content: "\e94b";
+}
+
+.n2-i-area-layer:before {
+    content: "\e937";
+}
+
+.n2-i-iframe-layer:before {
+    content: "\e938";
+}
+
+.n2-i-input-layer:before {
+    content: "\e939";
+}
+
+.n2-i-html-layer:before {
+    content: "\e93a";
+}
+
+.n2-i-video-layer:before {
+    content: "\e93b";
+}
+
+.n2-i-vimeo-layer:before {
+    content: "\e93c";
+}
+
+.n2-i-youtube-layer:before {
+    content: "\e93d";
+}
+
+.n2-i-list-layer:before {
+    content: "\e93e";
+}
+
+.n2-i-transition-layer:before {
+    content: "\e93f";
+}
+
+.n2-i-caption-layer:before {
+    content: "\e940";
+}
+
+.n2-i-icon-layer:before {
+    content: "\e941";
+}
+
+.n2-i-button-layer:before {
+    content: "\e942";
+}
+
+.n2-i-image-layer:before {
+    content: "\e943";
+}
+
+.n2-i-text-layer:before {
+    content: "\e944";
+}
+
+.n2-i-heading-layer:before {
+    content: "\e945";
+}
+
+.n2-i-preview:before {
+    content: "\e92d";
+}
+
+.n2-i-slides:before {
+    content: "\e91a";
+}
+
+.n2-i-slideedit:before {
+    content: "\e904";
+}
+
+.n2-i-help:before {
+    content: "\e644";
+}
+
+.n2-i-v-tablet-landscape:before {
+    content: "\e63a";
+}
+
+.n2-i-v-mobile-landscape:before {
+    content: "\e63b";
+}
+
+.n2-i-v-desktop-landscape:before {
+    content: "\e63c";
+}
+
+.n2-i-bulk:before {
+    content: "\e634";
+}
+
+.n2-i-notification:before {
+    content: "\e637";
+}
+
+.n2-i-v-tablet:before {
+    content: "\e616";
+}
+
+.n2-i-v-mobile:before {
+    content: "\e617";
+}
+
+.n2-i-v-desktop:before {
+    content: "\e618";
+}
+
+.n2-i-v-all:before {
+    content: "\e619";
+}
+
+.n2-i-smart:before {
+    content: "\e61a";
+}
+
+.n2-i-slider:before {
+    content: "\e61b";
+}
+
+.n2-i-s-open:before {
+    content: "\e61c";
+}
+
+.n2-i-s-close:before {
+    content: "\e61d";
+}
+
+.n2-i-next:before {
+    content: "\e61e";
+}
+
+.n2-i-n-success:before {
+    content: "\e61f";
+}
+
+.n2-i-n-notice:before {
+    content: "\e620";
+}
+
+.n2-i-n-error:before {
+    content: "\e621";
+}
+
+.n2-i-n-close:before {
+    content: "\e622";
+}
+
+.n2-i-drag:before {
+    content: "\e623";
+}
+
+.n2-i-a-text:before {
+    content: "\e624";
+}
+
+.n2-i-a-refresh:before {
+    content: "\e625";
+}
+
+.n2-i-a-html:before {
+    content: "\e626";
+}
+
+.n2-i-a-export:before {
+    content: "\e627";
+}
+
+.n2-i-a-duplicate:before {
+    content: "\e628";
+}
+
+.n2-i-a-deletes:before {
+    content: "\e629";
+}
+
+.n2-i-a-delete:before {
+    content: "\e62a";
+}
+
+.n2-i-a-back:before {
+    content: "\e62b";
+}
+
 .n2-i-up:before {
     content: "\e63e";
 }
@@ -711,7 +891,6 @@
 .n2-i-folder:before {
     content: "\e63d";
 }
-
 
 .n2 {
     box-sizing: initial;
@@ -943,7 +1122,7 @@ jQuery UI
 .n2 a {
     -moz-transition: none;
     -webkit-transition: none;
-    -o-transition: color 0 ease-in;
+    -o-transition: color 0s ease-in;
     transition: none;
     outline: 0;
 }
@@ -1451,7 +1630,7 @@ html[dir="rtl"] .n2-header-menu .n2-menu-has-sub .n2-menu-sub {
     position: relative;
     top: 0;
     height: 60px;
-    z-index: 10;
+    z-index: 1020;
     margin-right: -1px;
     border-bottom: 1px solid #1c2329;
     display: flex;
@@ -2253,29 +2432,6 @@ html[dir="rtl"] .n2-manage-set {
     font-weight: normal;
 }
 
-.ui-rotatable-handle {
-    height: 20px;
-    width: 20px;
-    cursor: pointer;
-    left: 50%;
-    bottom: -30px;
-    position: absolute;
-    margin-left: -10px;
-    background: #0c92df;
-    border-radius: 3px;
-}
-
-.ui-rotatable-handle:before {
-    display: block;
-    content: '\e642';
-    font-family: 'Nextend';
-    font-size: 16px;
-    text-align: center;
-    line-height: 20px;
-    color: #fff;
-    text-align: center;
-}
-
 .n2-nav {
     position: relative;
     z-index: 11;
@@ -2380,6 +2536,12 @@ html[dir="rtl"] .n2-manage-set {
 
 .n2-label label {
     color: #7b8898;
+}
+
+.n2-label label .n2-i,
+.n2-form-element-mixed label .n2-i {
+    font-size: 16px;
+    vertical-align: middle;
 }
 
 .n2-label label[data-n2tip]:after {
@@ -2658,6 +2820,43 @@ html[dir="rtl"] .n2-form-element-text .n2-text-unit {
     border-left-width: 1px;
 }
 
+.n2-form-element-connected-marginpadding {
+    margin-left: 10px;
+}
+
+.n2-form-element-connected-marginpadding .n2-text-sub-label {
+    display: inline-block;
+    border: 2px solid #28313a;
+    border-right-width: 1px;
+    background: #28313a;
+    height: 24px;
+    line-height: 24px;
+    color: #9aa7b2;
+    vertical-align: top;
+    padding: 0 5px;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.n2-form-element-connected-marginpadding.n2-values-linked .n2-text-sub-label .n2-i:before {
+    content: '\e64d';
+}
+
+.n2-form-element-connected-marginpadding .n2-form-element-text {
+    position: relative;
+    border-radius: 0;
+    margin-right: 0;
+    margin-left: 0;
+    border-left-width: 1px;
+    border-right-width: 1px;
+}
+
+.n2-form-element-connected-marginpadding.n2-values-linked .n2-form-element-text + .n2-form-element-text {
+    display: none;
+}
+
 .n2-form-element-text .n2-ui-slider-container {
     display: none;
     position: absolute;
@@ -2731,7 +2930,8 @@ html[dir="rtl"] .n2-form-element-text .n2-text-unit {
     height: 96px;
     border: 2px solid #303b47;
     background-position: 50% 50%;
-    background-size: cover;
+    background-size: contain;
+    background-repeat: no-repeat;
     margin: 0 10px;
     overflow: hidden;
     cursor: pointer;
@@ -3549,6 +3749,14 @@ NextendCheckbox
     border: 0;
     width: 22px;
     height: 22px;
+    text-align: center;
+    line-height: 22px;
+}
+
+.n2-form-element-icon .n2-form-element-preview > * {
+    color: #fff;
+    font-size: 22px;
+    vertical-align: top;
 }
 
 .n2-icons-modal .n2-modal-content {
@@ -3561,6 +3769,10 @@ NextendCheckbox
     width: 32px;
     height: 32px;
     cursor: pointer;
+    font-size: 24px;
+    line-height: 32px;
+    text-align: center;
+    color: #000;
 }
 
 .n2-icons-modal .n2-modal-content {
@@ -4541,6 +4753,7 @@ License: MIT
     border-radius: 3px;
     float: left;
     z-index: 0;
+    overflow: hidden;
 }
 
 .n2-sp-palette {
@@ -4555,7 +4768,7 @@ License: MIT
     border: 0;
 }
 
-.n2-sp-palette .n2-sp-thumb-inner{
+.n2-sp-palette .n2-sp-thumb-inner {
     width: 20px;
     height: 20px;
 }
@@ -4641,6 +4854,9 @@ License: MIT
     left: 0;
     bottom: 0;
     right: 0;
+}
+
+.n2-sp-thumb-inner {
     border-radius: 3px;
 }
 
@@ -4660,226 +4876,6 @@ License: MIT
 .n2-sp-palette .n2-sp-thumb-dark.n2-sp-thumb-active .n2-sp-thumb-inner {
     background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjEwMPRyoQAAAMdJREFUOE+tkgsNwzAMRMugEAahEAahEAZhEAqlEAZhEAohEAYh81X2dIm8fKpEspLGvudPOsUYpxE2BIJCroJmEW9qJ+MKaBFhEMNabSy9oIcIPwrB+afvAUFoK4H0tMaQ3XtlrggDhOVVMuT4E5MMG0FBbCEYzjYT7OxLEvIHQLY2zWwQ3D+9luyOQTfKDiFD3iUIfPk8VqrKjgAiSfGFPecrg6HN6m/iBcwiDAo7WiBeawa+Kwh7tZoSCGLMqwlSAzVDhoK+6vH4G0P5wdkAAAAASUVORK5CYII=);
 }
-/*!
- * jQuery contextMenu - Plugin for simple contextMenu handling
- *
- * Version: v2.1.0
- *
- * Authors: Björn Brala (SWIS.nl), Rodney Rehm, Addy Osmani (patches for FF)
- * Web: http://swisnl.github.io/jQuery-contextMenu/
- *
- * Copyright (c) 2011-2016 SWIS BV and contributors
- *
- * Licensed under
- *   MIT License http://www.opensource.org/licenses/mit-license
- *
- * Date: 2016-01-08T20:22:20.182Z
- */
-
-.context-menu-icon:before {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width: 28px;
-    font-family: 'Nextend' !important;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: normal;
-    line-height: 1;
-    color: #cedae2;
-    text-align: center;
-    -webkit-transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
-    -o-transform: translateY(-50%);
-    transform: translateY(-50%);
-
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-.context-menu-hover .context-menu-icon:before {
-    color: #fff;
-}
-
-.context-menu-icon-lock:before {
-    content: "\e609";
-}
-
-.context-menu-icon-unlock:before {
-    content: "\e63f";
-}
-
-.context-menu-icon-focus:before {
-    content: "\e643";
-}
-
-.context-menu-icon-delete:before {
-    content: "\e612";
-}
-
-.context-menu-icon-duplicate:before {
-    content: "\e611";
-}
-
-.context-menu-icon-copy:before {
-    content: "\e907";
-}
-
-.context-menu-icon-paste:before {
-    content: "\e908";
-}
-
-.context-menu-icon-in:before {
-    content: "\e641";
-}
-
-.context-menu-icon-loop:before {
-    content: "\e642";
-}
-
-.context-menu-icon-out:before {
-    content: "\e640";
-}
-
-.context-menu-icon.context-menu-hover:before {
-    color: #fff;
-}
-
-.context-menu-list {
-    position: absolute;
-    display: inline-block;
-    min-width: 100px;
-    max-width: 360px;
-    padding: 5px 0;
-    margin: 5px;
-    font-family: inherit;
-    font-size: inherit;
-    list-style-type: none;
-    background: #202934;
-    border-radius: 3px;
-}
-
-.context-menu-item {
-    position: relative;
-    padding: 0 30px;
-    line-height: 32px;
-    color: #cedae2;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    margin: 0;
-    font-size: 12px;
-    white-space: nowrap;
-}
-
-.context-menu-separator {
-    padding: 0;
-    margin: 5px 0;
-}
-
-.context-menu-html {
-    text-align: center;
-    font-size: 14px;
-    font-weight: bold;
-    text-transform: uppercase;
-}
-
-.context-menu-item > label > input,
-.context-menu-item > label > textarea {
-    -webkit-user-select: text;
-    -moz-user-select: text;
-    -ms-user-select: text;
-    user-select: text;
-}
-
-.context-menu-item.context-menu-hover {
-    color: #fff;
-    cursor: pointer;
-    background-color: #0c92df;
-}
-
-.context-menu-item.context-menu-disabled {
-    color: #626262;
-    background-color: #fff;
-}
-
-.context-menu-item.context-menu-disabled {
-    color: #626262;
-}
-
-.context-menu-input.context-menu-hover,
-.context-menu-item.context-menu-disabled.context-menu-hover {
-    cursor: default;
-    background-color: #eee;
-}
-
-.context-menu-submenu:after {
-    position: absolute;
-    top: 50%;
-    right: 8px;
-    z-index: 1;
-    width: 0;
-    height: 0;
-    content: '';
-    border-color: transparent transparent transparent #cedae2;
-    border-style: solid;
-    border-width: 4px 0 4px 4px;
-    -webkit-transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
-    -o-transform: translateY(-50%);
-    transform: translateY(-50%);
-}
-
-/**
- * Inputs
- */
-.context-menu-item.context-menu-input {
-    padding: 5px 10px;
-}
-
-/* vertically align inside labels */
-.context-menu-input > label > * {
-    vertical-align: top;
-}
-
-/* position checkboxes and radios as icons */
-.context-menu-input > label > input[type="checkbox"],
-.context-menu-input > label > input[type="radio"] {
-    position: relative;
-    top: 3px;
-}
-
-.context-menu-input > label,
-.context-menu-input > label > input[type="text"],
-.context-menu-input > label > textarea,
-.context-menu-input > label > select {
-    display: block;
-    width: 100%;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-}
-
-.context-menu-input > label > textarea {
-    height: 100px;
-}
-
-.context-menu-item > .context-menu-list {
-    top: 5px;
-    /* re-positioned by js */
-    right: -5px;
-    display: none;
-}
-
-.context-menu-item.context-menu-visible > .context-menu-list {
-    display: block;
-}
-
-.context-menu-accesskey {
-    text-decoration: underline;
-}
-
 .n2-vt {
     vertical-align: top;
 }
@@ -4911,18 +4907,23 @@ License: MIT
     left: -10000px;
     top: -10000px;
     margin-top: -9000000px;
-    font-size: 11px;
-    color: #b2bfc9;
-    background-color: RGBA(0, 0, 0, 0.9);
-    line-height: 16px;
-    padding: 5px 10px;
     opacity: 0;
     z-index: 100000;
+    border-radius: 3px;
+    line-height: 16px;
+    padding: 4px 6px;
+    color: #fff;
+    font-size: 10px;
+    background: RGBA(32, 41, 52, 0.95);
 }
 
 .n2-tooltip.n2-active {
     opacity: 1;
     margin: 10px;
+}
+
+.n2-position-display-active .n2-tooltip {
+    display: none;
 }
 .n2-button {
     display: inline-block;
@@ -5139,6 +5140,10 @@ COLOR
     background: #0c92df;
 }
 
+.n2-button-purple {
+    background: #5f39c2;
+}
+
 /**
 BUTTON MENU
 **/
@@ -5313,6 +5318,7 @@ LIST
 }
 
 .n2-list li {
+    display: block;
     position: relative;
     margin: 0;
     line-height: 39px;
@@ -5372,7 +5378,7 @@ html[dir="rtl"] .n2-list li.n2-active > a {
     position: absolute;
     top: 0;
     right: 0;
-    padding: 5px 3px 0;
+    padding: 2px 3px 0;
     line-height: 24px;
 }
 
@@ -5433,6 +5439,7 @@ html[dir="rtl"] .n2-list li > .n2-actions {
     border-radius: 3px;
     background-color: #212d3a;
     background-size: cover;
+    background-position: 50% 50%;
     opacity: 1;
     transition: opacity 0.6s;
     box-shadow: 0 0 5px RGBA(0, 0, 0, 0.05);
@@ -5746,11 +5753,29 @@ html[dir="rtl"] .n2-list li > .n2-actions {
     background: transparent;
 }
 
+.n2-box-promo-overlay,
+.n2-box-promo-overlay:HOVER,
+.n2-box-promo-overlay:FOCUS,
+.n2-box-promo-overlay:VISITED {
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: 100%;
+    color: #fff;
+    text-align: center;
+}
+
 .n2-box-promo .n2-close {
     position: absolute;
     right: 10px;
     top: 10px;
     cursor: pointer;
+    display: none;
+    z-index: 3;
+}
+
+.n2-box-promo:hover .n2-close {
+    display: block;
 }
 
 .n2-box-promo .n2-close:before {
@@ -6210,12 +6235,19 @@ html[dir="rtl"] .n2-list li > .n2-actions {
     position: relative;
 }
 
+.ui-customresizable-handle,
 .ui-resizable-handle {
     position: absolute;
     font-size: 0.1px;
     display: block;
 }
 
+.ui-spacing-handle {
+    position: absolute;
+    display: block;
+}
+
+.ui-customresizable-disabled .ui-customresizable-handle,
 .ui-resizable-disabled .ui-resizable-handle,
 .ui-resizable-autohide .ui-resizable-handle {
     display: none;
@@ -6229,7 +6261,8 @@ html[dir="rtl"] .n2-list li > .n2-actions {
     left: 0;
 }
 
-.ui-resizable-s {
+.ui-resizable-s,
+.ui-customresizable-s {
     cursor: s-resize;
     height: 7px;
     width: 100%;
@@ -6237,7 +6270,8 @@ html[dir="rtl"] .n2-list li > .n2-actions {
     left: 0;
 }
 
-.ui-resizable-e {
+.ui-resizable-e,
+.ui-customresizable-e {
     cursor: e-resize;
     width: 7px;
     right: -5px;
@@ -6245,7 +6279,8 @@ html[dir="rtl"] .n2-list li > .n2-actions {
     height: 100%;
 }
 
-.ui-resizable-w {
+.ui-resizable-w,
+.ui-customresizable-w {
     cursor: w-resize;
     width: 7px;
     left: -5px;

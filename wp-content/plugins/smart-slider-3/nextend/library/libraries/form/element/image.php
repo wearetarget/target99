@@ -30,7 +30,7 @@ class N2ElementImage extends N2ElementText {
 
         $params['alt'] = N2XmlHelper::getAttribute($this->_xml, 'alt');
 
-        N2JS::addInline("new NextendElementImage('" . $this->_id . "', " . json_encode($params) . " );");
+        N2JS::addInline("new N2Classes.FormElementImage('" . $this->_id . "', " . json_encode($params) . " );");
 
         if ($this->fixed) {
 

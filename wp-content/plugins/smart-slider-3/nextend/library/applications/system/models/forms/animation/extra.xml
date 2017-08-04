@@ -59,6 +59,7 @@
                 <option>SliderMouseLeave</option>
             </param>
             <param type="onoff" name="repeatable" label="Repeatable" default="0"/>
+            <param type="onoff" name="repeat-self-only" label="Repeat self only" default="0"/>
             <param type="onoff" name="instant-out" label="Instant out" default="0"/>
         </param>
     </params>

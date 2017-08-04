@@ -1,7 +1,6 @@
-(function ($, scope, undefined) {
+N2Require('SmartSliderMainAnimationSimple', ['SmartSliderMainAnimationAbstract'], [], function ($, scope, undefined) {
 
-
-    function NextendSmartSliderMainAnimationSimple(slider, parameters) {
+    function SmartSliderMainAnimationSimple(slider, parameters) {
 
         this.postBackgroundAnimation = false;
         this._currentBackgroundAnimation = false;
@@ -14,69 +13,67 @@
         }, parameters);
         parameters.delay /= 1000;
 
-        NextendSmartSliderMainAnimationAbstract.prototype.constructor.apply(this, arguments);
+        scope.SmartSliderMainAnimationAbstract.prototype.constructor.apply(this, arguments);
 
         this.setActiveSlide(this.slider.slides.eq(this.slider.currentSlideIndex));
 
-        this.animations = [];
-
         switch (this.parameters.type) {
             case 'no':
-                this.animations.push(this._mainAnimationNo);
+                this.animation = this._mainAnimationNo;
                 break;
             case 'fade':
-                this.animations.push(this._mainAnimationFade);
+                this.animation = this._mainAnimationFade;
                 break;
             case 'crossfade':
-                this.animations.push(this._mainAnimationCrossFade);
+                this.animation = this._mainAnimationCrossFade;
                 break;
             case 'vertical':
                 if (this.parameters.parallax == 1) {
-                    this.animations.push(this._mainAnimationVertical);
+                    this.animation = this._mainAnimationVertical;
                 } else {
-                    this.animations.push(this._mainAnimationVerticalParallax);
+                    this.animation = this._mainAnimationVerticalParallax;
                 }
                 break;
             case 'vertical-reversed':
                 if (this.parameters.parallax == 1) {
-                    this.animations.push(this._mainAnimationVerticalReversed);
+                    this.animation = this._mainAnimationVerticalReversed;
                 } else {
-                    this.animations.push(this._mainAnimationVerticalReversedParallax);
+                    this.animation = this._mainAnimationVerticalReversedParallax;
                 }
                 break;
             case 'horizontal-reversed':
                 if (this.parameters.parallax == 1) {
-                    this.animations.push(this._mainAnimationHorizontalReversed);
+                    this.animation = this._mainAnimationHorizontalReversed;
                 } else {
-                    this.animations.push(this._mainAnimationHorizontalReversedParallax);
+                    this.animation = this._mainAnimationHorizontalReversedParallax;
                 }
                 break;
             default:
                 if (this.parameters.parallax == 1) {
-                    this.animations.push(this._mainAnimationHorizontal);
+                    this.animation = this._mainAnimationHorizontal;
                 } else {
-                    this.animations.push(this._mainAnimationHorizontalParallax);
+                    this.animation = this._mainAnimationHorizontalParallax;
                 }
         }
     };
 
-    NextendSmartSliderMainAnimationSimple.prototype = Object.create(NextendSmartSliderMainAnimationAbstract.prototype);
-    NextendSmartSliderMainAnimationSimple.prototype.constructor = NextendSmartSliderMainAnimationSimple;
+    SmartSliderMainAnimationSimple.prototype = Object.create(scope.SmartSliderMainAnimationAbstract.prototype);
+    SmartSliderMainAnimationSimple.prototype.constructor = SmartSliderMainAnimationSimple;
 
 
-    NextendSmartSliderMainAnimationSimple.prototype.changeTo = function (currentSlideIndex, currentSlide, nextSlideIndex, nextSlide, reversed, isSystem) {
+    SmartSliderMainAnimationSimple.prototype.changeTo = function (currentSlideIndex, currentSlide, nextSlideIndex, nextSlide, reversed, isSystem) {
         if (this.postBackgroundAnimation) {
-            this.postBackgroundAnimation.start(currentSlideIndex, nextSlideIndex);
+            this.postBackgroundAnimation.prepareToSwitchSlide(currentSlideIndex, nextSlideIndex);
         }
 
-        NextendSmartSliderMainAnimationAbstract.prototype.changeTo.apply(this, arguments);
+        scope.SmartSliderMainAnimationAbstract.prototype.changeTo.apply(this, arguments);
     };
 
     /**
      * Used to hide non active slides
      * @param slide
      */
-    NextendSmartSliderMainAnimationSimple.prototype.setActiveSlide = function (slide) {
+    SmartSliderMainAnimationSimple.prototype.setActiveSlide = function (slide) {
         var notActiveSlides = this.slider.slides.not(slide);
         for (var i = 0; i < notActiveSlides.length; i++) {
             this._hideSlide(notActiveSlides.eq(i));
@@ -90,57 +87,52 @@
      * @param slide
      * @private
      */
-    NextendSmartSliderMainAnimationSimple.prototype._hideSlide = function (slide) {
+    SmartSliderMainAnimationSimple.prototype._hideSlide = function (slide) {
         var obj = {};
         obj[nextend.rtl.left] = '-100000px';
         NextendTween.set(slide.get(0), obj);
     };
 
-    NextendSmartSliderMainAnimationSimple.prototype._showSlide = function (slide) {
+    SmartSliderMainAnimationSimple.prototype._showSlide = function (slide) {
         var obj = {};
         obj[nextend.rtl.left] = 0;
         NextendTween.set(slide.get(0), obj);
     };
 
-    NextendSmartSliderMainAnimationAbstract.prototype.cleanSlideIndex = function (slideIndex) {
+    SmartSliderMainAnimationSimple.prototype.cleanSlideIndex = function (slideIndex) {
         this._hideSlide(this.slider.slides.eq(slideIndex));
     };
 
 
-    NextendSmartSliderMainAnimationSimple.prototype.revertTo = function (slideIndex, originalNextSlideIndex) {
+    SmartSliderMainAnimationSimple.prototype.revertTo = function (slideIndex, originalNextSlideIndex) {
 
         var originalNextSlide = this.slider.slides.eq(originalNextSlideIndex)
             .css('zIndex', '');
         this._hideSlide(originalNextSlide);
 
-        NextendSmartSliderMainAnimationAbstract.prototype.revertTo.apply(this, arguments);
+        scope.SmartSliderMainAnimationAbstract.prototype.revertTo.apply(this, arguments);
     };
 
-    NextendSmartSliderMainAnimationSimple.prototype._getAnimation = function () {
-        return $.proxy(this.animations[Math.floor(Math.random() * this.animations.length)], this);
+    SmartSliderMainAnimationSimple.prototype._initAnimation = function (currentSlideIndex, currentSlide, nextSlideIndex, nextSlide, reversed) {
+
+        this.animation(currentSlide, nextSlide, reversed, currentSlideIndex, nextSlideIndex);
     };
 
-    NextendSmartSliderMainAnimationSimple.prototype._initAnimation = function (currentSlideIndex, currentSlide, nextSlideIndex, nextSlide, reversed) {
-        var animation = this._getAnimation();
-
-        animation(currentSlide, nextSlide, reversed, currentSlideIndex, nextSlideIndex);
-    };
-
-    NextendSmartSliderMainAnimationSimple.prototype.onChangeToComplete = function (previousSlideIndex, currentSlideIndex, isSystem) {
+    SmartSliderMainAnimationSimple.prototype.onChangeToComplete = function (previousSlideIndex, currentSlideIndex, isSystem) {
 
         this._hideSlide(this.slider.slides.eq(previousSlideIndex));
 
-        NextendSmartSliderMainAnimationAbstract.prototype.onChangeToComplete.apply(this, arguments);
+        scope.SmartSliderMainAnimationAbstract.prototype.onChangeToComplete.apply(this, arguments);
     };
 
-    NextendSmartSliderMainAnimationSimple.prototype.onReverseChangeToComplete = function (previousSlideIndex, currentSlideIndex, isSystem) {
+    SmartSliderMainAnimationSimple.prototype.onReverseChangeToComplete = function (previousSlideIndex, currentSlideIndex, isSystem) {
 
         this._hideSlide(this.slider.slides.eq(previousSlideIndex));
 
-        NextendSmartSliderMainAnimationAbstract.prototype.onReverseChangeToComplete.apply(this, arguments);
+        scope.SmartSliderMainAnimationAbstract.prototype.onReverseChangeToComplete.apply(this, arguments);
     };
 
-    NextendSmartSliderMainAnimationSimple.prototype._mainAnimationNo = function (currentSlide, nextSlide) {
+    SmartSliderMainAnimationSimple.prototype._mainAnimationNo = function (currentSlide, nextSlide) {
 
         this._showSlide(nextSlide);
 
@@ -181,7 +173,7 @@
         }, this));
     };
 
-    NextendSmartSliderMainAnimationSimple.prototype._mainAnimationFade = function (currentSlide, nextSlide) {
+    SmartSliderMainAnimationSimple.prototype._mainAnimationFade = function (currentSlide, nextSlide) {
         currentSlide.css('zIndex', 5);
         this._showSlide(nextSlide);
 
@@ -194,7 +186,7 @@
             var needShift = false,
                 resetShift = false;
             if (this.parameters.shiftedBackgroundAnimation == 'auto') {
-                if (currentSlide.data('slide').$layers.length > 0) {
+                if (currentSlide.data('slide').hasLayers()) {
                     needShift = true;
                 } else {
                     resetShift = true;
@@ -233,7 +225,7 @@
         }, this));
     };
 
-    NextendSmartSliderMainAnimationSimple.prototype._mainAnimationCrossFade = function (currentSlide, nextSlide) {
+    SmartSliderMainAnimationSimple.prototype._mainAnimationCrossFade = function (currentSlide, nextSlide) {
         currentSlide.css('zIndex', 5);
         nextSlide.css('opacity', 0);
         this._showSlide(nextSlide);
@@ -247,7 +239,7 @@
             var needShift = false,
                 resetShift = false;
             if (this.parameters.shiftedBackgroundAnimation == 'auto') {
-                if (currentSlide.data('slide').$layers.length > 0) {
+                if (currentSlide.data('slide').hasLayers()) {
                     needShift = true;
                 } else {
                     resetShift = true;
@@ -289,43 +281,43 @@
         }, this));
     };
 
-    NextendSmartSliderMainAnimationSimple.prototype._mainAnimationHorizontal = function (currentSlide, nextSlide, reversed, currentSlideIndex, nextSlideIndex) {
+    SmartSliderMainAnimationSimple.prototype._mainAnimationHorizontal = function (currentSlide, nextSlide, reversed, currentSlideIndex, nextSlideIndex) {
         this.__mainAnimationDirection(currentSlide, nextSlide, 'horizontal', 1, reversed, currentSlideIndex, nextSlideIndex);
     };
 
-    NextendSmartSliderMainAnimationSimple.prototype._mainAnimationVertical = function (currentSlide, nextSlide, reversed, currentSlideIndex, nextSlideIndex) {
+    SmartSliderMainAnimationSimple.prototype._mainAnimationVertical = function (currentSlide, nextSlide, reversed, currentSlideIndex, nextSlideIndex) {
         this._showSlide(nextSlide);
         this.__mainAnimationDirection(currentSlide, nextSlide, 'vertical', 1, reversed, currentSlideIndex, nextSlideIndex);
     };
 
-    NextendSmartSliderMainAnimationSimple.prototype._mainAnimationHorizontalParallax = function (currentSlide, nextSlide, reversed) {
+    SmartSliderMainAnimationSimple.prototype._mainAnimationHorizontalParallax = function (currentSlide, nextSlide, reversed) {
         this.__mainAnimationDirection(currentSlide, nextSlide, 'horizontal', this.parameters.parallax, reversed);
     };
 
-    NextendSmartSliderMainAnimationSimple.prototype._mainAnimationVerticalParallax = function (currentSlide, nextSlide, reversed) {
+    SmartSliderMainAnimationSimple.prototype._mainAnimationVerticalParallax = function (currentSlide, nextSlide, reversed) {
         this._showSlide(nextSlide);
         this.__mainAnimationDirection(currentSlide, nextSlide, 'vertical', this.parameters.parallax, reversed);
     };
 
-    NextendSmartSliderMainAnimationSimple.prototype._mainAnimationHorizontalReversed = function (currentSlide, nextSlide, reversed, currentSlideIndex, nextSlideIndex) {
+    SmartSliderMainAnimationSimple.prototype._mainAnimationHorizontalReversed = function (currentSlide, nextSlide, reversed, currentSlideIndex, nextSlideIndex) {
         this.__mainAnimationDirection(currentSlide, nextSlide, 'horizontal', 1, !reversed, currentSlideIndex, nextSlideIndex);
     };
 
-    NextendSmartSliderMainAnimationSimple.prototype._mainAnimationVerticalReversed = function (currentSlide, nextSlide, reversed, currentSlideIndex, nextSlideIndex) {
+    SmartSliderMainAnimationSimple.prototype._mainAnimationVerticalReversed = function (currentSlide, nextSlide, reversed, currentSlideIndex, nextSlideIndex) {
         this._showSlide(nextSlide);
         this.__mainAnimationDirection(currentSlide, nextSlide, 'vertical', 1, !reversed, currentSlideIndex, nextSlideIndex);
     };
 
-    NextendSmartSliderMainAnimationSimple.prototype._mainAnimationHorizontalReversedParallax = function (currentSlide, nextSlide, reversed) {
+    SmartSliderMainAnimationSimple.prototype._mainAnimationHorizontalReversedParallax = function (currentSlide, nextSlide, reversed) {
         this.__mainAnimationDirection(currentSlide, nextSlide, 'horizontal', this.parameters.parallax, !reversed);
     };
 
-    NextendSmartSliderMainAnimationSimple.prototype._mainAnimationVerticalReversedParallax = function (currentSlide, nextSlide, reversed) {
+    SmartSliderMainAnimationSimple.prototype._mainAnimationVerticalReversedParallax = function (currentSlide, nextSlide, reversed) {
         this._showSlide(nextSlide);
         this.__mainAnimationDirection(currentSlide, nextSlide, 'vertical', this.parameters.parallax, !reversed);
     };
 
-    NextendSmartSliderMainAnimationSimple.prototype.__mainAnimationDirection = function (currentSlide, nextSlide, direction, parallax, reversed, currentSlideIndex, nextSlideIndex) {
+    SmartSliderMainAnimationSimple.prototype.__mainAnimationDirection = function (currentSlide, nextSlide, direction, parallax, reversed, currentSlideIndex, nextSlideIndex) {
         var property = '',
             propertyValue = 0,
             parallaxProperty = '',
@@ -393,7 +385,7 @@
             var needShift = false,
                 resetShift = false;
             if (this.parameters.shiftedBackgroundAnimation == 'auto') {
-                if (currentSlide.data('slide').$layers.length > 0) {
+                if (currentSlide.data('slide').hasLayers()) {
                     needShift = true;
                 } else {
                     resetShift = true;
@@ -480,11 +472,11 @@
         }, this));
     };
 
-    NextendSmartSliderMainAnimationSimple.prototype.getExtraDelay = function () {
+    SmartSliderMainAnimationSimple.prototype.getExtraDelay = function () {
         return 0;
     };
 
-    NextendSmartSliderMainAnimationSimple.prototype.adjustMainAnimation = function () {
+    SmartSliderMainAnimationSimple.prototype.adjustMainAnimation = function () {
         var duration = this.parameters.duration,
             delay = this.parameters.delay,
             backgroundAnimationDuration = this.timeline.totalDuration(),
@@ -519,18 +511,17 @@
         }
     };
 
-    NextendSmartSliderMainAnimationSimple.prototype.hasBackgroundAnimation = function () {
+    SmartSliderMainAnimationSimple.prototype.hasBackgroundAnimation = function () {
         return false;
     };
 
-    scope.NextendSmartSliderMainAnimationSimple = NextendSmartSliderMainAnimationSimple;
+    return SmartSliderMainAnimationSimple;
+});
+N2Require('SmartSliderFrontendBackgroundAnimation', ['SmartSliderMainAnimationSimple'], [], function ($, scope, undefined) {
 
-})(n2, window);
-(function ($, scope, undefined) {
-
-    function NextendSmartSliderFrontendBackgroundAnimation(slider, parameters, backgroundAnimations) {
+    function SmartSliderFrontendBackgroundAnimation(slider, parameters, backgroundAnimations) {
         this._currentBackgroundAnimation = false;
-        NextendSmartSliderMainAnimationSimple.prototype.constructor.call(this, slider, parameters);
+        scope.SmartSliderMainAnimationSimple.prototype.constructor.call(this, slider, parameters);
         this.isReverseAllowed = false;
 
         this.bgAnimationElement = this.sliderElement.find('.n2-ss-background-animation');
@@ -543,15 +534,20 @@
 
         this.backgroundImages = slider.backgroundImages.getBackgroundImages();
 
+        /**
+         * Hack to force browser to better image rendering {@link http://stackoverflow.com/a/14308227/305604}
+         * Prevents a Firefox glitch
+         */
+        slider.backgroundImages.hack();
     };
 
-    NextendSmartSliderFrontendBackgroundAnimation.prototype = Object.create(NextendSmartSliderMainAnimationSimple.prototype);
-    NextendSmartSliderFrontendBackgroundAnimation.prototype.constructor = NextendSmartSliderFrontendBackgroundAnimation;
+    SmartSliderFrontendBackgroundAnimation.prototype = Object.create(scope.SmartSliderMainAnimationSimple.prototype);
+    SmartSliderFrontendBackgroundAnimation.prototype.constructor = SmartSliderFrontendBackgroundAnimation;
 
     /**
-     * @returns [{NextendSmartSliderBackgroundAnimationAbstract}, {string}]
+     * @returns [{scope.SmartSliderBackgroundAnimationAbstract}, {string}]
      */
-    NextendSmartSliderFrontendBackgroundAnimation.prototype.getBackgroundAnimation = function (i) {
+    SmartSliderFrontendBackgroundAnimation.prototype.getBackgroundAnimation = function (i) {
         var animations = this.backgroundAnimations.global,
             speed = this.backgroundAnimations.speed;
         if (typeof this.backgroundAnimations.slides[i] != 'undefined' && this.backgroundAnimations.slides[i]) {
@@ -565,16 +561,16 @@
         return [animations[Math.floor(Math.random() * animations.length)], speed];
     },
 
-    /**
-     * Initialize the current background animation
-     * @param currentSlideIndex
-     * @param currentSlide
-     * @param nextSlideIndex
-     * @param nextSlide
-     * @param reversed
-     * @private
-     */
-        NextendSmartSliderFrontendBackgroundAnimation.prototype._initAnimation = function (currentSlideIndex, currentSlide, nextSlideIndex, nextSlide, reversed) {
+        /**
+         * Initialize the current background animation
+         * @param currentSlideIndex
+         * @param currentSlide
+         * @param nextSlideIndex
+         * @param nextSlide
+         * @param reversed
+         * @private
+         */
+        SmartSliderFrontendBackgroundAnimation.prototype._initAnimation = function (currentSlideIndex, currentSlide, nextSlideIndex, nextSlide, reversed) {
             this._currentBackgroundAnimation = false;
             var currentImage = this.backgroundImages[currentSlideIndex],
                 nextImage = this.backgroundImages[nextSlideIndex];
@@ -598,9 +594,9 @@
                             durationMultiplier = 0.5;
                             break;
                     }
-                    this._currentBackgroundAnimation = new window['NextendSmartSliderBackgroundAnimation' + backgroundAnimation[0].type](this, currentImage.element, nextImage.element, backgroundAnimation[0], durationMultiplier, reversed);
+                    this._currentBackgroundAnimation = new scope['SmartSliderBackgroundAnimation' + backgroundAnimation[0].type](this, currentImage.element, nextImage.element, backgroundAnimation[0], durationMultiplier, reversed);
 
-                    NextendSmartSliderMainAnimationSimple.prototype._initAnimation.apply(this, arguments);
+                    scope.SmartSliderMainAnimationSimple.prototype._initAnimation.apply(this, arguments);
 
                     this._currentBackgroundAnimation.postSetup();
 
@@ -617,7 +613,7 @@
                 }
             }
 
-            NextendSmartSliderMainAnimationSimple.prototype._initAnimation.apply(this, arguments);
+            scope.SmartSliderMainAnimationSimple.prototype._initAnimation.apply(this, arguments);
         };
 
     /**
@@ -625,73 +621,74 @@
      * @param previousSlideIndex
      * @param currentSlideIndex
      */
-    NextendSmartSliderFrontendBackgroundAnimation.prototype.onChangeToComplete = function (previousSlideIndex, currentSlideIndex) {
+    SmartSliderFrontendBackgroundAnimation.prototype.onChangeToComplete = function (previousSlideIndex, currentSlideIndex) {
         if (this._currentBackgroundAnimation) {
             this._currentBackgroundAnimation.ended();
             this._currentBackgroundAnimation = false;
         }
-        NextendSmartSliderMainAnimationSimple.prototype.onChangeToComplete.apply(this, arguments);
+        scope.SmartSliderMainAnimationSimple.prototype.onChangeToComplete.apply(this, arguments);
     };
 
-    NextendSmartSliderFrontendBackgroundAnimation.prototype.onReverseChangeToComplete = function (previousSlideIndex, currentSlideIndex, isSystem) {
+    SmartSliderFrontendBackgroundAnimation.prototype.onReverseChangeToComplete = function (previousSlideIndex, currentSlideIndex, isSystem) {
         if (this._currentBackgroundAnimation) {
             this._currentBackgroundAnimation.revertEnded();
             this._currentBackgroundAnimation = false;
         }
-        NextendSmartSliderMainAnimationSimple.prototype.onReverseChangeToComplete.apply(this, arguments);
+        scope.SmartSliderMainAnimationSimple.prototype.onReverseChangeToComplete.apply(this, arguments);
     };
 
-    NextendSmartSliderFrontendBackgroundAnimation.prototype.getExtraDelay = function () {
+    SmartSliderFrontendBackgroundAnimation.prototype.getExtraDelay = function () {
         if (this._currentBackgroundAnimation) {
             return this._currentBackgroundAnimation.getExtraDelay();
         }
         return 0;
     };
 
-    NextendSmartSliderFrontendBackgroundAnimation.prototype.hasBackgroundAnimation = function () {
+    SmartSliderFrontendBackgroundAnimation.prototype.hasBackgroundAnimation = function () {
         return this._currentBackgroundAnimation;
     };
 
-    scope.NextendSmartSliderFrontendBackgroundAnimation = NextendSmartSliderFrontendBackgroundAnimation;
+    return SmartSliderFrontendBackgroundAnimation;
 
-})(n2, window);
-(function ($, scope, undefined) {
+});
+N2Require('SmartSliderResponsiveSimple', ['SmartSliderResponsive'], [], function ($, scope, undefined) {
 
-    function NextendSmartSliderResponsiveSimple() {
+    function SmartSliderResponsiveSimple() {
         this.round = 1;
-        NextendSmartSliderResponsive.prototype.constructor.apply(this, arguments);
+        scope.SmartSliderResponsive.prototype.constructor.apply(this, arguments);
     };
 
-    NextendSmartSliderResponsiveSimple.prototype = Object.create(NextendSmartSliderResponsive.prototype);
-    NextendSmartSliderResponsiveSimple.prototype.constructor = NextendSmartSliderResponsiveSimple;
+    SmartSliderResponsiveSimple.prototype = Object.create(scope.SmartSliderResponsive.prototype);
+    SmartSliderResponsiveSimple.prototype.constructor = SmartSliderResponsiveSimple;
 
-    NextendSmartSliderResponsiveSimple.prototype.addResponsiveElements = function () {
-        this.helperElements = {};
+    SmartSliderResponsiveSimple.prototype.init = function () {
 
-        this._sliderHorizontal = this.addResponsiveElement(this.sliderElement, ['width', 'marginLeft', 'marginRight'], 'w', 'slider');
-        this.addResponsiveElement(this.sliderElement.find('.n2-ss-slider-1'), ['width', 'paddingLeft', 'paddingRight', 'borderLeftWidth', 'borderRightWidth'], 'w');
+        if (this.sliderElement.find('.n2-ss-section-main-content').length) {
+            this.updateVerticalRatios = this._updateVerticalRatios;
+        }
 
-        this._sliderVertical = this.addResponsiveElement(this.sliderElement, ['height', 'marginTop', 'marginBottom'], 'h', 'slider');
-        this.addResponsiveElement(this.sliderElement, ['fontSize'], 'fontRatio', 'slider');
-        this.addResponsiveElement(this.sliderElement.find('.n2-ss-slider-1'), ['height', 'paddingTop', 'paddingBottom', 'borderTopWidth', 'borderBottomWidth'], 'h');
+        this._sliderHorizontal = this.addHorizontalElement(this.sliderElement, ['width', 'marginLeft', 'marginRight'], 'w', 'slider');
+        this.addHorizontalElement(this.sliderElement.find('.n2-ss-slider-1'), ['width', 'paddingLeft', 'paddingRight', 'borderLeftWidth', 'borderRightWidth'], 'w');
 
-        this.helperElements.canvas = this.addResponsiveElement(this.sliderElement.find('.n2-ss-slide'), ['width'], 'w', 'slideouter');
+        this._sliderVertical = this.addVerticalElement(this.sliderElement, ['height', 'marginTop', 'marginBottom'], 'h', 'slider');
+        this.addHorizontalElement(this.sliderElement, ['fontSize'], 'fontRatio', 'slider');
+        this.addVerticalElement(this.sliderElement.find('.n2-ss-slider-1'), ['height', 'paddingTop', 'paddingBottom', 'borderTopWidth', 'borderBottomWidth'], 'h');
 
-        this.addResponsiveElement(this.sliderElement.find('.n2-ss-slide'), ['height'], 'h', 'slideouter');
+        this.addHorizontalElement(this.sliderElement.find('.n2-ss-slide'), ['width'], 'w', 'slideouter');
+
+        this.addVerticalElement(this.sliderElement.find('.n2-ss-slide'), ['height'], 'h', 'slideouter');
 
         var layerContainers = this.sliderElement.find('.n2-ss-layers-container');
-        this.addResponsiveElement(layerContainers, ['width'], 'slideW', 'slide');
-        this.addResponsiveElement(layerContainers, ['height'], 'slideH', 'slide').setCentered();
+        this.addHorizontalElement(layerContainers, ['width'], 'slideW', 'slide');
+        this.addVerticalElement(layerContainers, ['height'], 'slideH', 'slide').setCentered();
 
         var parallax = this.slider.parameters.mainanimation.parallax;
         var backgroundImages = this.slider.backgroundImages.getBackgroundImages();
         for (var i = 0; i < backgroundImages.length; i++) {
             if (parallax != 1) {
-                this.addResponsiveElement(backgroundImages[i].element, ['width'], 'w');
-                this.addResponsiveElement(backgroundImages[i].element, ['height'], 'h');
+                this.addHorizontalElement(backgroundImages[i].element, ['width'], 'w');
+                this.addVerticalElement(backgroundImages[i].element, ['height'], 'h');
             }
-
-            this.addResponsiveElementBackgroundImageAsSingle(backgroundImages[i].image, backgroundImages[i], []);
         }
 
 
@@ -706,15 +703,11 @@
         }
     };
 
-    NextendSmartSliderResponsiveSimple.prototype.getCanvas = function () {
-        return this.helperElements.canvas;
-    };
-
-    NextendSmartSliderResponsiveSimple.prototype.videoPlayerError = function (video) {
+    SmartSliderResponsiveSimple.prototype.videoPlayerError = function (video) {
         video.remove();
     };
 
-    NextendSmartSliderResponsiveSimple.prototype.videoPlayerReady = function (video) {
+    SmartSliderResponsiveSimple.prototype.videoPlayerReady = function (video) {
         video.data('ratio', video[0].videoWidth / video[0].videoHeight);
         video.addClass('n2-active');
 
@@ -724,7 +717,7 @@
         }, this));
     };
 
-    NextendSmartSliderResponsiveSimple.prototype.resizeVideo = function (video) {
+    SmartSliderResponsiveSimple.prototype.resizeVideo = function (video) {
 
         var mode = video.data('mode'),
             ratio = video.data('ratio'),
@@ -758,36 +751,35 @@
         }
     };
 
-    scope.NextendSmartSliderResponsiveSimple = NextendSmartSliderResponsiveSimple;
+    return SmartSliderResponsiveSimple;
+});
+N2Require('SmartSliderSimple', ['SmartSliderAbstract'], [], function ($, scope, undefined) {
 
-})(n2, window);
-(function ($, scope, undefined) {
-
-    function NextendSmartSliderSimple(elementID, parameters) {
+    function SmartSliderSimple(elementID, parameters) {
 
         this.type = 'simple';
-        this.responsiveClass = 'NextendSmartSliderResponsiveSimple';
+        this.responsiveClass = scope.SmartSliderResponsiveSimple;
 
         parameters = $.extend({
             bgAnimations: 0,
             carousel: 1
         }, parameters);
 
-        NextendSmartSliderAbstract.prototype.constructor.call(this, elementID, parameters);
+        scope.SmartSliderAbstract.prototype.constructor.call(this, elementID, parameters);
     };
 
-    NextendSmartSliderSimple.prototype = Object.create(NextendSmartSliderAbstract.prototype);
-    NextendSmartSliderSimple.prototype.constructor = NextendSmartSliderSimple;
+    SmartSliderSimple.prototype = Object.create(scope.SmartSliderAbstract.prototype);
+    SmartSliderSimple.prototype.constructor = SmartSliderSimple;
 
-    NextendSmartSliderSimple.prototype.initMainAnimation = function () {
+    SmartSliderSimple.prototype.initMainAnimation = function () {
 
         if (nModernizr.csstransforms3d && nModernizr.csstransformspreserve3d && this.parameters.bgAnimations) {
-            this.mainAnimation = new NextendSmartSliderFrontendBackgroundAnimation(this, this.parameters.mainanimation, this.parameters.bgAnimations);
+            this.mainAnimation = new scope.SmartSliderFrontendBackgroundAnimation(this, this.parameters.mainanimation, this.parameters.bgAnimations);
         } else {
-            this.mainAnimation = new NextendSmartSliderMainAnimationSimple(this, this.parameters.mainanimation);
+            this.mainAnimation = new scope.SmartSliderMainAnimationSimple(this, this.parameters.mainanimation);
         }
     };
 
-    scope.NextendSmartSliderSimple = NextendSmartSliderSimple;
+    return SmartSliderSimple;
 
-})(n2, window);
+});

@@ -13,7 +13,7 @@ class N2ElementColor extends N2ElementText
         }
 
         $html = parent::fetchElement();
-        N2JS::addInline('new NextendElementColor("' . $this->_id . '", ' . $this->alpha . ');');
+        N2JS::addInline('new N2Classes.FormElementColor("' . $this->_id . '", ' . $this->alpha . ');');
         return $html;
     }
 

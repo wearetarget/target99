@@ -123,7 +123,7 @@ get_header();
             </div>
 
             <div class="short-news-panel__footer">
-                <span class="button button--warning button--mobile-full">Смотреть всю информацию</span>
+                <a href="/category/news/"><span class="button button--warning button--mobile-full">Смотреть всю информацию</span></a>
             </div>
         </div>
     </section>
@@ -150,7 +150,7 @@ get_header();
             </div>
 
             <div class="events__footer">
-                <span class="button button--warning button--mobile-full">Смотреть все мероприятия</span>
+                <a href="/category/event/"><span class="button button--warning button--mobile-full">Смотреть все мероприятия</span></a>
             </div>
         </div>
     </section>

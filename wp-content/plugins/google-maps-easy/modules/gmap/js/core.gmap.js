@@ -382,7 +382,7 @@ gmpGoogleMap.prototype.addHeatmap = function(params) {
 gmpGoogleMap.prototype.getMarkerById = function(id) {
 	if(this._markers && this._markers.length) {
 		for(var i in this._markers) {
-			if(this._markers[ i ].getId() == id)
+			if(this._markers[i].getId && this._markers[i].getId() == id)
 				return this._markers[ i ];
 		}
 	}
@@ -484,6 +484,20 @@ gmpGoogleMap.prototype.getId = function() {
 gmpGoogleMap.prototype.refresh = function() {
 	return google.maps.event.trigger(this.getRawMapInstance(), 'resize');
 };
+gmpGoogleMap.prototype.refreshWithCenter = (function(lat, lng, zoom) {
+	var res = google.maps.event.trigger(this.getRawMapInstance(), 'resize');
+	if(zoom) {
+		this.setZoom(zoom);
+	} else {
+		this.setZoom(this.getZoom());
+	}
+	if(lat && lng) {
+		this.setCenter(lat, lng);
+	} else {
+		this.setCenter(this.getCenter().lat(), this.getCenter().lng());
+	}
+	return res;
+});
 gmpGoogleMap.prototype.fullRefresh = function() {
 	this.refresh();
 	this.checkMarkersParams(this._markers, false);
@@ -631,3 +645,5 @@ function changeInfoWndBgColor(map) {
 		});
 	}
 }
+
+window.gmpGoogleMap = gmpGoogleMap;

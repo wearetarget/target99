@@ -26,7 +26,7 @@ class N2ElementUrl extends N2ElementText {
     function fetchElement() {
         $html = parent::fetchElement();
 
-        N2JS::addInline("new NextendElementUrl('" . $this->_id . "', " . self::getNextendElementUrlParameters() . " );");
+        N2JS::addInline("new N2Classes.FormElementUrl('" . $this->_id . "', " . self::getNextendElementUrlParameters() . " );");
         return $html;
     }
 

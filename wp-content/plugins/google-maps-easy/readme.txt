@@ -5,7 +5,7 @@ Plugin URI: https://supsystic.com/plugins/google-maps-plugin
 Donate link: https://supsystic.com/plugins/google-maps-plugin
 Tags: google map, map, Google Maps, map markers, location
 Tested up to: 4.8
-Stable tag: trunk
+Stable tag: 1.7.9
 
 Google Maps with markers, locations and clusterization. Any data on the google map: text, images, videos. Custom google map markers with map builder
 
@@ -190,6 +190,32 @@ Copy and paste the shortcode into your post or page and Google Maps Easy will au
 6. Google Map Stylizations. Make your map unique with our Map Themes!
 
 == Changelog ==
+
+= Google Map Plugin v1.7.9 / 03.08.2017 =
+
+* Fixed bugs with Membership integration - https://supsystic.com/plugins/membership-plugin
+* Fixed Membership integration for Marker List link
+* Updated Polish language
+* Updated Persian language
+
+= Google Map Plugin v1.7.8 / 27.07.2017 =
+
+ * Updated German language
+ * Updated Polish language
+ * Minor issues fix
+
+= Google Map Plugin v1.7.7 / 12.07.2017 =
+
+ * Added membership integration - https://supsystic.com/plugins/membership-plugin
+ * Updated English language
+ * Updated Deutsch language
+ * Minor issues fix
+
+= Google Map Plugin v1.7.6 / 20.06.2017 =
+
+ * Fix of displaying the slider's scale for custom map controls
+ * Fix of displaying of autocomplete list for search in the custom map controls
+ * Small code fix
 
 = Google Map Plugin v1.7.5 / 18.05.2017 =
 

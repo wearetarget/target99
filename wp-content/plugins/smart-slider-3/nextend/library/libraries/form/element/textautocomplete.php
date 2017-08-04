@@ -6,7 +6,7 @@ class N2ElementTextAutocomplete extends N2ElementText
 
     function fetchElement() {
         $html = parent::fetchElement();
-        N2JS::addInline('new NextendElementAutocompleteSimple("' . $this->_id . '", ' . json_encode(explode(',', N2XmlHelper::getAttribute($this->_xml, 'values'))) . ');');
+        N2JS::addInline('new N2Classes.FormElementAutocompleteSimple("' . $this->_id . '", ' . json_encode(explode(',', N2XmlHelper::getAttribute($this->_xml, 'values'))) . ');');
         return $html;
     }
 
