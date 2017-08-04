@@ -16,7 +16,7 @@ class N2ElementAutocomplete extends N2ElementText
                 $options[] = (string)$option;
             }
         }
-        N2JS::addInline('new NextendElementAutocomplete("' . $this->_id . '", ' . json_encode($options) . ');');
+        N2JS::addInline('new N2Classes.FormElementAutocomplete("' . $this->_id . '", ' . json_encode($options) . ');');
 
         return $html;
     }

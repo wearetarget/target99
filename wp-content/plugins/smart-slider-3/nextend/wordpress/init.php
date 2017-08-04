@@ -30,12 +30,15 @@ class N2Wordpress {
         } else if (class_exists('WPSEO_Frontend')) {
             // Fix for an issue with Yoast SEO
             add_action('template_redirect', 'N2Wordpress::outputStart');
+        } else if (class_exists('EDD_SL_Plugin_Updater')) {
+            //fix for Divi/Extra Layout Injector
+            add_action('template_redirect', 'N2Wordpress::outputStart');
         } else if (class_exists('Gantry5\\Loader')) {
             // Fix for Gantry 5 themes
             add_action('template_redirect', 'N2Wordpress::outputStart');
         } else {
             $pri = 10;
-            if(class_exists('\\WPaaS\\Plugin', false)){
+            if (class_exists('\\WPaaS\\Plugin', false)) {
                 //Godaddy plugin conflict
                 $pri = 1;
             }
@@ -48,7 +51,7 @@ class N2Wordpress {
         if (class_exists('HeadwayDisplay', false)) {
             add_action('headway_html_close', 'N2Wordpress::afterOutputEnd');
         } else {
-            add_action('wp_footer', 'N2Wordpress::afterOutputEnd');
+            add_action('wp_footer', 'N2Wordpress::afterOutputEnd', 11);
         }
         add_action('admin_footer', 'N2Wordpress::afterOutputEnd');
     }
@@ -88,6 +91,7 @@ class N2Wordpress {
             }
             $results['html'] = ob_get_clean() . $results['html'];
         }
+
         return $results;
     }
 
@@ -111,6 +115,7 @@ class N2Wordpress {
 
         }
         if (N2Settings::get('safemode') == 1) echo self::$nextend_js;
+
         return true;
     }
 
@@ -121,8 +126,11 @@ class N2Wordpress {
         }
 
         if (self::$nextend_css != '' || self::$nextend_js != '') {
-            return preg_replace('/<\/head>/', self::$nextend_css . self::$nextend_js . '</head>', $buffer, 1);
+            $parts = preg_split('/<\/head>/', $buffer, 2);
+
+            return implode(self::$nextend_css . self::$nextend_js . '</head>', $parts);
         }
+
         return $buffer;
     }
 }

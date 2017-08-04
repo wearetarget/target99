@@ -121,6 +121,15 @@ jQuery(document).ready(function(){
 		return false;
 	});
 
+	jQuery('#membershipPropEnable').on('ifChanged', function() {
+		if(jQuery('#membershipPropEnable:checked').length) {
+			jQuery('#membershipHiddenEnable').val('1');
+		} else {
+			jQuery('#membershipHiddenEnable').val('0');
+		}
+
+	});
+
 	// Preview map definition
 	gmpMainMap = typeof(gmpMainMap) === 'undefined' ? null : gmpMainMap;
 	var previewMapParams = {}

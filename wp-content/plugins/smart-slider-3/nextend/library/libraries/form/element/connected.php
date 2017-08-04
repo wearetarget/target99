@@ -33,7 +33,7 @@ class N2ElementConnected extends N2ElementMixed {
         $html .= $hiddenhtml[1];
         $html .= "</div>";
 
-        N2JS::addInline('new NextendElementMixed("' . $this->_id . '", ' . json_encode($this->_elements) . ', "' . $this->_separator . '");');
+        N2JS::addInline('new N2Classes.FormElementMixed("' . $this->_id . '", ' . json_encode($this->_elements) . ', "' . $this->_separator . '");');
 
         return $html;
     }

@@ -35,7 +35,7 @@ abstract class N2SmartSliderCSSAbstract {
             'canvas'         => 0,
             'count'          => count($slider->slides),
             'margin'         => '0px 0px 0px 0px',
-            'clear'          => ($params->get('weaker-selector', 0) ? 'clearv2.n2less' : 'clear.n2less'),
+            'clear'          => 'clear.n2less',
             'hasPerspective' => 0
         );
 
@@ -60,7 +60,7 @@ abstract class N2SmartSliderCSSAbstract {
         $this->sizes['canvasHeight'] = intval($context['canvasheight']);
     }
 
-    protected abstract function  renderType(&$context);
+    protected abstract function renderType(&$context);
 
     protected function setContextFonts($matches, &$context, $fonts, $value) {
         $context['font' . $fonts] = '~".' . $matches[0] . '"';

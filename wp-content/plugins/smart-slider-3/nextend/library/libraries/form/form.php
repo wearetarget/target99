@@ -70,9 +70,6 @@ class N2FormAbstract extends N2Data {
 
     function decorateFormEnd() {
         echo N2Html::closeTag("div");
-        N2GoogleFonts::addFont('Open Sans');
-        N2GoogleFonts::addFont('Open Sans', 600);
-        N2GoogleFonts::addFont('Open Sans', 700);
     }
 
     function loadXMLFile($file) {

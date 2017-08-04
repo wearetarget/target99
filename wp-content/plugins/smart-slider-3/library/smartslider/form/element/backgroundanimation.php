@@ -15,7 +15,7 @@ class N2ElementBackgroundAnimation extends N2ElementHidden
             'Single animation'
         ));
 
-        N2JS::addInline('new NextendElementAnimationManager("' . $this->_id . '", "backgroundanimationManager");');
+        N2JS::addInline('new N2Classes.FormElementAnimationManager("' . $this->_id . '", "backgroundanimationManager");');
 
         return N2Html::tag('div', array(
             'class' => 'n2-form-element-option-chooser n2-border-radius'

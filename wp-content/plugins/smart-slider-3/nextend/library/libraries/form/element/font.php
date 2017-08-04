@@ -8,7 +8,7 @@ class N2ElementFont extends N2ElementHidden {
 
     function fetchElement() {
 
-        N2JS::addInline('new NextendElementFont("' . $this->_id . '", {
+        N2JS::addInline('new N2Classes.FormElementFont("' . $this->_id . '", {
             previewmode: "' . N2XmlHelper::getAttribute($this->_xml, 'previewmode') . '",
             style: "' . N2XmlHelper::getAttribute($this->_xml, 'style') . '",
             style2: "' . N2XmlHelper::getAttribute($this->_xml, 'style2') . '",

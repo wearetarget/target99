@@ -36,7 +36,7 @@ class N2ElementList extends N2ElementHidden
 
         $html .= parent::fetchElement();
 
-        N2JS::addInline('new NextendElementList("' . $this->_id . '", ' . $this->_multiple . ', "' . $this->getValue() . '");');
+        N2JS::addInline('new N2Classes.FormElementList("' . $this->_id . '", ' . $this->_multiple . ', "' . $this->getValue() . '");');
 
         return $html;
     }

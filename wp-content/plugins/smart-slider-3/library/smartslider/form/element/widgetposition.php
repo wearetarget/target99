@@ -2,8 +2,7 @@
 
 N2Loader::import('libraries.form.element.group');
 
-class N2ElementWidgetPosition extends N2ElementGroup
-{
+class N2ElementWidgetPosition extends N2ElementGroup {
 
     function fetchElement() {
         $values = explode('|*|', $this->getValue());
@@ -31,7 +30,7 @@ class N2ElementWidgetPosition extends N2ElementGroup
 
         $this->addAdvanced();
 
-        N2JS::addInline('new NextendElementWidgetPosition("' . $this->_id . '");');
+        N2JS::addInline('new N2Classes.FormElementWidgetPosition("' . $this->_id . '");');
 
         return parent::fetchElement();
     }
@@ -51,7 +50,6 @@ class N2ElementWidgetPosition extends N2ElementGroup
         $priority->addAttribute('name', $this->_name . '-stack');
         $priority->addAttribute('label', n2_('Stack'));
         $priority->addAttribute('default', N2XmlHelper::getAttribute($this->_xml, 'stack', '1'));
-        $priority->addAttribute('class', 'n2-expert');
 
         for ($i = 1; $i < 5; $i++) {
             $pri = $priority->addChild('option', $i);
@@ -65,7 +63,8 @@ class N2ElementWidgetPosition extends N2ElementGroup
         $offset->addAttribute('style', 'width:30px;');
         $offset->addAttribute('default', N2XmlHelper::getAttribute($this->_xml, 'offset', '0'));
 
-        $offset->addChild('unit', 'px')->addAttribute('value', 'px');
+        $offset->addChild('unit', 'px')
+               ->addAttribute('value', 'px');
     }
 
     protected function addAdvanced() {

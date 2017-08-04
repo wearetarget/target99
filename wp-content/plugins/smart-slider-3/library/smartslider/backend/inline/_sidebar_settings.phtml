@@ -10,12 +10,13 @@ $settings = array(
     'itemDefaults' => array(
         'title' => n2_('Item defaults'),
         'url'   => array("settings/itemDefaults")
-    ),
-    'nextend'      => array(
-        'title' => n2_('Nextend settings'),
-        'url'   => N2Base::getApplication('system')->router->createUrl("dashboard/index")
     )
 );
+$settings['nextend'] = array(
+    'title' => n2_('Nextend settings'),
+    'url'   => N2Base::getApplication('system')->router->createUrl("settings/index")
+);
+
 
 N2Plugin::callPlugin('ssgenerator', 'onSmartSliderConfigurationList', array(&$settings));
 

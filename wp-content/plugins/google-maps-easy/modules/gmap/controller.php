@@ -32,6 +32,14 @@ class gmapControllerGmp extends controllerGmp {
 			$edit = false;
 		}
 		if($saveRes) {
+			// save Membership param
+			$membershipModule = frameGmp::_()->getModule('membership');
+			if($membershipModule) {
+				$membershipModel = $membershipModule->getModel('membership_presets');
+				if($membershipModel) {
+					$membershipModel->updateRow(array('maps_id' => $mapId, 'allow_use' => isset($data['map_opts']['membershipEnable']) ? $data['map_opts']['membershipEnable'] : 0));
+				}
+			}
 			$addMarkerIds = reqGmp::getVar('add_marker_ids');
 			if($addMarkerIds && !empty($addMarkerIds)) {
 				frameGmp::_()->getModule('marker')->getModel()->setMarkersToMap($addMarkerIds, $mapId);

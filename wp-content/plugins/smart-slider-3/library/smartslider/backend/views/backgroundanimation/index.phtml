@@ -7,7 +7,7 @@ $sets = $model->getSets();
 
 $backgroundAnimations = new stdClass();
 N2JS::addFirstCode("
-    new NextendBackgroundAnimationManager({
+    new N2Classes.BgAnimationManager({
         setsIdentifier: '" . $model->type . "set',
         sets: " . json_encode($sets) . ",
         visuals: " . json_encode($backgroundAnimations) . ",

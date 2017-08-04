@@ -37,6 +37,9 @@ class N2SmartsliderLicenseModel {
 
     public function setKey($licenseKey) {
         N2Base::getApplication('smartslider')->storage->set('license', 'key', $licenseKey);
+        if ($licenseKey == '') {
+            N2Base::getApplication('smartslider')->storage->set('license', 'isActive', 0);
+        }
         $this->key = $licenseKey;
     
     }

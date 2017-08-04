@@ -2,14 +2,12 @@
 
 N2Loader::import('libraries.form.form');
 
-class N2SmartsliderItemModel extends N2Model
-{
+class N2SmartsliderItemModel extends N2Model {
 
-    function renderForm($type, $item, $data = array()) {
+    function renderForm($type, $configurationXmlFile, $data = array()) {
 
-        $configurationXmlFile = $item[4] . 'configuration.xml';
-
-        $form = new N2Form(N2Base::getApplication('smartslider')->getApplicationType('backend'));
+        $form = new N2Form(N2Base::getApplication('smartslider')
+                                 ->getApplicationType('backend'));
         $form->loadArray($data);
 
         $form->loadXMLFile($configurationXmlFile);

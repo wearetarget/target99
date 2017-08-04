@@ -3,7 +3,7 @@
 class N2 {
 
     public static $version = '2.0.21';
-    public static $api = 'http://secure.nextendweb.com/api/api.php';
+    public static $api = 'https://secure.nextendweb.com/api/api.php';
 
     public static function api($posts, $returnUrl = false) {
 
@@ -43,6 +43,7 @@ class N2 {
 
                 if ($curlErrorNumber) {
                     N2Message::error($curlErrorNumber . $error);
+
                     return array(
                         'status' => 'ERROR_HANDLED'
                     );
@@ -63,6 +64,7 @@ class N2 {
                 $data    = file_get_contents(self::$api, false, $context);
                 if ($data === false) {
                     N2Message::error(n2_('CURL disabled in your php.ini configuration. Please enable it!'));
+
                     return array(
                         'status' => 'ERROR_HANDLED'
                     );
@@ -70,6 +72,7 @@ class N2 {
                 $headers = self::parseHeaders($http_response_header);
                 if ($headers['status'] != '200') {
                     N2Message::error(n2_('Unable to contact with the licensing server, please try again later!'));
+
                     return array(
                         'status' => 'ERROR_HANDLED'
                     );
@@ -84,6 +87,7 @@ class N2 {
             case 'application/json':
                 return json_decode($data, true);
         }
+
         return $data;
     }
 
@@ -103,8 +107,10 @@ class N2 {
             if (isset($output[strtolower($header)])) {
                 return $output[strtolower($header)];
             }
+
             return;
         }
+
         return $output;
     }
 }

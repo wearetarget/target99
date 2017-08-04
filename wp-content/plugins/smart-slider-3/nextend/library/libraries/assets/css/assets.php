@@ -41,11 +41,11 @@ class N2AssetsCss extends N2AssetsAbstract {
             $combinedFile = $cssCombine->make();
 
             if ($mode == 'combine') {
-                $output .= N2Html::style(N2Uri::pathToUri($combinedFile), true, array(
+                $output .= N2Html::style(N2Uri::pathToUri($combinedFile, false), true, array(
                         'media' => 'screen, print'
                     )) . "\n";
             } else if ($mode == 'async') {
-                N2JS::addInline('window.n2CSS = "' . N2Uri::pathToUri($combinedFile) . '";', true, true);
+                N2JS::addInline('window.n2CSS = "' . N2Uri::pathToUri($combinedFile, false) . '";', true, true);
             } else if ($mode == 'inline') {
                 $output .= N2Html::style(file_get_contents($combinedFile), false, array(
                     'lazyload' => 1

@@ -125,8 +125,8 @@
     </params>
     <params name="developer" type="groupped" label="Developer">
       <params name="developer-options" hidetitle="1">
-        <param name="weaker-selector" type="onoff" label="Weaker CSS selectors" default="0"/>
         <param name="overflow-hidden-page" type="onoff" label="Hide page overflow" default="0"/>
+        <param name="clear-both" type="onoff" label="Clear both before slider" tip="If your slider doesn&apos;t resize correctly, turn this option on." default="0"/>
         <param type="textarea" name="callbacks" label="JavaScript callbacks" style2="width:600px;height:600px;"/>
       </params>
     </params>

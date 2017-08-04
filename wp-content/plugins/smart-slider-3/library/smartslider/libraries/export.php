@@ -107,21 +107,10 @@ class N2SmartSliderExport {
                     self::addImage($slide['params']->get('ligthboxImage'));
                     self::addLightbox($slide['params']->get('link'));
 
-
                     $layers = json_decode($slide['slide'], true);
-                    foreach ($layers AS $layer) {
-                        if (isset($layer['type'])) {
-                            switch ($layer['type']) {
-                                case 'group':
-                                    N2SmartSliderGroup::prepareExport($this, $layer);
-                                    break;
-                                default:
-                                    N2SmartSliderLayer::prepareExport($this, $layer);
-                            }
-                        } else {
-                            N2SmartSliderLayer::prepareExport($this, $layer);
-                        }
-                    }
+
+                    self::prepareExportLayer($this, $layers);
+
 
                     if (!empty($slide['generator_id'])) {
                         N2Loader::import("models.generator", "smartslider");
@@ -185,7 +174,38 @@ class N2SmartSliderExport {
                     N2Filesystem::createFolder($folder);
                 }
                 N2Filesystem::createFile($folder . $file, $zip->file());
+
                 return $folder . $file;
+            }
+        }
+    }
+
+    /**
+     * @param N2SmartSliderExport $export
+     * @param array               $layers
+     */
+    public static function prepareExportLayer($export, $layers) {
+        foreach ($layers AS $layer) {
+
+            if (isset($layer['type'])) {
+                switch ($layer['type']) {
+                    case 'content':
+                        N2SSSlideComponentContent::prepareExport($export, $layer);
+                        break;
+                    case 'row':
+                        N2SSSlideComponentRow::prepareExport($export, $layer);
+                        break;
+                    case 'col':
+                        N2SSSlideComponentCol::prepareExport($export, $layer);
+                        break;
+                    case 'group':
+                        N2SSSlideComponentGroup::prepareExport($export, $layer);
+                        break;
+                    default:
+                        N2SSSlideComponentLayer::prepareExport($export, $layer);
+                }
+            } else {
+                N2SSSlideComponentLayer::prepareExport($export, $layer);
             }
         }
     }
@@ -199,7 +219,7 @@ class N2SmartSliderExport {
 
         ob_start();
         N2Base::getApplication("smartslider")
-              ->getApplicationType('widget')
+              ->getApplicationType('frontend')
               ->render(array(
                   "controller" => 'home',
                   "action"     => N2Platform::getPlatform(),
@@ -313,6 +333,7 @@ class N2SmartSliderExport {
         if (substr($image, 0, 2) == '//') {
             return N2Uri::$scheme . ':' . $image;
         }
+
         return $image;
     }
 
@@ -334,6 +355,7 @@ class N2SmartSliderExport {
             } else {
                 $fileName = $this->imageTranslation[$path];
             }
+
             return str_replace($found[2], 'images/' . $fileName, $found[0]);
         } else {
             return $found[0];
@@ -354,9 +376,9 @@ class N2SmartSliderExport {
         $path = realpath($this->basePath . '/' . $exploded[0]);
         if ($path === false) {
             return 'url(' . str_replace(array(
-                'http://',
-                'https://'
-            ), '//', $this->baseUrl) . '/' . $matches[1] . ')';
+                    'http://',
+                    'https://'
+                ), '//', $this->baseUrl) . '/' . $matches[1] . ')';
         }
 
         $path = N2Filesystem::fixPathSeparator($path);
@@ -373,6 +395,7 @@ class N2SmartSliderExport {
         } else {
             $fileName = $this->imageTranslation[$path];
         }
+
         return str_replace($matches[1], '../images/' . $fileName, $matches[0]);
     }
 
@@ -385,6 +408,7 @@ class N2SmartSliderExport {
                 $image
             ));
         }
+
         return 'n2-lightbox-urls="' . implode(',', $images) . '"';
     }
 
@@ -394,6 +418,7 @@ class N2SmartSliderExport {
             '',
             $found[3]
         ));
+
         return str_replace($found[3], $path, $found[0]);
     }
 
@@ -404,6 +429,7 @@ class N2SmartSliderExport {
             '',
             $image
         ));
+
         return str_replace($found[1], str_replace('/', '\\/', $path), $found[0]);
     }
 

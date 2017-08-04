@@ -10,7 +10,7 @@ class N2ElementStyle extends N2ElementHidden {
 
         $preview = preg_replace_callback('/url\(\'(.*?)\'\)/', 'N2ElementStyle::fixPreviewImages', (string)$this->_xml);
 
-        N2JS::addInline('new NextendElementStyle("' . $this->_id . '", {
+        N2JS::addInline('new N2Classes.FormElementStyle("' . $this->_id . '", {
             previewmode: "' . N2XmlHelper::getAttribute($this->_xml, 'previewmode') . '",
             font: "' . N2XmlHelper::getAttribute($this->_xml, 'font') . '",
             font2: "' . N2XmlHelper::getAttribute($this->_xml, 'font2') . '",

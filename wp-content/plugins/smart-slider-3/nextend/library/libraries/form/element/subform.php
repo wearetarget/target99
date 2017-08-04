@@ -53,7 +53,7 @@ class N2ElementSubform extends N2ElementList
     function renderContainer() {
         ob_start();
         N2JS::addInline('
-        new NextendElementSubform(
+        new N2Classes.FormElementSubform(
               "' . $this->_id . '",
               "nextend-' . $this->_name . '-panel",
               "' . $this->_tab->_name . '",

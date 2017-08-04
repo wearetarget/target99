@@ -504,7 +504,7 @@ class htmlGmp {
             $paramsStr = implode(', ', $paramsArr);
         }
 
-        $res = '<div id="toeSliderDisplay_'. $id. '" class="toeSliderDisplay">'. (empty($params['value']) ? '' : $params['value']) . ' meter' .  '</div>';
+        $res = '<div id="toeSliderDisplay_'. $id. '" class="toeSliderDisplay">'. (isset($params['value']) ? $params['value'] . ' meter(s)' : '') . '</div>';
         $res .= '<div id="'. $id. '"></div>';
         $params['attrs'] = 'id="toeSliderInput_'. $id. '"';
         $res .= self::hidden($name, $params);

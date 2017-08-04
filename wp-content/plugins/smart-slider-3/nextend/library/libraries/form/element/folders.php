@@ -10,7 +10,7 @@ class N2ElementFolders extends N2ElementText
 
         N2ImageHelper::initLightbox();
 
-        N2JS::addInline("new NextendElementFolders('" . $this->_id . "' );");
+        N2JS::addInline("new N2Classes.FormElementFolders('" . $this->_id . "' );");
 
         return parent::fetchElement();
     }

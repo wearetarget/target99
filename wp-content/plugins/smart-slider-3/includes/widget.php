@@ -35,13 +35,20 @@ class N2SS3Widget extends WP_Widget {
     }
 
     function widget($args, $instance) {
+        global $wpdb;
         if ($this->preventRender) {
             return;
         }
         $instance = array_merge(array(
             'id'     => md5(time()),
-            'slider' => 0
+            'slider' => 0,
+            'title'  => ''
         ), $instance);
+
+        if ($instance['slider'] === 0) {
+
+            $instance['slider'] = $wpdb->get_var('SELECT id FROM ' . $wpdb->prefix . 'nextend2_smartslider3_sliders LIMIT 0,1');
+        }
 
         $slider = do_shortcode('[smartslider3 slider=' . $instance['slider'] . ']');
 
@@ -59,12 +66,14 @@ class N2SS3Widget extends WP_Widget {
     }
 
     function form($instance) {
-        global $wpdb;
         $instance = wp_parse_args((array)$instance, array(
             'title'  => '',
-            'slider' => -1
+            'slider' => 0
         ));
         $title    = $instance['title'];
+
+        N2SSShortcodeInsert::addForced();
+
         ?>
         <p>
             <label for="<?php echo $this->get_field_id('title'); ?>">
@@ -77,24 +86,12 @@ class N2SS3Widget extends WP_Widget {
 
         <p>
             <label for="<?php echo $this->get_field_id('smartslider2'); ?>">
-                Smart Slider:
-                <select class="widefat" id="<?php echo $this->get_field_id('slider'); ?>"
-                        name="<?php echo $this->get_field_name('slider'); ?>">
-                    <?php
-                    $slider = $instance['slider'];
+                Smart Slider:<br>
+                <input style="width:100px;vertical-align: top;" class="widefat" id="<?php echo $this->get_field_id('slider'); ?>" name="<?php echo $this->get_field_name('slider'); ?>" type="text" value="<?php echo esc_attr($instance['slider']); ?>">
 
-                    $res = $wpdb->get_results('SELECT id, title FROM ' . $wpdb->prefix . 'nextend2_smartslider3_sliders');
-                    foreach ($res AS $r) {
-                        ?>
-                        <option <?php if ($r->id == $slider) { ?>selected="selected"
-                                <?php } ?>value="<?php echo $r->id; ?>"><?php echo $r->title; ?></option>
-                        <?php
-                    }
-                    ?>
-                </select>
+                <a style="vertical-align: top;" href="#" onclick="return NextendSmartSliderSelectModal(jQuery(this).siblings('input'));" class="button button-primary elementor-button elementor-button-smartslider fl-builder-button fl-builder-button-large" title="Select slider">Select slider</a>
             </label>
         </p>
-        <p>You can create Sliders in the left sidebar.</p>
         <?php
     }
 
@@ -102,6 +99,7 @@ class N2SS3Widget extends WP_Widget {
         $instance           = $old_instance;
         $instance['title']  = $new_instance['title'];
         $instance['slider'] = $new_instance['slider'];
+
         return $instance;
     }
 }

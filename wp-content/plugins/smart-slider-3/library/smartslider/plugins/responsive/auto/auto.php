@@ -25,7 +25,7 @@ class N2SSResponsiveAuto {
         $this->responsive = $responsive;
 
         $this->responsive->scaleDown = intval($this->params->get('responsiveScaleDown', 1));
-        $this->responsive->scaleUp   = intval($this->params->get('responsiveScaleUp', 0));
+        $this->responsive->scaleUp   = intval($this->params->get('responsiveScaleUp', 1));
         if ($this->responsive->scaleUp) {
             $features->align->align = 'normal';
         }

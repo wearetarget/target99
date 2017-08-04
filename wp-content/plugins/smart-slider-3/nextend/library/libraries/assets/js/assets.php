@@ -51,6 +51,7 @@ class N2AssetsJs extends N2AssetsAbstract {
         }
 
         $output .= N2Html::script(self::minify_js(N2Localization::toJS() . "\n" . $this->getInlineScripts() . "\n"));
+
         return $output;
     }
 
@@ -105,6 +106,7 @@ class N2AssetsJs extends N2AssetsAbstract {
 
     public static function minify_js($input) {
         if (trim($input) === "") return $input;
+
         return preg_replace(array(
             // Remove comment(s)
             '#\s*("(?:[^"\\\]++|\\\.)*+"|\'(?:[^\'\\\\]++|\\\.)*+\')\s*|\s*\/\*(?!\!|@cc_on)(?>[\s\S]*?\*\/)\s*|\s*(?<![\:\=])\/\/.*(?=[\n\r]|$)|^\s*|\s*$#',

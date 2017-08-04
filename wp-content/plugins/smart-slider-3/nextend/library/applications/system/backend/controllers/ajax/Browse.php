@@ -20,7 +20,9 @@ class N2SystemBackendBrowseControllerAjax extends N2BackendControllerAjax {
             'jpg',
             'jpeg',
             'png',
-            'gif'
+            'gif',
+            'mp4',
+            'mp3'
         );
         $_files     = scandir($path);
         $files      = array();
@@ -60,6 +62,7 @@ class N2SystemBackendBrowseControllerAjax extends N2BackendControllerAjax {
                 }
             }
         }
+
         return true;
     }
 
@@ -211,6 +214,7 @@ class N2BulletProof {
      */
     public function fileTypes(array $fileTypes) {
         $this->imageType = $fileTypes;
+
         return $this;
     }
 
@@ -223,6 +227,7 @@ class N2BulletProof {
      */
     public function limitSize(array $fileSize) {
         $this->imageSize = $fileSize;
+
         return $this;
     }
 
@@ -235,6 +240,7 @@ class N2BulletProof {
      */
     public function limitDimension(array $dimensions) {
         $this->imageDimension = $dimensions;
+
         return $this;
     }
 
@@ -270,12 +276,13 @@ class N2BulletProof {
             "xmb",
             "ico"
         );
-		
-		$imageType = N2Image::exif_imagetype($imageName);
+
+        $imageType = N2Image::exif_imagetype($imageName);
         if (isset($listOfMimeTypes[$imageType])) {
             return $listOfMimeTypes[$imageType];
         }
-		return false;
+
+        return false;
     }
 
     /**
@@ -287,6 +294,7 @@ class N2BulletProof {
      */
     protected function getPixels($getImage) {
         list($width, $height) = getImageSize($getImage);
+
         return array(
             "width"  => $width,
             "height" => $height
@@ -304,6 +312,7 @@ class N2BulletProof {
         if ($isNameProvided) {
             return $isNameProvided . "." . $this->getMimeType;
         }
+
         return uniqid(true) . "_" . str_shuffle(implode(range("E", "Q"))) . "." . $this->getMimeType;
     }
 
@@ -324,6 +333,7 @@ class N2BulletProof {
             }
         }
         $this->uploadDir = $directoryName;
+
         return $this;
     }
 
@@ -359,6 +369,7 @@ class N2BulletProof {
         if (file_exists($fileToDelete) && !unlink($fileToDelete)) {
             throw new N2ImageUploaderException("File may have been deleted or does not exist");
         }
+
         return true;
     }
 
@@ -373,34 +384,50 @@ class N2BulletProof {
      */
     public function upload($fileToUpload, $isNameProvided = null) {
 
+        $isMedia = false;
         // Check if any errors are thrown by the FILES[] array
         if ($fileToUpload["error"]) {
             throw new N2ImageUploaderException($this->commonUploadErrors($fileToUpload["error"]));
         }
 
-        // First get the real file extension
-        $this->getMimeType = $this->getMimeType($fileToUpload["tmp_name"]);
+        $rawMime = mime_content_type($fileToUpload["tmp_name"]);
 
-        // Check if this file type is allowed for upload
-        if (!in_array($this->getMimeType, $this->imageType)) {
-            throw new N2ImageUploaderException(" This is not allowed file type!
+        switch ($rawMime) {
+            case 'video/mp4':
+                $this->getMimeType = 'mp4';
+                $isMedia           = true;
+                break;
+            case 'audio/mpeg':
+                $this->getMimeType = 'mp3';
+                $isMedia           = true;
+                break;
+        }
+
+        if (!$isMedia) {
+            // First get the real file extension
+            $this->getMimeType = $this->getMimeType($fileToUpload["tmp_name"]);
+
+            // Check if this file type is allowed for upload
+            if (!in_array($this->getMimeType, $this->imageType)) {
+                throw new N2ImageUploaderException(" This is not allowed file type!
              Please only upload ( " . implode(", ", $this->imageType) . " ) file types");
-        }
+            }
 
-        //Check if size (in bytes) of the image are above or below of defined in 'limitSize()'
-        if ($fileToUpload["size"] < $this->imageSize["min"] || $fileToUpload["size"] > $this->imageSize["max"]) {
-            throw new N2ImageUploaderException("File sizes must be between " . implode(" to ", $this->imageSize) . " bytes");
-        }
+            //Check if size (in bytes) of the image are above or below of defined in 'limitSize()'
+            if ($fileToUpload["size"] < $this->imageSize["min"] || $fileToUpload["size"] > $this->imageSize["max"]) {
+                throw new N2ImageUploaderException("File sizes must be between " . implode(" to ", $this->imageSize) . " bytes");
+            }
 
-        // check if image is valid pixel-wise.
-        $pixel = $this->getPixels($fileToUpload["tmp_name"]);
+            // check if image is valid pixel-wise.
+            $pixel = $this->getPixels($fileToUpload["tmp_name"]);
 
-        if ($pixel["width"] < 4 || $pixel["height"] < 4) {
-            throw new N2ImageUploaderException("This file is either too small or corrupted to be an image");
-        }
+            if ($pixel["width"] < 4 || $pixel["height"] < 4) {
+                throw new N2ImageUploaderException("This file is either too small or corrupted to be an image");
+            }
 
-        if ($pixel["height"] > $this->imageDimension["height"] || $pixel["width"] > $this->imageDimension["width"]) {
-            throw new N2ImageUploaderException("Image pixels/size must be below " . implode(", ", $this->imageDimension) . " pixels");
+            if ($pixel["height"] > $this->imageDimension["height"] || $pixel["width"] > $this->imageDimension["width"]) {
+                throw new N2ImageUploaderException("Image pixels/size must be below " . implode(", ", $this->imageDimension) . " pixels");
+            }
         }
 
         // create upload directory if it does not exist
@@ -432,6 +459,7 @@ class N2BulletProof {
         if (!is_uploaded_file($uploaded_file)) {
             return copy($uploaded_file, $new_file);
         }
+
         return move_uploaded_file($uploaded_file, $new_file);
     }
 

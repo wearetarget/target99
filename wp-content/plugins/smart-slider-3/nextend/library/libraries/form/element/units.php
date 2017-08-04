@@ -40,7 +40,7 @@ class N2ElementUnits extends N2ElementHidden {
 
         $html .= "</div>";
 
-        N2JS::addInline('new NextendElementUnits("' . $this->_id . '", ' . json_encode($values) . ');');
+        N2JS::addInline('new N2Classes.FormElementUnits("' . $this->_id . '", ' . json_encode($values) . ');');
 
         return $html;
     }

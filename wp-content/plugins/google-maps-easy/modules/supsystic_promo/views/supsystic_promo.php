@@ -30,7 +30,10 @@ class supsystic_promoViewGmp extends viewGmp {
 	public function getFaqList() {
 		return array(
 			__('How to create Google Maps API Key?', GMP_LANG_CODE)
-				=> sprintf(__('Your map suddenly stopped working and you get the following error?' + '<blockquote style="color: gray; font-style: italic;">Oops! Something went wrong.This page didn\'t load Google Maps correctly. See the JavaScript console for technical details.</blockquote>Please check you browser console, if you\'ll see such error <blockquote style="color: gray; font-style: italic;">This site has exceeded its daily quota for maps.</blockquote> – this <a href="//supsystic.com/google-maps-api-key/" target="_blank">article</a> is written for you and required for reading.', GMP_LANG_CODE), $this->getModule()->getMainLink()),
+				=> sprintf(__('Your map suddenly stopped working and you get the following error?'
+				. '<blockquote style="color: gray; font-style: italic;">Oops! Something went wrong.This page didn\'t load Google Maps correctly. See the JavaScript console for technical details.</blockquote>'
+				. 'Please check you browser console, if you\'ll see such error <blockquote style="color: gray; font-style: italic;">This site has exceeded its daily quota for maps.</blockquote>'
+				. ' - this <a href="//supsystic.com/google-maps-api-key/" target="_blank">article</a> is written for you and required for reading.', GMP_LANG_CODE), $this->getModule()->getMainLink()),
 			__('How to use Google Maps Easy Widget?', GMP_LANG_CODE)
 				=> sprintf(__('1. Go to Appearance -> Widgets in the WordPress navigation menu.<br />2. Find the Google Maps Easy in the list of available widgets.<br />3. Drag the Google Maps Easy widget to widget area, which you need.<br />4. Choose the map for widget and configure the settings - Widget Map width and height.<br />5. Click "Save".', GMP_LANG_CODE), $this->getModule()->getMainLink()),
 			__('How to add map into the site content?', GMP_LANG_CODE)

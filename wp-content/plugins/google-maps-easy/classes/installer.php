@@ -199,6 +199,20 @@ class installerGmp {
 			) DEFAULT CHARSET=utf8");
 			dbGmp::query("INSERT INTO `".$wpPrefix.GMP_DB_PREF."usage_stat` (code, visits) VALUES ('installed', 1)");
 		}
+		/**
+		 * Membership integration
+		 */
+		if(!dbGmp::exist($wpPrefix.GMP_DB_PREF.'membership_presets')) {
+			dbDelta("CREATE TABLE `".$wpPrefix.GMP_DB_PREF."membership_presets` (
+				`maps_id` int(11) NOT NULL,
+				`allow_use` TINYINT(1) NOT NULL DEFAULT 0,
+				PRIMARY KEY (`maps_id`)
+			)  DEFAULT CHARSET=utf8");
+		}
+		if(!dbGmp::exist('@__modules', 'code', 'membership')) {
+			dbGmp::query("INSERT INTO `@__modules` (id, code, active, type_id, params, has_tab, label, description) VALUES
+				(NULL, 'membership', 1, 1, '', 1, 'membership', 'membership');");
+		}
         update_option($wpPrefix. GMP_DB_PREF. 'db_version', GMP_VERSION_PLUGIN);
 		add_option($wpPrefix. GMP_DB_PREF. 'db_installed', 1);
 		
@@ -246,6 +260,7 @@ class installerGmp {
 		   $wpdb->query("DROP TABLE IF EXISTS `".$wpPrefix.GMP_DB_PREF."options_categories`");
 		   $wpdb->query("DROP TABLE IF EXISTS `".$wpPrefix.GMP_DB_PREF."modules_type`");
 		   $wpdb->query("DROP TABLE IF EXISTS `".$wpPrefix.GMP_DB_PREF."usage_stat`");
+		   $wpdb->query("DROP TABLE IF EXISTS `".$wpPrefix.GMP_DB_PREF."membership_presets`");
 
 		   delete_option('gmp_def_icons_installed');
 		   delete_option(GMP_DB_PREF. 'db_version');

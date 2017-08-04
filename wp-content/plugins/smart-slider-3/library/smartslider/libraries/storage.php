@@ -889,11 +889,14 @@ class N2SmartSliderStorage {
         N2Base::getApplicationInfo('smartslider')
               ->loadLocale();
 
+
         array_push($sets, array(
             'id'           => 1000,
             'referencekey' => '',
             'value'        => n2_('Simple')
         ));
+
+        $c = 1001;
     }
 
     public static function splitTextAnimationStorage(&$sets, &$animations) {

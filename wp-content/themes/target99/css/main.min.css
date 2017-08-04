@@ -1364,7 +1364,7 @@ body {
   box-sizing: border-box;
   float: left;
   width: 80%;
-  padding-right: 20px;
+  padding-right: 40px;
 }
 .full-post .full-post__headline {
   width: 100%;
@@ -1563,6 +1563,61 @@ body {
 }
 .pagination .page-numbers.current {
   color: rgba(0, 171, 143, 0.7);
+}
+.rpbt_shortcode > h3 {
+  display: none;
+}
+.related-post {
+  display: inline-block;
+  background-color: #f1f1f1;
+  position: relative;
+  margin-bottom: 10px;
+}
+.related-post .related-post__inner-container {
+  display: block;
+  position: relative;
+}
+.related-post .related-post__inner-container:hover .related-post__meta-container {
+  background-color: rgba(0, 171, 143, 0.7);
+}
+.related-post .related-post__image {
+  max-height: 100%;
+  min-height: 100%;
+  min-width: 100%;
+  max-width: 100%;
+}
+.related-post .related-post__meta-container {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  margin-bottom: 6px;
+  padding: 10px;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.5);
+}
+.related-post .related-post__title-container {
+  text-align: center;
+}
+.related-post .related-post__title {
+  font-family: 'PT Sans', sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: white;
+}
+.related-post .related-post__date-container {
+  text-align: center;
+}
+.related-post .related-post__date {
+  font-family: 'PT Sans', sans-serif;
+  font-size: 16px;
+  font-weight: normal;
+  color: white;
+}
+.related-post .related-post__date [class*='fa-'] {
+  padding: 5px;
 }
 
 /*# sourceMappingURL=main.min.css.map */

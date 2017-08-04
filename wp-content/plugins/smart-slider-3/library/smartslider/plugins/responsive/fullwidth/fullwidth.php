@@ -61,5 +61,7 @@ class N2SSResponsiveFullWidth {
         $this->responsive->orientationMode = $this->params->get('responsiveSliderOrientation', 'width_and_height');
 
         $this->responsive->forceFull = intval($this->params->get('responsiveForceFull', 1));
+		
+		$this->responsive->forceFullHorizontalSelector = $this->params->get('responsiveForceFullHorizontalSelector', '');
     }
 }

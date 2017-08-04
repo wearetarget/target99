@@ -43,6 +43,7 @@ class N2SSPluginWidgetBulletTransition extends N2SSPluginWidgetAbstract {
             self::$key . 'position-',
             'bullet'
         );
+
         return $positions;
     }
 
@@ -73,7 +74,7 @@ class N2SSPluginWidgetBulletTransition extends N2SSPluginWidgetAbstract {
         $i    = 1;
         foreach ($slider->slides AS $slide) {
             $dots[] = N2Html::tag('div', array(
-                'class' => $bulletStyle . ($slide->isActive() ? 'n2-active' : ''),
+                'class'    => 'n2-ow ' . $bulletStyle . ($slide->isActive() ? 'n2-active' : ''),
                 'tabindex' => '0'
             ), '');
 
@@ -128,7 +129,7 @@ class N2SSPluginWidgetBulletTransition extends N2SSPluginWidgetAbstract {
         $parameters['action']     = $params->get(self::$key . 'action');
         $parameters['numeric']    = 0;
 
-        N2JS::addInline('new NextendSmartSliderWidgetBulletTransition("' . $id . '", ' . json_encode($parameters) . ');');
+        N2JS::addInline('new N2Classes.SmartSliderWidgetBulletTransition("' . $id . '", ' . json_encode($parameters) . ');');
 
         $fullSize = intval($params->get(self::$key . 'bar-full-size'));
         if ($fullSize) {
@@ -136,7 +137,7 @@ class N2SSPluginWidgetBulletTransition extends N2SSPluginWidgetAbstract {
         }
 
         return N2Html::tag("div", $displayAttributes + $attributes + array(
-                "class" => $displayClass . $barStyle . "nextend-bullet-bar n2-ib nextend-bullet-bar-" . $orientation,
+                "class" => $displayClass . $barStyle . "nextend-bullet-bar n2-ib n2-ow nextend-bullet-bar-" . $orientation,
                 "style" => "text-align: " . $params->get(self::$key . 'align') . ";" . $style
             ), $html);
     }

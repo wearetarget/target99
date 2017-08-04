@@ -136,7 +136,7 @@ class N2SSPluginWidgetArrowImage extends N2SSPluginWidgetAbstract {
                 $html .= self::getHTML($id, $params, $animation, 'next', $next, $displayClass, $displayAttributes, $styleClass, $nextColor, $nextHover, $nextHoverColor);
             }
 
-            N2JS::addInline('new NextendSmartSliderWidgetArrowImage("' . $id . '", ' . n2_floatval($params->get(self::$key . 'responsive-desktop')) . ', ' . n2_floatval($params->get(self::$key . 'responsive-tablet')) . ', ' . n2_floatval($params->get(self::$key . 'responsive-mobile')) . ');');
+            N2JS::addInline('new N2Classes.SmartSliderWidgetArrowImage("' . $id . '", ' . n2_floatval($params->get(self::$key . 'responsive-desktop')) . ', ' . n2_floatval($params->get(self::$key . 'responsive-tablet')) . ', ' . n2_floatval($params->get(self::$key . 'responsive-mobile')) . ');');
         }
 
         return $html;
@@ -205,7 +205,7 @@ class N2SSPluginWidgetArrowImage extends N2SSPluginWidgetAbstract {
         if ($animation == 'none' || $animation == 'fade') {
             return N2Html::tag('div', $displayAttributes + $attributes + array(
                     'id'    => $id . '-arrow-' . $side,
-                    'class' => $displayClass . $styleClass . 'nextend-arrow n2-ib nextend-arrow-' . $side . '  nextend-arrow-animated-' . $animation,
+                    'class' => $displayClass . $styleClass . 'nextend-arrow n2-ib n2-ow nextend-arrow-' . $side . '  nextend-arrow-animated-' . $animation,
                     'style' => $style,
                     'role' => 'button',
                     'aria-label' => $label,
@@ -216,7 +216,7 @@ class N2SSPluginWidgetArrowImage extends N2SSPluginWidgetAbstract {
 
         return N2Html::tag('div', $displayAttributes + $attributes + array(
                 'id'    => $id . '-arrow-' . $side,
-                'class' => $displayClass . 'nextend-arrow n2-ib nextend-arrow-animated nextend-arrow-animated-' . $animation . ' nextend-arrow-' . $side,
+                'class' => $displayClass . 'nextend-arrow n2-ib nextend-arrow-animated n2-ow nextend-arrow-animated-' . $animation . ' nextend-arrow-' . $side,
                 'style' => $style,
                 'role' => 'button',
                 'aria-label' => $label,

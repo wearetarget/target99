@@ -1,4 +1,7 @@
 <?php
+
+N2SS3::initLicense();
+
 $slidesModel = new N2SmartsliderSlidesModel();
 if (!isset($sliderObj)) {
     $slides    = $slidesModel->getAll($slider['id']);
@@ -16,98 +19,138 @@ $router = N2Base::getApplication('smartslider')
 <div id="n2-ss-slides-container">
     <div id="n2-ss-slides">
         <div class="n2-ss-slides-header">
-
             <?php
             ob_start();
+
+            $buttons = array();
+
+            $buttons[] = N2Html::link(n2_('Add images'), '#', array(
+                'class' => 'n2-h4 n2-add-quick-image'
+            ));
+            $buttons[] = N2Html::link(n2_('Add video'), '#', array(
+                'class' => 'n2-h4 n2-add-quick-video'
+            ));
+            if (N2Platform::$hasPosts) {
+                $buttons[] = N2Html::link(n2_('Add post'), '#', array(
+                    'class' => 'n2-h4 n2-add-quick-post'
+                ));
+            }
+            $buttons[] = N2Html::link(n2_('Create empty slide'), $router->createUrl(array(
+                "slides/create",
+                array(
+                    "sliderid" => N2Request::getInt('sliderid'),
+                    "static"   => 0
+                )
+            )), array(
+                'class' => 'n2-h4'
+            ));
+
+            $buttons[] = N2Html::link(n2_('Create static slide'), $router->createUrl(array(
+                "slides/create",
+                array(
+                    "sliderid" => N2Request::getInt('sliderid'),
+                    "static"   => 1
+                )
+            )), array(
+                'class' => 'n2-h4 n2-ss-create-static-slide'
+            ));
+
+
+            $buttons[] = N2Html::link(n2_('Create dynamic slides'), $router->createUrl(array(
+                "generator/create",
+                array(
+                    "sliderid" => N2Request::getInt('sliderid')
+                )
+            )), array(
+                'class' => 'n2-h4'
+            ));
+
             $this->widget->init("buttonmenu", array(
                 "content" => N2Html::tag('div', array(
                     'class' => 'n2-button-menu'
                 ), N2Html::tag('div', array(
                     'class' => 'n2-button-menu-inner n2-border-radius'
-                ), N2Html::link(n2_('Select all'), '#', array(
-                        'class' => 'n2-h4'
-                    )) . N2Html::link(n2_('Select none'), '#', array(
-                        'class' => 'n2-h4'
-                    )) . N2Html::link(n2_('Select published'), '#', array(
-                        'class' => 'n2-h4'
-                    )) . N2Html::link(n2_('Select unpublished'), '#', array(
-                        'class' => 'n2-h4'
-                    ))))
+                ), implode('', $buttons)))
             ));
             $selectButtonMenu = ob_get_clean();
 
-            echo N2Html::tag('div', array('class' => 'n2-button n2-button-plain n2-button-with-actions n2-bulk-select n2-radius-s'), N2Html::tag('span', array(
+            echo N2Html::tag('div', array('class' => 'n2-button n2-button-plain n2-button-with-actions n2-radius-s'), N2Html::tag('span', array(
                     'class' => 'n2-button-inner n2-h4'
-                ), n2_('Select')) . $selectButtonMenu);
-
-            echo N2HTML::tag('div', array(
-                'class' => 'n2-bulk-actions'
-            ), N2Html::link(n2_('Delete'), '#', array(
-                    'class' => 'n2-button n2-button-normal n2-button-m n2-radius-s n2-button-plain n2-color-red n2-button-inner n2-h4'
-                )) . N2Html::link(n2_('Duplicate'), '#', array(
-                    'class' => 'n2-button n2-button-normal n2-button-m n2-radius-s n2-button-plain n2-button-inner n2-h4'
-                )) . N2Html::link(n2_('Publish'), '#', array(
-                    'class' => 'n2-button n2-button-normal n2-button-m n2-radius-s n2-button-plain n2-button-inner n2-h4'
-                )) . N2Html::link(n2_('Unpublish'), '#', array(
-                    'class' => 'n2-button n2-button-normal n2-button-m n2-radius-s n2-button-plain n2-button-inner n2-h4'
-                )));
-
-
+                ), n2_('Create slide')) . $selectButtonMenu);
             ?>
+
+            <div class="n2-ss-bulk-controls">
+                <?php
+                ob_start();
+                $this->widget->init("buttonmenu", array(
+                    "content" => N2Html::tag('div', array(
+                        'class' => 'n2-button-menu'
+                    ), N2Html::tag('div', array(
+                        'class' => 'n2-button-menu-inner n2-border-radius'
+                    ), N2Html::link(n2_('Select all'), '#', array(
+                            'class' => 'n2-h4'
+                        )) . N2Html::link(n2_('Select none'), '#', array(
+                            'class' => 'n2-h4'
+                        )) . N2Html::link(n2_('Select published'), '#', array(
+                            'class' => 'n2-h4'
+                        )) . N2Html::link(n2_('Select unpublished'), '#', array(
+                            'class' => 'n2-h4'
+                        ))))
+                ));
+                $selectButtonMenu = ob_get_clean();
+
+                echo N2Html::tag('div', array('class' => 'n2-button n2-button-plain n2-button-with-actions n2-bulk-select n2-radius-s'), N2Html::tag('span', array(
+                        'class' => 'n2-button-inner n2-h4'
+                    ), n2_('Select')) . $selectButtonMenu);
+
+                echo N2HTML::tag('div', array(
+                    'class' => 'n2-bulk-actions'
+                ), N2Html::link(n2_('Delete'), '#', array(
+                        'data-action' => 'deleteSlides',
+                        'class'       => 'n2-button n2-button-normal n2-button-m n2-radius-s n2-button-plain n2-color-red n2-button-inner n2-h4'
+                    )) . N2Html::link(n2_('Duplicate'), '#', array(
+                        'data-action' => 'duplicateSlides',
+                        'class'       => 'n2-button n2-button-normal n2-button-m n2-radius-s n2-button-plain n2-button-inner n2-h4'
+                    )) . N2Html::link(n2_('Copy'), '#', array(
+                        'data-action' => 'copySlides',
+                        'class'       => 'n2-button n2-button-normal n2-button-m n2-radius-s n2-button-plain n2-button-inner n2-h4'
+                    )) . N2Html::link(n2_('Publish'), '#', array(
+                        'data-action' => 'publishSlides',
+                        'class'       => 'n2-button n2-button-normal n2-button-m n2-radius-s n2-button-plain n2-button-inner n2-h4'
+                    )) . N2Html::link(n2_('Unpublish'), '#', array(
+                        'data-action' => 'unPublishSlides',
+                        'class'       => 'n2-button n2-button-normal n2-button-m n2-radius-s n2-button-plain n2-button-inner n2-h4'
+                    )));
+
+
+                ?>
+            </div>
         </div>
 
 
     <div class="n2-ss-slides-container">
         <?php
-        ob_start();
-        $this->widget->init("buttonmenu", array(
-            "content" => N2Html::tag('div', array(
-                'class' => 'n2-button-menu'
-            ), N2Html::tag('div', array(
-                'class' => 'n2-button-menu-inner n2-border-radius'
-            ), N2Html::link(n2_('Add images'), '#', array(
-                    'class' => 'n2-add-quick-image n2-h4'
-                )) . N2Html::link(n2_('Add video'), '#', array(
-                    'class' => 'n2-add-quick-video n2-h4' . (N2Platform::$hasPosts ? '' : ' n2-separator')
-                )) . (N2Platform::$hasPosts ? N2Html::link(n2_('Add post'), '#', array(
-                    'class' => 'n2-add-quick-post n2-h4'
-                )) : '') . N2Html::link(n2_('Create empty slide'), $router->createUrl(array(
-                    "slides/create",
-                    array(
-                        "sliderid" => N2Request::getInt('sliderid'),
-                        "static"   => 0
-                    )
-                )), array(
-                    'class' => 'n2-h4 n2-separator'
-                )) . N2Html::link(n2_('Create static slide'), $router->createUrl(array(
-                    "slides/create",
-                    array(
-                        "sliderid" => N2Request::getInt('sliderid'),
-                        "static"   => 1
-                    )
-                )), array(
-                    'class' => 'n2-h4 n2-ss-create-static-slide'
-                )) . N2Html::link(n2_('Create dynamic slides'), $router->createUrl(array(
-                    "generator/create",
-                    array(
-                        "sliderid" => N2Request::getInt('sliderid')
-                    )
-                )), array(
-                    'class' => 'n2-h4'
-                ))))
-        ));
-        $buttonMenu = ob_get_clean();
-
         echo N2Html::tag('div', array('class' => 'n2-box n2-box-small n2-box-slide-add n2-h3'), N2Html::link(n2_('New slide'), '#', array(
-                'class' => 'n2-add-quick-image n2-button n2-button-l n2-button-green n2-radius-s n2-uc n2-h3'
-            )) . $buttonMenu);
+            'class' => 'n2-add-quick-image n2-button n2-button-l n2-button-green n2-radius-s n2-uc n2-h3'
+        )));
+
+        echo N2Html::tag('div', array('class' => 'n2-box n2-box-small n2-box-add-sample-slide n2-h3'), N2Html::link(n2_('Slide Library'), $router->createUrl(array(
+            "slides/create",
+            array(
+                "sliderid" => N2Request::getInt('sliderid'),
+                "static"   => 0,
+                "mode"     => 'sample'
+            )
+        )), array(
+            'class' => 'n2-button n2-button-l n2-button-purple n2-radius-s n2-uc n2-h3'
+        )));
 
         $parameters = array();
         if (N2Platform::$isWordpress) {
             $parameters['nonce']     = wp_create_nonce('internal-linking');
             $parameters['wpAjaxUrl'] = admin_url('admin-ajax.php');
         }
-        N2JS::addInline('new NextendSmartSliderAdminSidebarSlides("' . $this->appType->router->createAjaxUrl(array(
+        N2JS::addInline('new N2Classes.SlidesManager("' . $this->appType->router->createUrl(array(
                 "slides/index",
                 array(
                     "sliderid" => $sliderObj->sliderId,
@@ -154,12 +197,13 @@ $router = N2Base::getApplication('smartslider')
         <a href="#" class="n2-button n2-button-icon n2-button-s n2-button-grey n2-radius-s"><?php echo N2Html::tag('i', array('class' => 'n2-i n2-it n2-i-more2'), ''); ?></a>
         <div class="n2-box-menu-content">
             <ul>
-                <li class="n2-ss-duplicate"><?php n2_e('Duplicate'); ?></li>
-                <li class="n2-ss-publish"><?php n2_e('Publish'); ?></li>
-                <li class="n2-ss-unpublish"><?php n2_e('Unpublish'); ?></li>
-                <li class="n2-ss-generator"><?php n2_e('Edit generator'); ?></li>
-                <li class="n2-ss-setFirst"><?php n2_e('Set as first'); ?></li>
-                <li class="n2-ss-delete"><?php n2_e('Delete'); ?></li>
+                <li data-action="duplicate"><?php n2_e("Duplicate"); ?></li>
+                <li data-action="copy"><?php n2_e("Copy"); ?></li>
+                <li data-action="publish"><?php n2_e("Publish"); ?></li>
+                <li data-action="unpublish"><?php n2_e("Unpublish"); ?></li>
+                <li data-action="generator"><?php n2_e("Edit generator"); ?></li>
+                <li data-action="setFirst"><?php n2_e("Set as first"); ?></li>
+                <li data-action="delete"><?php n2_e("Delete"); ?></li>
             </ul>
         </div>
     </div>

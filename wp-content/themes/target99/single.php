@@ -54,8 +54,7 @@
         </section>
 
         <div class="full-post__advice-container">
-            <div>1</div>
-            <div>2</div>
+            <?php echo do_shortcode('[related_posts_by_tax format="thumbnails_target99" posts_per_page="3"]'); ?>
         </div>
 
     </div>
