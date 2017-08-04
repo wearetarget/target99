@@ -4,26 +4,6 @@
 .full-post {
 	background-color: @background-color-3;
 
-	.full-post__inner-container {
-		padding-top: 50px;
-		padding-bottom: 50px;
-		width: 85%;
-
-		&:after {
-			display: table;
-			content: "";
-			visibility: hidden;
-			clear: both;
-		}
-	}
-
-	.full-post__article-container {
-		box-sizing: border-box;
-		float: left;
-		width: 80%;
-		padding-right: 40px;
-	}
-
 	.full-post__headline {
 		width: 100%;
 		position: relative;
@@ -42,6 +22,10 @@
 		font-family: @main-control-font;
 		font-weight: bold;
 		font-size: 18px;
+
+		@media @small-screen {
+			font-size: 14px;
+		}
 	}
 
 	.full-post__category {
@@ -63,6 +47,10 @@
 		padding: 30px;
 
 		background: rgba(0, 0, 0, 0.5);
+
+		@media @small-screen {
+			padding: 10px;
+		}
 	}
 
 	.full-post__title-container {
@@ -78,6 +66,18 @@
 		text-transform: uppercase;
 
 		color: @text-color-3;
+
+		@media @large-screen {
+			font-size: 24px;
+		}
+
+		@media @medium-screen {
+			font-size: 20px;
+		}
+
+		@media @small-screen {
+			font-size: 16px;
+		}
 	}
 
 	.full-post__headline-footer {
@@ -87,13 +87,17 @@
 			content: "";
 			clear: both;
 		}
+
+		@media @small-screen {
+			padding-top: 15px;
+		}
 	}
 
 	.full-post__back-link-container {
 		box-sizing: border-box;
 		float: left;
 		text-align: left;
-		width: 45%;
+		width: 50%;
 	}
 
 	.full-post__back-link {
@@ -108,14 +112,18 @@
 		&.full-post__back-link--green {
 			color: @background-color-2;
 		}
+
+		@media @small-screen {
+			font-size: 14px;
+		}
 	}
 
 	.full-post__date-container {
 		float: right;
 		box-sizing: border-box;
 
-		text-align: left;
-		width: 55%
+		text-align: right;
+		width: 50%;
 	}
 
 	.full-post__date {
@@ -128,17 +136,16 @@
 		[class*='fa-'] {
 			padding: 5px;
 		}
-	}
 
-	.full-post__content {
-		word-wrap: break-word;
-		overflow: hidden;
+		@media @small-screen {
+			font-size: 14px;
+		}
 	}
 
 	.full-post__share-container {
 		box-sizing: border-box;
 		float: right;
-		width: 55%;
+		width: 50%;
 		text-align: right;
 	}
 
@@ -153,18 +160,18 @@
 		text-transform: uppercase;
 
 		color: @text-color-3;
-	}
 
-	.full-post__advice-container {
-		box-sizing: border-box;
-		float: right;
-		width: 20%;
+		@media @small-screen {
+			font-size: 14px;
+		}
 	}
 
 	.full-post__content {
+		word-wrap: break-word;
+		overflow: hidden;
 		font-family: @main-control-font;
 
-		p{
+		p {
 			font-size: 14px;
 			line-height: 32px;
 			margin-bottom: 2em;

@@ -1,0 +1,64 @@
+@import '../base/variables';
+@import '../base/layout';
+
+.post-page {
+	background-color: @background-color-3;
+
+	.post-page__inner-container {
+		padding-top: 50px;
+		padding-bottom: 50px;
+		width: 85%;
+
+		&:after {
+			display: table;
+			content: "";
+			visibility: hidden;
+			clear: both;
+		}
+
+		@media @medium-screen, @small-screen {
+			padding-top: 20px;
+
+			width: 98%;
+		}
+	}
+
+	.post-page__article-container {
+		box-sizing: border-box;
+		float: left;
+		width: 80%;
+		padding-right: 40px;
+
+		@media @large-screen {
+			width: 70%;
+		}
+
+		@media @medium-screen, @small-screen {
+			padding: 10px;
+			float: none;
+			width: 100%;
+		}
+
+		&.post-page__article-container--full {
+			@media @xl-screen, @large-screen {
+				width: 100%;
+			}
+		}
+	}
+
+	.post-page__advice-container {
+		box-sizing: border-box;
+		float: right;
+		width: 20%;
+
+		@media @large-screen {
+			width: 30%;
+		}
+
+		@media @medium-screen, @small-screen {
+			padding: 10px;
+			float: none;
+			width: 100%;
+		}
+	}
+}

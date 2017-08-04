@@ -1,16 +1,16 @@
 <?php if ( $related_posts ) : ?>
 <div class="related-gallery">
-    <div class="related-gallery__inner-container">
+
     <?php foreach ( $related_posts as $post ) :
             setup_postdata( $post );
 
         // Check if size was set in widget or shortcode
         $size = isset( $rpbt_args['size'] ) ? $size : 'thumbnail';
     ?>
-
+    <div class="related-gallery__item-container">
         <div class="related-post">
             <a class="related-post__inner-container" href="<?php the_permalink(); ?>">
-                <img class="" src="<?php the_post_thumbnail_url( $size ); ?>" />
+                <img class="related-post__image" src="<?php the_post_thumbnail_url( $size ); ?>" />
 
                 <div class="related-post__meta-container">
                     <div class="related-post__title-container">
@@ -25,10 +25,10 @@
                 </div>
             </a>
         </div>
+    </div>
 
     <?php endforeach; ?>
 
-    </div>
 </div>
 
 <?php endif ?>
