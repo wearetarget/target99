@@ -41,13 +41,9 @@
                 </div>
 
                 <div class="full-post__article-footer">
-                    <div class="full-post__back-link-container">
-                        <a href="/blog" class="full-post__back-link full-post__back-link--green">< К списку новостей</a>
-                    </div>
-
                     <div class="full-post__share-container">
                         <div class="full-post__share">
-                            Поделиться <span class="fa fa-share-alt"></span>
+                            <?php echo do_shortcode('[addtoany]'); ?>
                         </div>
                     </div>
                 </div>
