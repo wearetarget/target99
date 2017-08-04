@@ -1,33 +1,35 @@
 @import '../base/variables';
 
 .rpbt_shortcode {
-	> h3 {
-		display: none;
-	}
+   > h3 {
+    display: none;
+  }
 }
 
 .related-gallery {
-	@media @medium-screen, @small-screen {
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: space-between;
-	}
+  @media @medium-screen, @small-screen {
+    display: flex;
 
-	.related-gallery__item-container {
-		box-sizing: border-box;
-		padding-bottom: 10px;
-		text-align: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
 
-		@media @medium-screen {
-			flex-basis: 50%;
-			padding: 10px;
-		}
+  .related-gallery__item-container {
+    box-sizing: border-box;
+    padding-bottom: 10px;
 
-		@media @small-screen {
-			flex-basis: 100%;
-			padding: 10px;
-		}
-	}
+    text-align: center;
 
+    @media @medium-screen {
+      padding: 10px;
+
+      flex-basis: 50%;
+    }
+
+    @media @small-screen {
+      padding: 10px;
+
+      flex-basis: 100%;
+    }
+  }
 }
-

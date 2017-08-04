@@ -2,8 +2,9 @@
 @import '../base/layout';
 
 .events {
-  background-color: @background-color-3;
   position: relative;
+
+  background-color: @background-color-3;
 
   .events__title-container {
     padding-bottom: 50px;
@@ -47,9 +48,10 @@
 
     @media @small-screen {
       position: absolute;
-      width: 100%;
       bottom: 0;
       left: 0;
+
+      width: 100%;
     }
   }
 }
@@ -67,18 +69,20 @@
   }
 
   .event__content {
-    display: block;
     position: relative;
-    cursor: pointer;
+
+    display: block;
 
     box-sizing: border-box;
     width: 460px;
     height: 282px;
 
+    cursor: pointer;
+
     @media @small-screen {
+      width: auto;
       min-width: 250px;
       max-width: 460px;
-      width: auto;
       margin: 0 auto;
     }
   }

@@ -1,26 +1,27 @@
 @import 'variables';
 
-html, body {
+html,
+body {
   height: 100%;
+
   background: @border-color-1;
 }
 
 .layout {
-  width: 100%;
-  min-height: 100%;
+  position: relative;
 
   box-sizing: border-box;
-  position: relative;
-  padding-bottom: 220px;
-
-  margin: 0 auto;
+  width: 100%;
   min-width: @mobile-min-width;
   max-width: @layout-max-width * 1;
+  min-height: 100%;
+  margin: 0 auto;
+  padding-bottom: 220px;
 }
 
 .layout__service {
-  margin: 0 auto;
   box-sizing: border-box;
+  margin: 0 auto;
 
   @media @small-screen, @medium-screen {
     min-width: @mobile-min-width;
@@ -28,9 +29,8 @@ html, body {
 }
 
 .layout__content {
-  margin: 0 auto;
   box-sizing: border-box;
-
+  margin: 0 auto;
   padding: 90px 20px 70px;
 
   @media @medium-screen, @large-screen, @xl-screen {
