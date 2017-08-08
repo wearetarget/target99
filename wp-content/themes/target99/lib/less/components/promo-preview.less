@@ -1,0 +1,57 @@
+@import '../base/variables';
+@import '../base/layout';
+
+.promo-preview {
+  position: relative;
+
+  display: block;
+
+  width: 100%;
+  min-height: 300px;
+
+  background: @border-color-2;
+
+  .promo-preview__image-container {
+    overflow: hidden;
+
+    padding: 50px;
+
+    text-align: center;
+  }
+
+  .promo-preview__image {
+    max-width: 100%;
+  }
+
+  .promo-preview__tip-container {
+    margin: 0 auto;
+    padding: 50px;
+
+    text-align: center;
+  }
+
+  .promo-preview__tip {
+    font-family: @main-control-font;
+    font-size: 18px;
+  }
+
+  .promo-preview__controls-container {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+
+    padding: 20px;
+  }
+
+  .promo-preview__control {
+    font-size: 48px;
+
+    color: @text-color-2;
+
+    &:hover {
+      cursor: pointer;
+
+      color: @text-color-3;
+    }
+  }
+}

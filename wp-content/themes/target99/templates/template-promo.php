@@ -27,21 +27,41 @@
 			<h2 class="promo-page__title">Информация об отходах</h2>
 		</div>
 
-		<div class="promo-page__preview-container"></div>
+		<div class="promo-page__preview-container">
+            <div class="promo-preview">
+                <div class="promo-preview__image-container">
+                    <img class="promo-preview__image" src="" />
+                </div>
+                <div class="promo-preview__tip-container">
+                    <div class="promo-preview__tip">Выберите один из промо-файлов</div>
+                </div>
+                <div class="promo-preview__controls-container">
+                    <div class="promo-preview__control fa fa-download"></div>
+                </div>
+            </div>
+        </div>
 
 		<div class="promo-page__promos-list">
-			<div clss="promo-page__promo-item">
+
 				<?php
 					while ($promo_query->have_posts()) {
 						$promo_query->the_post();
 						$promo_preview = wp_get_attachment_image_src(get_post_thumbnail_id(), 'full')[0];
 
-						include('template-parts/template-part-promo.php');
+                ?>
+                    <div class="promo-page__promo-item">
+                        <div class="promo">
+                            <div class="promo__title-container" href="">
+                                <span class="promo__title"><?php echo get_the_title(); ?></span>
+                            </div>
+                        </div>
+                    </div>
+                <?php
 					}
 
 					wp_reset_postdata();
 				?>
-			</div>
+
 		</div>
 	</div>
 </section>
