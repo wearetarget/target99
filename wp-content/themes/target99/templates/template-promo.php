@@ -63,6 +63,10 @@
 				?>
 
 		</div>
+
+        <div class="promo-page__pagination-container">
+            <?php custom_pagination($promo_query->max_num_pages, "", $paged); ?>
+        </div>
 	</div>
 </section>
 <?php endif; ?>
