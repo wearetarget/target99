@@ -82,8 +82,6 @@ function rpbt_thumbnails_target99_format_template( $template, $type, $format ) {
 
 function create_post_types()
 {
-    // News
-
     register_post_type('waste-info', array(
         'labels' => array(
             'name' => __('Информация об отходах'),
@@ -114,7 +112,6 @@ function create_post_types()
         )
     ));
 
-    // Location
     register_post_type('partner-info', array(
         'labels' => array(
             'name' => __('Партнёры'),
@@ -128,6 +125,21 @@ function create_post_types()
         )
     ));
 
+    register_post_type('promo', array(
+            'labels' => array(
+                'name' => __('Промо материалы'),
+                'singular_name' => __('Промо материал')
+            ),
+            'description' => 'Промо материалы, отображаемые в галерее.',
+            'exclude_from_search' => true,
+            'publicly_queryable' => false,
+            'show_ui' => true,
+            'show_in_admin_bar' => true,
+            'supports' => array(
+                'title',
+                'thumbnail'
+             )
+    ));
 }
 
 add_action('init', 'create_post_types');

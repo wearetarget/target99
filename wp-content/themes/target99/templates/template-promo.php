@@ -4,47 +4,117 @@
 		Template Name: Promo
 	*/
 
-	// Post query arguments
 	$paged = ( get_query_var('paged') ) ? get_query_var('paged') : 1;
-	$post_args = [
-		'post_status'       => array('publish'),
-		'posts_per_page'    => 10,
-		'post_type'         => array( 'post'),
-		'order'             => 'DSC',
-		'orderby'           => 'date',
-		'paged'             => $paged
+
+	$promo_args = [
+		'post_status' => array('publish'),
+		'post_type' => array('promo'),
+		'order' => 'ASC',
+		'orderby' => 'date',
+		'posts_per_page' => 3,
+		'paged' => $paged
 	];
 
-	$the_query = new WP_Query($post_args);
+	$promo_query = new WP_Query($promo_args);
 
 	get_header();
 ?>
 
-<section class="post-page">
+<script>
+	window.target99 = window.target99 || {};
+	window.target99.activePromoPreviewId = null;
 
-	<section class="post-page__posts-container">
-			<?php
-				if ( $the_query->have_posts() ) {
-					while ( $the_query->have_posts() ) {
-						$the_query->the_post();
-						$post_image_url = wp_get_attachment_image_src( get_post_thumbnail_id(), 'medium')[0];
-						$content_width_class = (bool)$post_image_url ? '' : 'news-post-single__details--full';
+	function previewPromo(id){
+		var promoToPreview = $('#promo__image--' + id);
+		var promoContainer = promoToPreview.parent();
+        var previewImgSrc = promoToPreview.get(0).src;
+        var tipElement = $('#promo-preview__tip').get(0);
+        var fileUrl = promoContainer.get(0).dataset.fileUrl;
 
-						include('template-parts/template-part-news-short.php');
+		if (window.target99.activePromoPreviewId !== id) {
+            $('#promo-preview__download').get(0).href = fileUrl;
+            $('#promo-preview__controls-container').show();
+
+            if (previewImgSrc !== window.location.href ) {
+                $('#promo-preview__tip-container').hide();
+                $('#promo-preview__image').get(0).src = previewImgSrc;
+                $('#promo-preview__image-container').show();
+            } else {
+                $('#promo-preview__image-container').hide();
+                $('#promo-preview__tip-container').show();
+                tipElement.innerHTML = "Предпросмотр недоступен.";
+            }
+
+			window.target99.activePromoPreviewId = id;
+			$('#promo-page .promo').removeClass('promo--active');
+			promoContainer.addClass('promo--active');
+
+		} else {
+			$('#promo-preview__image-container').hide();
+            $('#promo-preview__controls-container').hide();
+
+            $('#promo-preview__tip-container').show();
+			$('#promo-preview__image').get(0).src = null;
+            tipElement.innerHTML = "Выберите один из промо файлов.";
+
+			promoContainer.removeClass('promo--active');
+			window.target99.activePromoPreviewId = null;
+		}
+	}
+</script>
+
+<?php if ($promo_query->have_posts()) : ?>
+<section id="promo-page" class="promo-page">
+	<div class="promo-page__inner-container layout__content">
+		<div class="promo-page__title-container">
+			<h2 class="promo-page__title">Информация об отходах</h2>
+		</div>
+
+		<div class="promo-page__preview-container">
+			<div class="promo-preview">
+				<div id="promo-preview__image-container" class="promo-preview__image-container">
+					<img id="promo-preview__image" class="promo-preview__image" src="" />
+				</div>
+				<div id="promo-preview__tip-container" class="promo-preview__tip-container">
+					<div id="promo-preview__tip" class="promo-preview__tip">Выберите один из промо файлов.</div>
+				</div>
+				<div id="promo-preview__controls-container" class="promo-preview__controls-container">
+					<a id="promo-preview__download" class="promo-preview__control fa fa-download" href='#' target="_blank"></a>
+				</div>
+			</div>
+		</div>
+
+		<div class="promo-page__promos-list">
+
+				<?php
+					while ($promo_query->have_posts()) {
+						$promo_query->the_post();
+						$promo_preview_src = wp_get_attachment_image_src(get_post_thumbnail_id(), 'full')[0];
+
+				?>
+					<div class="promo-page__promo-item">
+						<div class="promo" data-file-url="<?php echo get_field('promo-file')['url']; ?>">
+							<img id="promo__image--<?php echo get_the_ID(); ?>" src="<?php echo $promo_preview_src; ?>"/>
+							<div class="promo__title-container" onclick="previewPromo('<?php echo get_the_ID(); ?>')">
+								<span class="promo__title"><?php echo get_the_title(); ?></span>
+							</div>
+						</div>
+					</div>
+				<?php
 					}
 
 					wp_reset_postdata();
-				} else {
-			?>
-				<p><?php _e('There haven\'t been any posts yet. Check back soon!'); ?></p>
-			<?php } ?>
+				?>
 
-	</section>
+		</div>
 
-	<div class="post-page__pagination-container">
+		<div class="promo-page__pagination-container">
+			<?php custom_pagination($promo_query->max_num_pages, "", $paged); ?>
+		</div>
 	</div>
-
 </section>
+<?php endif; ?>
+
 
 <?php get_footer(); ?>
 

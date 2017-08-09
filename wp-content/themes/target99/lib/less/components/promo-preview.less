@@ -1,0 +1,65 @@
+@import '../base/variables';
+@import '../base/layout';
+
+.promo-preview {
+  position: relative;
+
+  display: block;
+
+  width: 100%;
+  height: 450px;
+
+  background: @border-color-2;
+
+  .promo-preview__image-container {
+    display: none;
+    overflow: hidden;
+
+    box-sizing: border-box;
+    margin: 0 auto;
+    padding: 50px;
+  }
+
+  .promo-preview__image {
+    display: block;
+
+    max-width: 600px;
+    min-height: 300px;
+    max-height: 350px;
+    margin: 0 auto;
+  }
+
+  .promo-preview__tip-container {
+    margin: 0 auto;
+    padding: 50px;
+
+    text-align: center;
+  }
+
+  .promo-preview__tip {
+    font-family: @main-control-font;
+    font-size: 18px;
+  }
+
+  .promo-preview__controls-container {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+
+    display: none;
+
+    padding: 20px;
+  }
+
+  .promo-preview__control {
+    font-size: 48px;
+
+    color: @text-color-2;
+
+    &:hover {
+      cursor: pointer;
+
+      color: @text-color-3;
+    }
+  }
+}

@@ -1,0 +1,47 @@
+@import '../base/variables';
+@import '../base/layout';
+
+.promo {
+  display: table;
+
+  width: 100%;
+  min-height: 110px;
+
+  background: @border-color-1;
+
+  [id*='promo__image--'] {
+    display: none;
+  }
+
+  .promo__title-container {
+    display: table-cell;
+
+    padding: 10px 25px;
+
+    text-align: center;
+    vertical-align: middle;
+    text-decoration: none;
+  }
+
+  .promo__title {
+    font-family: @main-control-font;
+    font-size: 18px;
+    font-weight: bold;
+
+    color: @text-color-2;
+
+    @media @medium-screen, @small-screen {
+      font-size: 16px;
+    }
+  }
+
+  &:hover {
+    cursor: pointer;
+
+    background: @text-color-3;
+  }
+
+  &.promo--active {
+    background: @text-color-3;
+  }
+}
