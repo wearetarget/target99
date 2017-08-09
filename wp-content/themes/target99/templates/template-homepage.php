@@ -92,8 +92,11 @@ get_header();
                     $waste_info_query->the_post();
                     $waste_info_background = wp_get_attachment_image_src(get_post_thumbnail_id(), 'full')[0];
 
+                    echo '<div class="waste-info__tile">';
                     include('template-parts/template-part-waste-info.php');
-                }
+                    echo '</div>';
+
+                    }
 
                 wp_reset_postdata();
                 ?>

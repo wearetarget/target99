@@ -1,6 +1,8 @@
 <?php
 	$category = get_the_category()[0];
 	$post_image_url = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full' )[0];
+
+	the_post();
 	get_header();
 ?>
 
@@ -12,7 +14,7 @@
 				<div class="full-post__headline">
 					<div class="full-post__category-container">
 						<span class="full-post__category--prefix">Target99 / </span>
-						<span class="full-post__category"><?php echo $category->cat_name; ?></span>
+						<span class="full-post__category">Достижения</span>
 					</div>
 					<img src="<?php echo $post_image_url; ?>" class="full-post__featured-image"/>
 
@@ -39,20 +41,15 @@
 				</div>
 
 				<div class="full-post__article-footer">
-					<div class="full-post__back-link-container">
-						<a href="/blog" class="full-post__back-link full-post__back-link--green">< К списку новостей</a>
-					</div>
-
 					<div class="full-post__share-container">
 						<div class="full-post__share">
-							Поделиться <span class="fa fa-share-alt"></span>
+							<?php echo do_shortcode('[addtoany]'); ?>
 						</div>
 					</div>
 				</div>
 			</div>
 
 		</section>
-
 	</div>
 
 </section>

@@ -1,57 +1,30 @@
 <?php
 	$category = get_the_category()[0];
 	$post_image_url = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full' )[0];
+	$promos = get_field('related_promos');
 	get_header();
+	the_post();
 ?>
 
-<section class="post-page">
-	<div class="post-page__inner-container layout__service">
-		<section class="post-page__article-container post-page__article-container--full">
+<section class="waste-article">
+	<div class="waste-article__content">
+		<?php the_content(); ?>
 
-			<div class="full-post">
-				<div class="full-post__headline">
-					<div class="full-post__category-container">
-						<span class="full-post__category--prefix">Target99 / </span>
-						<span class="full-post__category"><?php echo $category->cat_name; ?></span>
-					</div>
-					<img src="<?php echo $post_image_url; ?>" class="full-post__featured-image"/>
+	</div>
 
-					<div class="full-post__meta-container">
-						<div class="full-post__title-container">
-							<h1 class="full-post__title"><?php echo get_the_title(); ?></h1>
-						</div>
-
-						<div class="full-post__headline-footer">
-							<div class="full-post__back-link-container">
-								<a href="/blog" class="full-post__back-link">< К списку новостей</a>
-							</div>
-							<div class="full-post__date-container">
-								<div class="full-post__date">
-									<span class="fa fa-calendar"></span><?php echo get_the_date(); ?>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="full-post__content">
-					<?php echo get_the_content(); ?>
-				</div>
-
-				<div class="full-post__article-footer">
-					<div class="full-post__back-link-container">
-						<a href="/blog" class="full-post__back-link full-post__back-link--green">< К списку новостей</a>
-					</div>
-
-					<div class="full-post__share-container">
-						<div class="full-post__share">
-							Поделиться <span class="fa fa-share-alt"></span>
-						</div>
-					</div>
-				</div>
+	<div class="waste-article__promo-container">
+		<?php
+				if( $promos ): ?>
+		<?php foreach( $promos as $promo): ?>
+		<div class="waste-article__promo-item">
+			<div class="promo">
+				<a class="promo__title-container" href="<?php echo get_field('promo-file', $promo->ID)['url']; ?>" target="_blank">
+					<span class="promo__title"><?php echo get_the_title($promo->ID); ?></span>
+				</a>
 			</div>
-
-		</section>
+		</div>
+		<?php endforeach; ?>
+		<?php endif; ?>
 
 	</div>
 
