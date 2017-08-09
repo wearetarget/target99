@@ -35,15 +35,15 @@
 
 }
 
-#accordions-76 {
+[id^="accordions"] {//to unique file less
   margin: 0 40px;
 
-  .ui-accordion-content-active {
-
-    height: auto !important; //TODO How better
-    & > p {
-      font-weight: bold;
-    }
+  p {
+    font-weight: bold;
   }
+}
+
+.ui-accordion-content-active {
+  height: auto !important; //TODO How better
 }
 

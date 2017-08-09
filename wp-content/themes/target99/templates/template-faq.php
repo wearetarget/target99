@@ -31,17 +31,17 @@ get_header();
     </div>
 </section>
 
-<section class="faq-ask-question">
-    <div class="faq-ask-question__inner-container layout__service">
-        <div class="faq-ask-question__title-container">
-            <h2 class="faq-ask-question__title">
+<section class="faq">
+    <div class="faq__inner-container layout__service">
+        <div class="faq__title-container">
+            <h2 class="faq__title">
                 ЗАДАТЬ ВОПРОС, НАПИСАТЬ СООБЩЕНИЕ
             </h2>
-<div class="faq-ask-question__forms">
-            <input type="text" class="faq-ask-question__input faq-ask-question__sm__input" placeholder="ИМЯ ФАМИЛИЯ" name="full_name">
-            <input type="text" class="faq-ask-question__input right faq-ask-question__sm__input" placeholder="EMAIL" name="email">
-           <textarea type="text" class="faq-ask-question__input faq-ask-question__big__input"  placeholder="ВОПРОС" name="question"></textarea>
-                  <span class="button button--warning button--mobile-full faq-ask-question__button">Отправить</span>
+<div class="faq__forms">
+            <input type="text" class="faq__input faq__half__input" placeholder="ИМЯ ФАМИЛИЯ" name="full_name">
+            <input type="text" class="faq__input faq__half__input" placeholder="EMAIL" name="email">
+           <textarea type="text" class="faq__input faq__full__input"  placeholder="ВОПРОС" name="question"></textarea>
+                  <span class="button button--warning button--mobile-full faq__button">Отправить</span>
             </div>
         </div>
     </div>

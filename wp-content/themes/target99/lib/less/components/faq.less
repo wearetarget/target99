@@ -1,16 +1,16 @@
 @import '../base/variables';
 @import '../base/layout';
 
-.faq-ask-question {
+.faq {
 
   background-color: @background-color-4;
   display: block;
-  .faq-ask-question__inner-container {
+  .faq__inner-container {
     padding: 50px 0;
     position: relative;
   }
 
-  .faq-ask-question__title-container {
+  .faq__title-container {
     padding-bottom: 30px;
 
     text-align: center;
@@ -20,7 +20,7 @@
     }
   }
 
-  .faq-ask-question__title {
+  .faq__title {
     font-family: @main-control-font;
     font-size: 22px;
     font-weight: bold;
@@ -33,13 +33,13 @@
     }
   }
 
-  .faq-ask-question__form-container {
+  .faq__form-container {
     width: 100%;
     text-align: center;
     margin-bottom: -60px;
   }
 
-  .faq-ask-question__button {
+  .faq__button {
     width: 20%;
 
     @media @small-screen {
@@ -52,7 +52,7 @@
     }
   }
 
-  .faq-ask-question__footer {
+  .faq__footer {
     text-align: center;
     span {
       padding: 20px 75px;
@@ -66,25 +66,18 @@
     }
   }
 
-  .faq-ask-question__forms{
+  .faq__forms{
     align-content: center;
     display: table;
     margin: 0 auto;
     clear: both;
-
-    .right{
-      float: right;
-      @media @small-screen {
-        float: none;
-      }
-    }
 
     @media @small-screen {
       width: 100%;
     }
   }
 
-  .faq-ask-question__half__input {
+  .faq__half__input {
     display: inline-block;
     width: 49%;
     height: 54px;
@@ -93,11 +86,17 @@
     @media @small-screen {
       margin-top: 0;
     }
+    &:nth-child(2n+1){
+      float: right;
+      @media @small-screen {
+        float: none;
+      }
+    }
   }
 
 
 
-  .faq-ask-question__input {
+  .faq__input {
     box-sizing: border-box;
     font-family: @main-control-font;
     font-size: 14px;
@@ -144,7 +143,7 @@
     }
   }
 
-  .faq-ask-question__full__input {
+  .faq__full__input {
     height: 108px;
     width: 100%;
     padding-top: 15px;
