@@ -1743,8 +1743,8 @@ body {
   }
 }
 .promo-page {
-  background-color: #f1f1f1;
   height: 100%;
+  background-color: #f1f1f1;
 }
 .promo-page .promo-page__inner-container {
   width: 85%;
@@ -1753,26 +1753,27 @@ body {
 }
 .promo-page .promo-page__title-container {
   width: 100%;
-  text-align: center;
   padding: 5px 5px 30px 5px;
+  text-align: center;
 }
 .promo-page .promo-page__title {
   display: inline-block;
   font-family: 'PT Sans', sans-serif;
-  color: #fbbc2d;
   font-size: 24px;
-  border-bottom: 1px solid #c2c2c2;
   text-transform: uppercase;
+  color: #fbbc2d;
+  border-bottom: 1px solid #c2c2c2;
 }
 .promo-page .promo-page__preview-container {
   display: block;
   width: 100%;
 }
 .promo-page .promo-page__promos-list {
-  padding-top: 50px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  width: 100%;
+  padding-top: 50px;
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
   -ms-flex-flow: row wrap;
@@ -1780,15 +1781,14 @@ body {
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   justify-content: space-between;
-  width: 100%;
 }
 .promo-page .promo-page__promo-item {
   display: block;
-  -ms-flex-preferred-size: 33%;
-  flex-basis: 33%;
-  padding: 10px;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
+  padding: 10px;
+  -ms-flex-preferred-size: 33%;
+  flex-basis: 33%;
 }
 @media screen and (min-width: 600px) and (max-width: 899px) {
   .promo-page .promo-page__promo-item {
@@ -1802,23 +1802,31 @@ body {
     flex-basis: 100%;
   }
 }
+.promo-page .promo-page__pagination-container {
+  margin: 0 auto;
+  padding-bottom: 50px;
+  text-align: center;
+}
 .promo {
   display: table;
-  background: #c2c2c2;
-  min-height: 110px;
   width: 100%;
+  min-height: 110px;
+  background: #434343;
+}
+.promo [id*='promo__image--'] {
+  display: none;
 }
 .promo .promo__title-container {
   display: table-cell;
   padding: 10px 25px;
+  text-align: center;
   vertical-align: middle;
   text-decoration: none;
-  text-align: center;
 }
 .promo .promo__title {
   font-family: 'PT Sans', sans-serif;
-  font-weight: bold;
   font-size: 18px;
+  font-weight: bold;
   color: white;
 }
 @media screen and (min-width: 600px) and (max-width: 899px), screen and (max-width: 599px) {
@@ -1827,30 +1835,37 @@ body {
   }
 }
 .promo:hover {
-  background: #fbbc2d;
   cursor: pointer;
+  background: #fbbc2d;
 }
 .promo.promo--active {
   background: #fbbc2d;
 }
 .promo-preview {
-  display: block;
   position: relative;
-  background: #c2c2c2;
-  min-height: 300px;
+  display: block;
   width: 100%;
+  height: 450px;
+  background: #c2c2c2;
 }
 .promo-preview .promo-preview__image-container {
-  text-align: center;
-  padding: 50px;
+  display: none;
   overflow: hidden;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 50px;
 }
 .promo-preview .promo-preview__image {
-  max-width: 100%;
+  display: block;
+  max-width: 600px;
+  min-height: 300px;
+  max-height: 350px;
+  margin: 0 auto;
 }
 .promo-preview .promo-preview__tip-container {
-  padding: 50px;
   margin: 0 auto;
+  padding: 50px;
   text-align: center;
 }
 .promo-preview .promo-preview__tip {
@@ -1861,15 +1876,16 @@ body {
   position: absolute;
   right: 0;
   bottom: 0;
+  display: none;
   padding: 20px;
 }
 .promo-preview .promo-preview__control {
-  color: white;
   font-size: 48px;
+  color: white;
 }
 .promo-preview .promo-preview__control:hover {
-  color: #fbbc2d;
   cursor: pointer;
+  color: #fbbc2d;
 }
 
 /*# sourceMappingURL=main.min.css.map */

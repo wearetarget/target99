@@ -7,20 +7,26 @@
   display: block;
 
   width: 100%;
-  min-height: 300px;
+  height: 450px;
 
   background: @border-color-2;
 
   .promo-preview__image-container {
+    display: none;
     overflow: hidden;
 
+    box-sizing: border-box;
+    margin: 0 auto;
     padding: 50px;
-
-    text-align: center;
   }
 
   .promo-preview__image {
-    max-width: 100%;
+    display: block;
+
+    max-width: 600px;
+    min-height: 300px;
+    max-height: 350px;
+    margin: 0 auto;
   }
 
   .promo-preview__tip-container {
@@ -39,6 +45,8 @@
     position: absolute;
     right: 0;
     bottom: 0;
+
+    display: none;
 
     padding: 20px;
   }
