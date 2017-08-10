@@ -364,4 +364,34 @@ function trim_excerpt($excerpt)
     return wp_trim_words($excerpt, 55, '...');
 }
 
+function waste_what_func() {
+    $waste_what_field = get_field('waste-what');
+    $waste_what_component = '';
+
+    if ($waste_what_field) {
+        $waste_what_component = '<div class="waste-article__waste-sign-container">';
+        $waste_what_component .= $waste_what_field;
+        $waste_what_component .= '</div>';
+    }
+
+    return $waste_what_component;
+}
+add_shortcode( 'waste_what', 'waste_what_func' );
+
+
+function waste_where_func() {
+    $waste_where_field = get_field('waste-where');
+    $waste_where_component = '';
+
+    if ($waste_where_field) {
+        $waste_where_component = '<div class="waste-article__waste-sign-container">';
+        $waste_where_component .= $waste_where_field;
+        $waste_where_component .= '</div>';
+    }
+
+    return $waste_where_component;
+}
+
+add_shortcode( 'waste_where', 'waste_where_func' );
+
 ?>
