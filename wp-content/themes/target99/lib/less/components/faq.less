@@ -1,0 +1,163 @@
+@import '../base/variables';
+@import '../base/layout';
+
+.faq {
+
+  background-color: @background-color-4;
+  display: block;
+  .faq__inner-container {
+    padding: 50px 0;
+    position: relative;
+  }
+
+  .faq__title-container {
+    padding-bottom: 30px;
+
+    text-align: center;
+
+    @media @small-screen {
+      font-size: 16px;
+    }
+  }
+
+  .faq__title {
+    font-family: @main-control-font;
+    font-size: 22px;
+    font-weight: bold;
+
+    text-transform: uppercase;
+
+    color: @text-color-2;
+    @media @small-screen{
+      margin-bottom: 20px;
+    }
+  }
+
+  .faq__form-container {
+    width: 100%;
+    text-align: center;
+    margin-bottom: -60px;
+  }
+
+  .faq__button {
+    width: 20%;
+
+    @media @small-screen {
+        text-align: center;
+        width: 100%;
+
+        position: absolute;
+        bottom: 0;
+        left: 0;
+    }
+  }
+
+  .faq__footer {
+    text-align: center;
+    span {
+      padding: 20px 75px;
+    }
+
+    @media @small-screen {
+      position: absolute;
+      width: 100%;
+      bottom: 0;
+      left: 0;
+    }
+  }
+
+  .faq__forms{
+    align-content: center;
+    display: table;
+    margin: 0 auto;
+    clear: both;
+
+    @media @small-screen {
+      width: 100%;
+    }
+  }
+
+  .faq__half__input {
+    display: inline-block;
+    width: 49%;
+    height: 54px;
+    margin: 20px 0;
+    float: left;
+    @media @small-screen {
+      margin-top: 0;
+    }
+    &:nth-child(2n+1){
+      float: right;
+      @media @small-screen {
+        float: none;
+      }
+    }
+  }
+
+
+
+  .faq__input {
+    box-sizing: border-box;
+    font-family: @main-control-font;
+    font-size: 14px;
+    font-weight: bold;
+
+    padding-left: 20px;
+    padding-top: 5px;
+
+    color: @text-color-1;
+    border: 1px solid @text-color-2;
+    background-color: @text-color-2;
+
+    &:focus {
+      outline-width: 0;
+    }
+
+    &::-webkit-input-placeholder {
+      text-transform: uppercase;
+
+      color: @text-color-1;
+    }
+    &::-moz-placeholder {
+      text-transform: uppercase;
+
+      color: @text-color-1;
+    }
+    /* Firefox 19+ */
+    &:-moz-placeholder {
+      text-transform: uppercase;
+
+      color: @text-color-1;
+    }
+    /* Firefox 18- */
+    &:-ms-input-placeholder {
+      text-transform: uppercase;
+
+      color: @text-color-1;
+    }
+
+    @media @small-screen {
+      width: 80%;
+      padding-bottom: 20px;
+      float: none;
+    }
+  }
+
+  .faq__full__input {
+    height: 108px;
+    width: 100%;
+    padding-top: 15px;
+    margin-bottom: 40px;
+    @media @small-screen {
+      width: 80%;
+      padding-bottom: 20px;
+      float: none;
+      margin-bottom: 65px;
+    }
+
+  }
+
+  @media @small-screen {
+    min-height: 350px;
+  }
+}

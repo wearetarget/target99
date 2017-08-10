@@ -1,0 +1,291 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: accordions\n"
+"POT-Creation-Date: 2016-05-06 07:54+0600\n"
+"PO-Revision-Date: 2017-04-05 18:09+0600\n"
+"Last-Translator: \n"
+"Language-Team: PickPlugins <support@pickplugins.com>\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.12\n"
+"X-Poedit-Basepath: ../includes\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPath-1: menu\n"
+
+#: class-settings.php:31
+msgid "Help & Contact"
+msgstr ""
+
+#: functions.php:15 meta.php:137
+msgid "Shortcode"
+msgstr ""
+
+#: menu/help.php:16
+msgid "Help"
+msgstr ""
+
+#: menu/help.php:24
+msgid "Help & Support"
+msgstr ""
+
+#: menu/help.php:31
+msgid "Need Help ?"
+msgstr ""
+
+#: menu/help.php:32
+msgid ""
+"Feel free to contact with any issue for this plugin, Ask any question via "
+"forum"
+msgstr ""
+
+#: menu/help.php:69
+msgid "Submit Reviews."
+msgstr ""
+
+#: menu/help.php:70
+msgid ""
+"We are working hard to build some awesome plugins for you and spend thousand "
+"hour for plugins. we wish your three(3) minute by submitting five star "
+"reviews at wordpress.org. if you have any issue please submit at forum."
+msgstr ""
+
+#: menu/help.php:79
+msgid "Please Share"
+msgstr ""
+
+#: menu/help.php:80
+msgid "If you like this plugin please share with your social share network."
+msgstr ""
+
+#: menu/help.php:90
+msgid "Video Tutorial"
+msgstr ""
+
+#: menu/help.php:91
+msgid "Please watch this video tutorial."
+msgstr ""
+
+#: meta.php:16 meta.php:18
+msgid "New Accordions"
+msgstr ""
+
+#: meta.php:17
+msgid "Edit Accordions"
+msgstr ""
+
+#: meta.php:19
+msgid "View Accordions"
+msgstr ""
+
+#: meta.php:20
+msgid "Search Accordions"
+msgstr ""
+
+#: meta.php:21
+msgid "Nothing found"
+msgstr ""
+
+#: meta.php:22
+msgid "Nothing found in Trash"
+msgstr ""
+
+#: meta.php:60 meta.php:138
+msgid "Accordions Options"
+msgstr ""
+
+#: meta.php:139
+msgid "Style"
+msgstr ""
+
+#: meta.php:140 meta.php:185 meta.php:387 meta.php:449
+msgid "Content"
+msgstr ""
+
+#: meta.php:141
+msgid "Custom CSS"
+msgstr ""
+
+#: meta.php:142
+msgid "Tabs Options"
+msgstr ""
+
+#: meta.php:151
+msgid "Accordions Shortcode"
+msgstr ""
+
+#: meta.php:152
+msgid ""
+"Copy this shortcode and paste on page or post where you want to display "
+"accordions, Use PHP code to your themes file to display accordions."
+msgstr ""
+
+#: meta.php:160
+msgid "Tabs Shortcode"
+msgstr ""
+
+#: meta.php:171 meta.php:523
+msgid "Collapsible"
+msgstr ""
+
+#: meta.php:174 meta.php:526
+msgid "True"
+msgstr ""
+
+#: meta.php:175 meta.php:527
+msgid "False"
+msgstr ""
+
+#: meta.php:182
+msgid "heightStyle"
+msgstr ""
+
+#: meta.php:186
+msgid "Fill"
+msgstr ""
+
+#: meta.php:193
+msgid "Activate event"
+msgstr ""
+
+#: meta.php:196
+msgid "Click"
+msgstr ""
+
+#: meta.php:197
+msgid "Mouseover"
+msgstr ""
+
+#: meta.php:208
+msgid "Themes"
+msgstr ""
+
+#: meta.php:263
+msgid "Container options"
+msgstr ""
+
+#: meta.php:267
+msgid "Text Align:"
+msgstr ""
+
+#: meta.php:269
+msgid "Left"
+msgstr ""
+
+#: meta.php:270
+msgid "Center"
+msgstr ""
+
+#: meta.php:271
+msgid "Right"
+msgstr ""
+
+#: meta.php:274
+msgid "Padding: (ex: 10px)"
+msgstr ""
+
+#: meta.php:278
+msgid "Background color:"
+msgstr ""
+
+#: meta.php:281
+msgid "Background image:"
+msgstr ""
+
+#: meta.php:286
+msgid "Clear"
+msgstr ""
+
+#: meta.php:320
+msgid "Icon set"
+msgstr ""
+
+#: meta.php:321
+msgid ""
+"Please use font awesome icon id. ex: <b>fa-chevron-up</b>, please visit to "
+"see more <a href=\"https://fortawesome.github.io/Font-Awesome/icons/"
+"\">https://fortawesome.github.io/Font-Awesome/icons/</a>"
+msgstr ""
+
+#: meta.php:324
+msgid "Plus Icon."
+msgstr ""
+
+#: meta.php:329
+msgid "Minus Icon."
+msgstr ""
+
+#: meta.php:335
+msgid "Icon color."
+msgstr ""
+
+#: meta.php:339
+msgid "Icon font size."
+msgstr ""
+
+#: meta.php:349
+msgid "Accordions Header."
+msgstr ""
+
+#: meta.php:351
+msgid "Default Background Color."
+msgstr ""
+
+#: meta.php:355
+msgid "Active Background Color."
+msgstr ""
+
+#: meta.php:359
+msgid "Accordions Header Font Color."
+msgstr ""
+
+#: meta.php:362
+msgid "Accordions Header Font Size."
+msgstr ""
+
+#: meta.php:369
+msgid "Accordions Content."
+msgstr ""
+
+#: meta.php:370
+msgid "Accordions Content Font Color."
+msgstr ""
+
+#: meta.php:373
+msgid "Accordions Content Font Size."
+msgstr ""
+
+#: meta.php:376
+msgid "Accordions Content Background Color."
+msgstr ""
+
+#: meta.php:388
+msgid ""
+"You can sorting accordion by dragging each title, click to expand title and "
+"see the input."
+msgstr ""
+
+#: meta.php:391
+msgid "Add"
+msgstr ""
+
+#: meta.php:439
+msgid "Hide on Frontend"
+msgstr ""
+
+#: meta.php:445
+msgid "Header"
+msgstr ""
+
+#: meta.php:492
+msgid "Custom CSS for this Accordions"
+msgstr ""
+
+#: meta.php:493
+msgid ""
+"Do not use &lt;style>&lt;/style> tag, you can use bellow prefix to your css, "
+"sometime you need use \"!important\" to overrid."
+msgstr ""

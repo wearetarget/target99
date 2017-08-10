@@ -1,0 +1,74 @@
+@import '../base/variables';
+@import '../base/layout';
+
+.about-us {
+  background: white;
+
+  .about-us__inner-container {
+    padding-top: 0;
+  }
+
+  .about-us__inner-container.layout__content>div:nth-child(2n+1){
+    text-align: center;
+  }
+
+  .about-us__title-container {
+    padding-bottom: 50px;
+
+    text-align: center;
+
+    @media @small-screen {
+      text-align: center;
+    }
+  }
+
+
+  .about-us__title {
+    margin-top: 40px;
+    display: inline-block;
+    min-width: 210px;
+    padding-bottom: 12px;
+
+    font-family: @main-control-font;
+    font-size: 24px;
+
+    text-transform: uppercase;
+
+      color: @text-color-4;
+  }
+
+  .about-us__title-module {
+    color: @text-color-3;
+    border-bottom: 1px solid @text-color-1;
+  }
+
+  .about-us__text-answer {
+    font-family: @main-control-font;
+    font-weight: bold;
+    color: @text-color-1;
+    margin: 0 40px;
+
+    @media @medium-screen {
+      margin: 0 20px;
+    }
+
+    @media @small-screen {
+      margin: 0;
+    }
+  }
+
+}
+
+.about-us__videoWrapper {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 */
+  padding-top: 25px;
+  height: 0;
+}
+.about-us__videoWrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
