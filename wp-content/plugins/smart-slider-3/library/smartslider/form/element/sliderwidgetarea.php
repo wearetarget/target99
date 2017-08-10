@@ -22,7 +22,7 @@ class N2ElementSliderWidgetArea extends N2ElementHidden
             )) . $areas);
         $html .= parent::fetchElement();
 
-        N2JS::addInline('new NextendElementSliderWidgetArea("' . $this->_id . '");');
+        N2JS::addInline('new N2Classes.FormElementSliderWidgetArea("' . $this->_id . '");');
 
         return $html;
     }

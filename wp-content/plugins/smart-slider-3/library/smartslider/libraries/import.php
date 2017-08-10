@@ -30,10 +30,15 @@ class N2SmartSliderImport {
             $filePathOrData = $tmp;
         }
         $importData = N2ZipRead($filePathOrData);
-        if (!isset($importData['data'])) {
+        if (!is_array($importData)) {
+            N2Message::error(n2_('The importing failed at the unzipping part.'));
+
+            return false;
+        } else if (!isset($importData['data'])) {
             if (array_key_exists("slider.ss2", $importData)) {
                 N2Message::error(n2_('You can\'t import sliders from Smart Slider 2.'));
             }
+
             return false;
         }
 
@@ -53,10 +58,11 @@ class N2SmartSliderImport {
 
 
         if ($this->restore) {
-            $this->sliderId = $sliderModel->restore($this->backup->slider);
+            $this->sliderId = $sliderModel->restore($this->backup->slider, $groupID);
         } else {
             $this->sliderId = $sliderModel->import($this->backup->slider, $groupID);
         }
+
         if (!$this->sliderId) {
             return false;
         }
@@ -186,19 +192,9 @@ class N2SmartSliderImport {
                 $slide['params']->set('link', $this->fixLightbox($slide['params']->get('link')));
 
                 $layers = json_decode($slide['slide'], true);
-                for ($j = 0; $j < count($layers); $j++) {
-                    if (isset($layers[$j]['type'])) {
-                        switch ($layers[$j]['type']) {
-                            case 'group':
-                                N2SmartSliderGroup::prepareImport($this, $layers[$j]);
-                                break;
-                            default:
-                                N2SmartSliderLayer::prepareImport($this, $layers[$j]);
-                        }
-                    } else {
-                        N2SmartSliderLayer::prepareImport($this, $layers[$j]);
-                    }
-                }
+
+                self::prepareImportLayer($this, $layers);
+
                 $slide['slide'] = json_encode($layers);
 
                 if (isset($generatorTranslation[$slide['generator_id']])) {
@@ -207,13 +203,45 @@ class N2SmartSliderImport {
                 $slidesModel->import($slide, $this->sliderId);
             }
         }
+
         return $this->sliderId;
+    }
+
+    /**
+     * @param N2SmartSliderImport $import
+     * @param array               $layers
+     */
+    public static function prepareImportLayer($import, &$layers) {
+        for ($i = 0; $i < count($layers); $i++) {
+
+            if (isset($layers[$i]['type'])) {
+                switch ($layers[$i]['type']) {
+                    case 'content':
+                        N2SSSlideComponentContent::prepareImport($import, $layers[$i]);
+                        break;
+                    case 'row':
+                        N2SSSlideComponentRow::prepareImport($import, $layers[$i]);
+                        break;
+                    case 'col':
+                        N2SSSlideComponentCol::prepareImport($import, $layers[$i]);
+                        break;
+                    case 'group':
+                        N2SSSlideComponentGroup::prepareImport($import, $layers[$i]);
+                        break;
+                    default:
+                        N2SSSlideComponentLayer::prepareImport($import, $layers[$i]);
+                }
+            } else {
+                N2SSSlideComponentLayer::prepareImport($import, $layers[$i]);
+            }
+        }
     }
 
     public function fixImage($image) {
         if (isset($this->backup->imageTranslation[$image]) && isset($this->imageTranslation[$this->backup->imageTranslation[$image]])) {
             return $this->imageTranslation[$this->backup->imageTranslation[$image]];
         }
+
         return $image;
     }
 
@@ -221,6 +249,7 @@ class N2SmartSliderImport {
         if (isset($this->sectionTranslation[$idOrRaw])) {
             return $this->sectionTranslation[$idOrRaw];
         }
+
         return $idOrRaw;
     }
 
@@ -234,6 +263,7 @@ class N2SmartSliderImport {
             }
             $url = 'lightbox[' . implode(',', $newImages) . ']' . $matches[3];
         }
+
         return $url;
     }
 
@@ -248,7 +278,7 @@ class N2SmartSliderImport {
                 foreach ($records AS $record) {
                     $storage = N2Base::getApplication($record['application'])->storage;
                     if (!isset($sets[$record['application'] . '_' . $record['section']])) {
-                        $sets[$record['application'] . '_' . $record['section']] = $storage->add($record['section'] . 'set', null, $this->backup->slider['title']);
+                        $sets[$record['application'] . '_' . $record['section']] = $storage->add($record['section'] . 'set', '', $this->backup->slider['title']);
                     }
                     $this->sectionTranslation[$record['id']] = $storage->add($record['section'], $sets[$record['application'] . '_' . $record['section']], $record['value']);
                 }

@@ -2,13 +2,17 @@
 N2Loader::import('libraries.image.color');
 N2Loader::import('libraries.parse.parse');
 
-class N2ParseStyle
-{
+class N2ParseStyle {
 
     private $_style;
 
     public function __construct($style) {
-        $this->_style = json_decode(base64_decode($style), true);
+        $decoded = $style;
+        if ($decoded[0] != '{') {
+            $decoded = base64_decode($decoded);
+        }
+
+        $this->_style = json_decode($decoded, true);
     }
 
     public function printTab($tab = '') {
@@ -25,11 +29,13 @@ class N2ParseStyle
             }
             $style .= $this->parse('extra', $extra);
         }
+
         return $style;
     }
 
     public function parse($property, $value) {
         $fn = 'parse' . $property;
+
         return $this->$fn($value);
     }
 
@@ -40,6 +46,7 @@ class N2ParseStyle
             $rgba = N2Color::hex2rgba($v);
             $style .= 'background: RGBA(' . $rgba[0] . ',' . $rgba[1] . ',' . $rgba[2] . ',' . round($rgba[3] / 127, 2) . ');';
         }
+
         return $style;
     }
 
@@ -47,6 +54,7 @@ class N2ParseStyle
         $padding   = explode('|*|', $v);
         $unit      = array_pop($padding);
         $padding[] = '';
+
         return 'padding:' . implode($unit . ' ', $padding) . ';';
     }
 
@@ -57,6 +65,7 @@ class N2ParseStyle
             return 'box-shadow: none;';
         } else {
             $rgba = N2Color::hex2rgba($boxShadow[4]);
+
             return 'box-shadow: ' . $boxShadow[0] . 'px ' . $boxShadow[1] . 'px ' . $boxShadow[2] . 'px ' . $boxShadow[3] . 'px RGBA(' . $rgba[0] . ',' . $rgba[1] . ',' . $rgba[2] . ',' . round($rgba[3] / 127, 2) . ');';
         }
     }
@@ -74,6 +83,7 @@ class N2ParseStyle
     public function parseBorderRadius($v) {
         $radius   = explode('|*|', $v);
         $radius[] = '';
+
         return 'border-radius:' . $v . 'px;';
     }
 

@@ -122,7 +122,7 @@ class N2TabTabbedSidebar extends N2Tab {
             );
             $tip   = N2XmlHelper::getAttribute($tab->_xml, 'tip');
             if (!empty($tip)) {
-                $attrs['data-n2tip'] = $tip;
+                $attrs['data-n2tip'] = n2_($tip);
             }
             return N2Html::tag('div', $attrs, '');
         }

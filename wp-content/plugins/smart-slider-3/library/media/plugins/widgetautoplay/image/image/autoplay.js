@@ -1,13 +1,14 @@
-(function ($, scope, undefined) {
+N2Require('SmartSliderWidgetAutoplayImage', [], [], function ($, scope, undefined) {
+
     "use strict";
-    function NextendSmartSliderWidgetAutoplayImage(id, desktopRatio, tabletRatio, mobileRatio) {
+    function SmartSliderWidgetAutoplayImage(id, desktopRatio, tabletRatio, mobileRatio) {
 
         this.slider = window[id];
 
         this.slider.started($.proxy(this.start, this, id, desktopRatio, tabletRatio, mobileRatio));
     };
 
-    NextendSmartSliderWidgetAutoplayImage.prototype.start = function (id, desktopRatio, tabletRatio, mobileRatio) {
+    SmartSliderWidgetAutoplayImage.prototype.start = function (id, desktopRatio, tabletRatio, mobileRatio) {
 
         if (this.slider.sliderElement.data('autoplay')) {
             return false;
@@ -17,6 +18,7 @@
         this.paused = false;
 
         this.button = this.slider.sliderElement.find('.nextend-autoplay');
+        this.slider.controls.autoplay.hasButton = !!this.button.length;
 
         // Autoplay not enabled, so just destroy the widget
         if (this.slider.controls.autoplay._disabled) {
@@ -46,7 +48,7 @@
         }
     };
 
-    NextendSmartSliderWidgetAutoplayImage.prototype.loaded = function () {
+    SmartSliderWidgetAutoplayImage.prototype.loaded = function () {
         this.width = this.button.width();
         this.height = this.button.height();
 
@@ -55,7 +57,7 @@
         this.deferred.resolve();
     };
 
-    NextendSmartSliderWidgetAutoplayImage.prototype.onDevice = function (e, device) {
+    SmartSliderWidgetAutoplayImage.prototype.onDevice = function (e, device) {
         var ratio = 1;
         switch (device.device) {
             case 'tablet':
@@ -71,7 +73,7 @@
         this.button.height(this.height * ratio);
     };
 
-    NextendSmartSliderWidgetAutoplayImage.prototype.switchState = function (e) {
+    SmartSliderWidgetAutoplayImage.prototype.switchState = function (e) {
         e.preventDefault();
         e.stopImmediatePropagation();
         if (!this.paused) {
@@ -84,22 +86,20 @@
         }
     };
 
-    NextendSmartSliderWidgetAutoplayImage.prototype.setPaused = function () {
+    SmartSliderWidgetAutoplayImage.prototype.setPaused = function () {
         this.paused = true;
         this.button.addClass('n2-autoplay-paused');
     };
 
-    NextendSmartSliderWidgetAutoplayImage.prototype.setPlaying = function () {
+    SmartSliderWidgetAutoplayImage.prototype.setPlaying = function () {
         this.paused = false;
         this.button.removeClass('n2-autoplay-paused');
     };
 
-    NextendSmartSliderWidgetAutoplayImage.prototype.destroy = function () {
+    SmartSliderWidgetAutoplayImage.prototype.destroy = function () {
         this.slider.sliderElement.off('.n2-widget-autoplay');
         this.button.remove();
     };
 
-
-    scope.NextendSmartSliderWidgetAutoplayImage = NextendSmartSliderWidgetAutoplayImage;
-
-})(n2, window);
+    return SmartSliderWidgetAutoplayImage;
+});

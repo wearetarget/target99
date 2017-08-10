@@ -17,7 +17,7 @@ class N2ElementIconManager extends N2ElementHidden
             )) . '<a id="' . $this->_id . '_edit" class="n2-form-element-button n2-icon-button n2-h5 n2-uc" href="#"><i class="n2-i n2-it  n2-i-layer-image"></i></a>' . parent::fetchElement());
 
         N2JS::addInline('
-            new NextendElementIconManager("' . $this->_id . '");
+            new N2Classes.FormElementIconManager("' . $this->_id . '");
         ');
         return $html;
     }

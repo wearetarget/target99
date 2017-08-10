@@ -29,7 +29,7 @@ class N2ElementSwitcher extends N2ElementHidden
 
         $html .= "</div>";
 
-        N2JS::addInline('new NextendElementSwitcher("' . $this->_id . '", ' . json_encode($values) . ');');
+        N2JS::addInline('new N2Classes.FormElementSwitcher("' . $this->_id . '", ' . json_encode($values) . ');');
 
         return $html;
     }

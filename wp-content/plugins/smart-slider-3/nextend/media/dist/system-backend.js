@@ -94,7 +94,11 @@
             }
         } else {
             try {
-                JSON.parse(Base64.decode(id));
+                var decoded = id;
+                if (decoded[0] != '{') {
+                    decoded = Base64.decode(decoded)
+                }
+                JSON.parse(decoded);
                 return {
                     id: 0,
                     name: n2_('Static')
@@ -497,7 +501,13 @@
     };
 
     NextendVisualManagerSetsAndMore.prototype.getStaticData = function (data) {
-        var d = JSON.parse(Base64.decode(data)).data;
+
+        var decoded = data;
+        if (decoded[0] != '{') {
+            decoded = Base64.decode(decoded)
+        }
+
+        var d = JSON.parse(decoded).data;
         if (typeof d === 'undefined') {
             return '';
         }
@@ -678,8 +688,16 @@
     NextendVisualCore.prototype.setValue = function (value, render) {
         var data = null;
         if (typeof value == 'string') {
-            this.base64 = value;
-            data = JSON.parse(Base64.decode(value));
+
+            var decoded = value;
+            if (decoded[0] != '{') {
+                this.base64 = decoded;
+                decoded = Base64.decode(decoded)
+            } else {
+                this.base64 = Base64.encode(decoded);
+            }
+
+            data = JSON.parse(decoded);
         } else {
             data = value;
         }
@@ -1488,10 +1506,10 @@
                 .on('click', $.proxy(this.clearCurrentTab, this));
 
 
-            this.tabField = new NextendElementRadio('n2-' + this.type + '-editor-tabs', ['0']);
+            this.tabField = new N2Classes.FormElementRadio('n2-' + this.type + '-editor-tabs', ['0']);
             this.tabField.element.on('nextendChange.n2-editor', $.proxy(this.tabChanged, this));
 
-            this.previewModeField = new NextendElementRadio('n2-' + this.type + '-editor-preview-mode', ['0']);
+            this.previewModeField = new N2Classes.FormElementRadio('n2-' + this.type + '-editor-preview-mode', ['0']);
             this.previewModeField.element.on('nextendChange.n2-editor', $.proxy(this.previewModeChanged, this));
 
             this.previewModeField.options.eq(0).html(this.previewModesList[0].label);
@@ -1844,7 +1862,8 @@
             playEvent: 0,
             pauseEvent: 0,
             stopEvent: 0,
-            instantOut: 0
+            instantOut: 0,
+            repeatSelfOnly: 0,
         };
     };
 
@@ -1924,6 +1943,16 @@
             this.controller.featurePauseEvent(0);
         }
 
+        if (this.currentFeatures.repeatSelfOnly) {
+            this.controller.featureRepeatSelfOnly(1);
+            if (!data.repeatSelfOnly) {
+                data.repeatSelfOnly = 0;
+            }
+            this.controller.loadRepeatSelfOnly(data.repeatSelfOnly);
+        } else {
+            this.controller.featureRepeatSelfOnly(0);
+        }
+
         if (this.currentFeatures.stopEvent) {
             this.controller.featureStopEvent(1);
             if (!data.stopEvent) {
@@ -1956,6 +1985,10 @@
 
         if (this.currentFeatures.repeatable) {
             animationData.repeatable = this.controller.repeatable;
+        }
+
+        if (this.currentFeatures.repeatSelfOnly) {
+            animationData.repeatSelfOnly = this.controller.repeatSelfOnly;
         }
 
         if (this.currentFeatures.specialZero) {
@@ -2072,7 +2105,8 @@
         scaleX: 1,
         scaleY: 1,
         scaleZ: 1,
-        skewX: 0
+        skewX: 0,
+        n2blur: 0
     };
 
     function NextendAnimationEditorController() {
@@ -2180,7 +2214,8 @@
             scaleX: 1,
             scaleY: 1,
             scaleZ: 1,
-            skewX: 0
+            skewX: 0,
+            n2blur: 0
         };
     };
 
@@ -2190,8 +2225,8 @@
 
     NextendAnimationEditorController.prototype.initBackgroundColor = function () {
 
-        new NextendElementText("n2-animation-editor-background-color");
-        new NextendElementColor("n2-animation-editor-background-color", 0);
+        new N2Classes.FormElementText("n2-animation-editor-background-color");
+        new N2Classes.FormElementColor("n2-animation-editor-background-color", 0);
 
         var box = this.lightbox.find('.n2-editor-preview-box');
         $('#n2-animation-editor-background-color').on('nextendChange', function () {
@@ -2508,7 +2543,7 @@
                 animation = $.extend({}, zero);
             animation.duration = singleAnimation.duration;
             animation.ease = singleAnimation.ease;
-            if ((singleAnimation.rotationX == 360 || singleAnimation.rotationY == 360 || singleAnimation.rotationZ == 360) && singleAnimation.opacity == 1 && singleAnimation.x == 0 && singleAnimation.y == 0 && singleAnimation.z == 0 && singleAnimation.scaleX == 1 && singleAnimation.scaleY == 1 && singleAnimation.scaleZ == 1 && singleAnimation.skewX == 0) {
+            if ((singleAnimation.rotationX == 360 || singleAnimation.rotationY == 360 || singleAnimation.rotationZ == 360) && singleAnimation.opacity == 1 && singleAnimation.x == 0 && singleAnimation.y == 0 && singleAnimation.z == 0 && singleAnimation.scaleX == 1 && singleAnimation.scaleY == 1 && singleAnimation.scaleZ == 1 && singleAnimation.skewX == 0 && singleAnimation.n2blur == 0) {
                 return [
                     {
                         duration: animations[0].duration,
@@ -2694,6 +2729,15 @@
         this.repeatable = repeatable;
     };
 
+    NextendAnimationEditorController.prototype.loadRepeatSelfOnly = function (repeatSelfOnly) {
+        this.editor.fields.repeatSelfOnly.element.data('field').insideChange(repeatSelfOnly);
+        this.refreshRepeatSelfOnly(repeatSelfOnly);
+    };
+
+    NextendAnimationEditorController.prototype.refreshRepeatSelfOnly = function (repeatSelfOnly) {
+        this.repeatSelfOnly = repeatSelfOnly;
+    };
+
     NextendAnimationEditorController.prototype.loadInstantOut = function (instantOut) {
         this.editor.fields.instantOut.element.data('field').insideChange(instantOut);
         this.refreshInstantOut(instantOut);
@@ -2751,6 +2795,15 @@
 
     NextendAnimationEditorController.prototype.featureRepeatable = function (enabled) {
         var row = this.editor.fields.repeatable.element.closest('.n2-mixed-group');
+        if (enabled) {
+            row.removeClass('n2-hidden');
+        } else {
+            row.addClass('n2-hidden');
+        }
+    };
+
+    NextendAnimationEditorController.prototype.featureRepeatSelfOnly = function (enabled) {
+        var row = this.editor.fields.repeatSelfOnly.element.closest('.n2-mixed-group');
         if (enabled) {
             row.removeClass('n2-hidden');
         } else {
@@ -2827,6 +2880,12 @@
                     'outsideChange.n2-editor': $.proxy(this.changeSkew, this)
                 }
             },
+            n2blur: {
+                element: $('#n2-animation-editorn2blur'),
+                events: {
+                    'outsideChange.n2-editor': $.proxy(this.changeN2blur, this)
+                }
+            },
             specialZero: {
                 element: $('#n2-animation-editorspecial-zero'),
                 events: {
@@ -2875,6 +2934,12 @@
                     'outsideChange.n2-editor': $.proxy(this.changeRepeatable, this)
                 }
             },
+            repeatSelfOnly: {
+                element: $('#n2-animation-editorrepeat-self-only'),
+                events: {
+                    'outsideChange.n2-editor': $.proxy(this.changeRepeatSelfOnly, this)
+                }
+            },
             instantOut: {
                 element: $('#n2-animation-editorinstant-out'),
                 events: {
@@ -2899,6 +2964,7 @@
         this.fields.rotate.element.data('field').insideChange(values.rotationX + '|*|' + values.rotationY + '|*|' + values.rotationZ);
         this.fields.scale.element.data('field').insideChange(values.scaleX * 100 + '|*|' + values.scaleY * 100 + '|*|' + values.scaleZ * 100);
         this.fields.skew.element.data('field').insideChange(values.skewX);
+        this.fields.n2blur.element.data('field').insideChange(values.n2blur);
         this.fields.specialZero.element.data('field').insideChange(nextend.animationManager.controller.specialZero);
         this.fields.repeatCount.element.data('field').insideChange(nextend.animationManager.controller.repeatCount);
         this.fields.repeatStartDelay.element.data('field').insideChange(nextend.animationManager.controller.repeatStartDelay * 1000);
@@ -2909,6 +2975,7 @@
         this.fields.pauseEvent.element.data('field').insideChange(nextend.animationManager.controller.pauseEvent);
         this.fields.stopEvent.element.data('field').insideChange(nextend.animationManager.controller.stopEvent);
         this.fields.repeatable.element.data('field').insideChange(nextend.animationManager.controller.repeatable);
+        this.fields.repeatSelfOnly.element.data('field').insideChange(nextend.animationManager.controller.repeatSelfOnly);
         this.fields.instantOut.element.data('field').insideChange(nextend.animationManager.controller.instantOut);
 
         this._on();
@@ -2960,6 +3027,10 @@
         this.trigger('skewX', this.fields.skew.element.val());
     };
 
+    NextendAnimationEditor.prototype.changeN2blur = function () {
+        this.trigger('n2blur', this.fields.n2blur.element.val());
+    };
+
     NextendAnimationEditor.prototype.changeTransformOrigin = function () {
         nextend.animationManager.controller.refreshTransformOrigin(this.fields.transformOrigin.element.val());
     };
@@ -2990,6 +3061,10 @@
 
     NextendAnimationEditor.prototype.changeRepeatable = function () {
         nextend.animationManager.controller.refreshRepeatable(this.fields.repeatable.element.val());
+    };
+
+    NextendAnimationEditor.prototype.changeRepeatSelfOnly = function () {
+        nextend.animationManager.controller.refreshRepeatSelfOnly(this.fields.repeatSelfOnly.element.val());
     };
 
     NextendAnimationEditor.prototype.changeInstantOut = function () {
@@ -3048,7 +3123,7 @@
         this.clear();
 
         if (this.uploadAllowed) {
-            this.node.append($('<div class="n2-browse-box n2-browse-upload"><div class="n2-h4">' + n2_('Drop files anywhere to upload or') + ' <a class="n2-button n2-button-normal n2-button-m n2-radius-s n2-button-grey n2-uc n2-h4" href="#">' + n2_('Select files') + '</a></div><input id="n2-browse-upload" type="file" name="image" multiple></div>'));
+            this.node.append($('<div class="n2-browse-box n2-browse-upload"><div class="n2-h4">' + n2_('Drop files anywhere to upload or') + ' <br> <a class="n2-button n2-button-normal n2-button-m n2-radius-s n2-button-grey n2-uc n2-h4" href="#">' + n2_('Select files') + '</a></div><input id="n2-browse-upload" type="file" name="image" multiple></div>'));
 
             this.node.find('#n2-browse-upload').fileupload({
                 url: NextendAjaxHelper.makeAjaxUrl(this.url, {
@@ -3085,9 +3160,15 @@
                     if (response.data && response.data.name) {
                         cache[response.data.path].data.files[response.data.name] = response.data.url;
 
-                        data.box.css('background-image', 'url(' + encodeURI(nextend.imageHelper.fixed(response.data.url)) + ')')
+                        data.box
                             .on('click', $.proxy(this.clickImage, this, response.data.url))
                             .find('.n2-browse-title').html(response.data.name);
+
+                        var ext = response.data.url.split('.').pop();
+                        if (ext != 'mp4' && ext != 'mp3') {
+                            box.css('background-image', 'url(' + encodeURI(nextend.imageHelper.fixed(response.data.url)) + ')');
+                        }
+
                         if (this.mode == 'multiple') {
                             this.selected.push(response.data.url);
                             data.box.addClass('n2-active');
@@ -3123,8 +3204,13 @@
         for (var k in data.files) {
             if (data.files.hasOwnProperty(k)) {
                 var box = $('<div class="n2-browse-box n2-browse-image"><div class="n2-button n2-button-icon n2-button-s n2-button-blue n2-radius-s"><i class="n2-i n2-it n2-i-tick"></i></div><div class="n2-browse-title">' + k + '</div></div>')
-                    .css('background-image', 'url(' + encodeURI(nextend.imageHelper.fixed(data.files[k])) + ')')
                     .on('click', $.proxy(this.clickImage, this, data.files[k]));
+
+                var ext = data.files[k].split('.').pop();
+                if (ext != 'mp4' && ext != 'mp3') {
+                    box.css('background-image', 'url(' + encodeURI(nextend.imageHelper.fixed(data.files[k])) + ')');
+                }
+
                 this.node.append(box);
 
                 if (this.mode == 'multiple') {
@@ -3189,7 +3275,6 @@
 
     function NextendFontManager() {
         NextendVisualManagerSetsAndMore.prototype.constructor.apply(this, arguments);
-        this.setFontSize(16);
     };
 
     NextendFontManager.prototype = Object.create(NextendVisualManagerSetsAndMore.prototype);
@@ -3266,11 +3351,15 @@
 
     };
 
-    NextendFontManager.prototype._renderStaticFont = function (mode, font, pre) {
+    NextendFontManager.prototype._renderStaticFont = function (mode, fontJsonOrBase64, pre) {
         if (typeof pre === 'undefined') {
             pre = this.parameters.renderer.pre;
         }
-        nextend.css.add(this.renderer.getCSS(mode, pre, '.' + this.getClass(font, mode), JSON.parse(Base64.decode(font)).data, {}));
+        var jsonFont = fontJsonOrBase64;
+        if (jsonFont[0] != '{') {
+            jsonFont = Base64.decode(jsonFont);
+        }
+        nextend.css.add(this.renderer.getCSS(mode, pre, '.' + this.getClass(fontJsonOrBase64, mode), JSON.parse(jsonFont).data, {}));
     };
 
     /**
@@ -3296,8 +3385,10 @@
         } else if (font == '') {
             // Empty font
             return '';
+        } else if (font == '{') {
+            font = Base64.encode(font);
         }
-        // Font might by empty with this class too, but we do not care as nothing wrong if it has an extra class
+        // Font might be empty with this class too, but we do not care as nothing wrong if it has an extra class
         // We could do try catch to JSON.parse(Base64.decode(font)), but it is wasting resource
         return 'n2-font-' + md5(font) + '-' + mode;
     };
@@ -3312,10 +3403,6 @@
 
     NextendFontManager.prototype.setConnectedStyle2 = function (styleId) {
         this.styleClassName2 = $('#' + styleId).data('field').renderStyle();
-    };
-
-    NextendFontManager.prototype.setFontSize = function (fontSize) {
-        this.controller.setFontSize(fontSize)
     };
 
     scope.NextendFontManager = NextendFontManager;
@@ -3364,7 +3451,8 @@
         this.defaultFamily = defaultFamily;
         NextendVisualEditorController.prototype.constructor.apply(this, arguments);
 
-        this.preview = $('#n2-font-editor-preview');
+        this.fontSize = 16;
+        this.preview = $('#n2-font-editor-preview').css('fontSize', '16px');
 
         this.initBackgroundColor();
     }
@@ -3384,7 +3472,7 @@
         this.previewModes = {
             1: [this.previewModesList['simple']],
             2: [this.previewModesList['link'], this.previewModesList['hover'], this.previewModesList['accordionslidetitle']],
-            3: [this.previewModesList['paragraph']]
+            3: [this.previewModesList['paragraph'], this.previewModesList['list']]
         };
     };
 
@@ -3440,15 +3528,10 @@
         return [this.getEmptyFont()];
     };
 
-    NextendFontEditorController.prototype.setFontSize = function (fontSize) {
-        this.fontSize = fontSize;
-        this.preview.css('fontSize', fontSize);
-    };
-
     NextendFontEditorController.prototype.initBackgroundColor = function () {
 
-        new NextendElementText("n2-font-editor-background-color");
-        new NextendElementColor("n2-font-editor-background-color", 0);
+        new N2Classes.FormElementText("n2-font-editor-background-color");
+        new N2Classes.FormElementColor("n2-font-editor-background-color", 0);
 
         var box = this.lightbox.find('.n2-editor-preview-box');
         $('#n2-font-editor-background-color').on('nextendChange', function () {
@@ -3780,6 +3863,128 @@
 })
 (n2, window);
 
+N2Require('Icons', [], [], function ($, scope, undefined) {
+    function Icons(data) {
+        scope.Icons = this;
+        this.data = data;
+        this.keys = {};
+        for (var k in this.data) {
+            this.keys[this.data[k].id] = this.data[k];
+        }
+    }
+
+    Icons.prototype.render = function (key) {
+        var parts = key.split(':');
+        if (parts.length != 2) {
+            return false;
+        }
+        var id = parts[0],
+            icon = parts[1];
+        if (this.keys[id] == undefined) {
+            return false;
+        }
+
+        var iconPack = this.keys[id];
+        if (iconPack.data[icon] == undefined) {
+            return false;
+        }
+
+        if (iconPack.isLoaded == undefined) {
+            $("head").append("<link rel='stylesheet' href='" + iconPack.css + "' type='text/css' media='screen'>");
+            iconPack.isLoaded = true;
+        }
+
+        if (iconPack.isLigature) {
+
+            return {
+                "class": iconPack.class,
+                "ligature": icon
+            };
+
+        } else {
+
+            return {
+                "class": iconPack.class + " " + iconPack.prefix + icon,
+                "ligature": ""
+            };
+        }
+    }
+
+    Icons.prototype._render = function (iconPack, icon) {
+
+        if (iconPack.isLigature) {
+            return '<i class="' + iconPack.class + '">' + icon + '</i>';
+        }
+
+        return '<i class="' + iconPack.class + " " + iconPack.prefix + icon + '"></i>';
+    }
+
+    var callback = false;
+    Icons.prototype.showModal = function (cb) {
+        callback = cb;
+
+        if (this.modal == undefined) {
+            var $content = $('<div></div>');
+
+            var $search = $('<input class="n2-h5" placeholder="' + n2_("Search") + '" type="text" name="search-icon" value="" style="width:280px;"/>').appendTo($('<div class="n2-form-element-text n2-border-radius" style="margin: 10px 0 0 20px;"/>').appendTo($content));
+
+            for (var k in this.data) {
+
+                var iconPack = this.data[k];
+                if (iconPack.isLoaded == undefined) {
+                    $("head").append("<link rel='stylesheet' href='" + iconPack.css + "' type='text/css' media='screen'>");
+                    iconPack.isLoaded = true;
+                }
+
+                var $tab = $('<div class="n2-form-tab "></div>').appendTo($content);
+                $tab.append('<div class="n2-h2 n2-content-box-title-bg">' + iconPack.label + '</div>');
+
+                var $desc = $('<div class="n2-description"></div>').appendTo($tab);
+
+                for (var icon in iconPack.data) {
+                    $('<div class="n2-icon" data-identifier="' + iconPack.id + ':' + icon + '" data-kw="' + iconPack.data[icon].kw.toLowerCase() + '">' + this._render(iconPack, icon) + '</div>')
+                        .on('click', $.proxy(function (e) {
+                            callback($(e.currentTarget).data('identifier'));
+                            this.modal.hide(e);
+                        }, this)).appendTo($desc);
+                }
+            }
+
+
+            var $icons = $content.find('.n2-icon');
+
+            $search.on('keyup', $.proxy(function (e) {
+                var query = $(e.target).val();
+                if (query.length <= 1) {
+                    $icons.css('display', '');
+                } else {
+                    var $matched = $icons.filter("[data-kw*='" + query + "']");
+                    $icons.not($matched).css('display', 'none');
+                    $matched.css('display', '');
+                }
+            }, this));
+
+            this.modal = new NextendModal({
+                zero: {
+                    size: [
+                        1200,
+                        600
+                    ],
+                    fit: true,
+                    title: 'Icons',
+                    back: false,
+                    close: true,
+                    content: $content
+                }
+            }, false);
+            this.modal.setCustomClass('n2-icons-modal');
+        }
+
+        this.modal.show();
+    }
+
+    return Icons;
+});
 ;
 (function ($, scope) {
 
@@ -4203,7 +4408,6 @@
 
     function NextendStyleManager() {
         NextendVisualManagerSetsAndMore.prototype.constructor.apply(this, arguments);
-        this.setFontSize(14);
     };
 
     NextendStyleManager.prototype = Object.create(NextendVisualManagerSetsAndMore.prototype);
@@ -4281,11 +4485,15 @@
 
     };
 
-    NextendStyleManager.prototype._renderStaticStyle = function (mode, style, pre) {
+    NextendStyleManager.prototype._renderStaticStyle = function (mode, styleJsonOrBase64, pre) {
         if (typeof pre === 'undefined') {
             pre = this.parameters.renderer.pre;
         }
-        nextend.css.add(this.renderer.getCSS(mode, pre, '.' + this.getClass(style, mode), JSON.parse(Base64.decode(style)).data, {}));
+        var jsonStyle = styleJsonOrBase64;
+        if (jsonStyle[0] != '{') {
+            jsonStyle = Base64.decode(jsonStyle);
+        }
+        nextend.css.add(this.renderer.getCSS(mode, pre, '.' + this.getClass(styleJsonOrBase64, mode), JSON.parse(jsonStyle).data, {}));
     };
 
     /**
@@ -4330,10 +4538,6 @@
 
     NextendStyleManager.prototype.setConnectedFont2 = function (fontId) {
         this.fontClassName2 = $('#' + fontId).data('field').renderFont();
-    };
-
-    NextendStyleManager.prototype.setFontSize = function (fontSize) {
-        this.controller.setFontSize(fontSize)
     };
 
     scope.NextendStyleManager = NextendStyleManager;
@@ -4381,7 +4585,8 @@
     function NextendStyleEditorController() {
         NextendVisualEditorController.prototype.constructor.apply(this, arguments);
 
-        this.preview = $('#n2-style-editor-preview');
+        this.preview = $('#n2-style-editor-preview')
+            .css('fontSize', '16px');
 
         this.initBackgroundColor();
     }
@@ -4449,14 +4654,10 @@
         return [this.getEmptyStyle()];
     };
 
-    NextendStyleEditorController.prototype.setFontSize = function (fontSize) {
-        this.preview.css('fontSize', fontSize);
-    };
-
     NextendStyleEditorController.prototype.initBackgroundColor = function () {
 
-        new NextendElementText("n2-style-editor-background-color");
-        new NextendElementColor("n2-style-editor-background-color", 0);
+        new N2Classes.FormElementText("n2-style-editor-background-color");
+        new N2Classes.FormElementColor("n2-style-editor-background-color", 0);
 
         var box = this.lightbox.find('.n2-editor-preview-box');
         $('#n2-style-editor-background-color').on('nextendChange', function () {

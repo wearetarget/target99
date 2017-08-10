@@ -1,16 +1,16 @@
 <?php
 /*
 Plugin Name: Smart Slider 3
-Plugin URI: http://smartslider3.com/
+Plugin URI: https://smartslider3.com/
 Description: The perfect all-in-one responsive slider solution for WordPress.
-Version: 3.1.10
+Version: 3.2.4
 Author: Nextend
 Author URI: http://nextendweb.com
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
  */
 
-/*  Copyright 2015  Roland Soos - Nextendweb  (email : roland@nextendweb.com)
+/*  Copyright 2017  Roland Soos - Nextendweb  (email : roland@nextendweb.com)
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License, version 2, as

@@ -9,7 +9,7 @@ class N2ElementText extends N2Element
 
     function fetchElement() {
 
-        N2JS::addInline('new NextendElementText("' . $this->_id . '");');
+        N2JS::addInline('new N2Classes.FormElementText("' . $this->_id . '");');
 
         $html = N2Html::openTag('div', array(
             'class' => 'n2-form-element-text ' . $this->getClass() . ($this->_xml->unit ? 'n2-text-has-unit ' : '') . 'n2-border-radius',

@@ -39,12 +39,19 @@ class N2SmartsliderSlidersXrefModel extends N2Model {
     }
 
     public function deleteSlider($sliderID) {
+
+        N2SmartsliderSlidersModel::markChanged($sliderID);
+
         return $this->db->deleteByAttributes(array(
             'slider_id' => $sliderID
         ));
     }
 
     public function deleteXref($groupID, $sliderID) {
+
+        N2SmartsliderSlidersModel::markChanged($sliderID);
+        N2SmartsliderSlidersModel::markChanged($groupID);
+
         return $this->db->deleteByAttributes(array(
             'group_id'  => $groupID,
             'slider_id' => $sliderID
@@ -61,6 +68,7 @@ class N2SmartsliderSlidersXrefModel extends N2Model {
 
     public function getGroups($sliderID) {
         $slidersModel = new N2SmartsliderSlidersModel();
+
         return $this->db->queryAll("
             SELECT xref.group_id, sliders.title
             FROM " . $this->getTable() . " AS xref
@@ -75,6 +83,7 @@ class N2SmartsliderSlidersXrefModel extends N2Model {
         $result = $this->db->queryRow($query);
 
         if (isset($result['ordering'])) return $result['ordering'] + 1;
+
         return 0;
     }
 }

@@ -36,13 +36,52 @@ function remove_admin_login_header() {
 }
 
 // -----------------
+// Override template for the related posts plugin
+// -----------------
+
+// Return posts with post thumbnails for the thumbnail_excerpt format.
+add_filter( 'related_posts_by_taxonomy_shortcode_atts', 'rpbt_thumbnails_target99_args' ); // shortcode
+add_filter( 'related_posts_by_taxonomy_widget_args', 'rpbt_thumbnails_target99_args' ); // widget
+
+function rpbt_thumbnails_target99_args( $args ) {
+    if (  'thumbnails_target99' === $args['format'] ) {
+        $args['post_thumbnail'] = true;
+    }
+
+    return $args;
+}
+
+// Create new format thumbnails_target99 for use in widget and shortcode
+add_action( 'wp_loaded', 'rpbt_thumbnails_target99_format', 11 );
+
+function rpbt_thumbnails_target99_format() {
+
+    if ( !class_exists( 'Related_Posts_By_Taxonomy_Defaults' ) ) {
+        return;
+    }
+
+    $defaults = Related_Posts_By_Taxonomy_Defaults::get_instance();
+
+    // Add the new format .
+    $defaults->formats['thumbnails_target99'] = __( 'Thumbnail for target99' );
+}
+
+add_filter( 'related_posts_by_taxonomy_template', 'rpbt_thumbnails_target99_format_template', 10, 3 );
+
+// Return the right template for the thumbnail_excerpt format
+function rpbt_thumbnails_target99_format_template( $template, $type, $format ) {
+    if ( isset( $format ) && ( 'thumbnails_target99' === $format ) ) {
+        return 'related-posts-thumbnails_target99.php';
+    }
+    return $template;
+}
+
+// -----------------
 // Custom Post Types
 // -----------------
 
 function create_post_types()
 {
-    // News
-
     register_post_type('waste-info', array(
         'labels' => array(
             'name' => __('Информация об отходах'),
@@ -73,7 +112,6 @@ function create_post_types()
         )
     ));
 
-    // Location
     register_post_type('partner-info', array(
         'labels' => array(
             'name' => __('Партнёры'),
@@ -87,6 +125,21 @@ function create_post_types()
         )
     ));
 
+    register_post_type('promo', array(
+            'labels' => array(
+                'name' => __('Промо материалы'),
+                'singular_name' => __('Промо материал')
+            ),
+            'description' => 'Промо материалы, отображаемые в галерее.',
+            'exclude_from_search' => true,
+            'publicly_queryable' => false,
+            'show_ui' => true,
+            'show_in_admin_bar' => true,
+            'supports' => array(
+                'title',
+                'thumbnail'
+             )
+    ));
 }
 
 add_action('init', 'create_post_types');
@@ -290,9 +343,8 @@ function custom_pagination($numpages = '', $pagerange = '', $paged = '')
     $paginate_links = paginate_links($pagination_args);
 
     if ($paginate_links) {
-        echo "<nav class='posts__pagination posts__pagination--advanced'>";
+        echo "<nav class='pagination'>";
         echo $paginate_links;
-        echo "<div class='page-numbers page-count'>Page " . $paged . " of " . $numpages . "</div> ";
         echo "</nav>";
     }
 
@@ -311,5 +363,35 @@ function trim_excerpt($excerpt)
 {
     return wp_trim_words($excerpt, 55, '...');
 }
+
+function waste_what_func() {
+    $waste_what_field = get_field('waste-what');
+    $waste_what_component = '';
+
+    if ($waste_what_field) {
+        $waste_what_component = '<div class="waste-article__waste-sign-container">';
+        $waste_what_component .= $waste_what_field;
+        $waste_what_component .= '</div>';
+    }
+
+    return $waste_what_component;
+}
+add_shortcode( 'waste_what', 'waste_what_func' );
+
+
+function waste_where_func() {
+    $waste_where_field = get_field('waste-where');
+    $waste_where_component = '';
+
+    if ($waste_where_field) {
+        $waste_where_component = '<div class="waste-article__waste-sign-container">';
+        $waste_where_component .= $waste_where_field;
+        $waste_where_component .= '</div>';
+    }
+
+    return $waste_where_component;
+}
+
+add_shortcode( 'waste_where', 'waste_where_func' );
 
 ?>

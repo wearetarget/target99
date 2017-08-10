@@ -9,7 +9,7 @@ class N2ElementFamily extends N2ElementText {
         $families     = explode("\n", $fontSettings['preset-families']);
 
         usort($families, 'N2ElementFamily::sort');
-        N2JS::addInline('new NextendElementAutocompleteSimple("' . $this->_id . '", ' . json_encode($families) . ');');
+        N2JS::addInline('new N2Classes.FormElementAutocompleteSimple("' . $this->_id . '", ' . json_encode($families) . ');');
         return $html;
     }
 

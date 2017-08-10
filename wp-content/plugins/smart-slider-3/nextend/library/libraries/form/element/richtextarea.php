@@ -5,7 +5,7 @@ class N2ElementRichTextarea extends N2Element
 
     function fetchElement() {
 
-        N2JS::addInline('new NextendElementRichText("' . $this->_id . '");');
+        N2JS::addInline('new N2Classes.FormElementRichText("' . $this->_id . '");');
 
         $tools = array(
             N2Html::tag('div', array('class' => 'n2-textarea-rich-bold'), N2Html::tag('I', array('class' => 'n2-i n2-it n2-i-bold'))),

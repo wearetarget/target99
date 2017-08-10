@@ -20,7 +20,7 @@ class N2ElementRadio extends N2ElementHidden
             'style' => N2XmlHelper::getAttribute($this->_xml, 'style')
         ), $this->generateOptions($this->_xml) . parent::fetchElement());
 
-        N2JS::addInline('new NextendElementRadio("' . $this->_id . '", ' . json_encode($this->values) . ');');
+        N2JS::addInline('new N2Classes.FormElementRadio("' . $this->_id . '", ' . json_encode($this->values) . ');');
 
         return $html;
     }

@@ -1,6 +1,7 @@
-(function ($, scope, undefined) {
+N2Require('SmartSliderWidgetThumbnailDefault', [], [], function ($, scope, undefined) {
     "use strict";
-    function NextendSmartSliderWidgetThumbnailDefault(id, parameters) {
+
+    function SmartSliderWidgetThumbnailDefault(id, parameters) {
 
         this.slider = window[id];
 
@@ -8,7 +9,7 @@
     };
 
 
-    NextendSmartSliderWidgetThumbnailDefault.prototype.start = function (id, parameters) {
+    SmartSliderWidgetThumbnailDefault.prototype.start = function (id, parameters) {
 
         if (this.slider.sliderElement.data('thumbnail')) {
             return false;
@@ -128,13 +129,13 @@
         }
     };
 
-    NextendSmartSliderWidgetThumbnailDefault.prototype.onReady = function () {
+    SmartSliderWidgetThumbnailDefault.prototype.onReady = function () {
         this.slider.sliderElement.on('SliderResize', $.proxy(this.onSliderResize, this));
         this.onSliderResize();
     };
 
 
-    NextendSmartSliderWidgetThumbnailDefault.prototype.onSliderResize = function () {
+    SmartSliderWidgetThumbnailDefault.prototype.onSliderResize = function () {
         if (this.forceHiddenCB !== null) {
             this.forceHiddenCB.call(this);
         }
@@ -143,7 +144,7 @@
         this.goToDot(this.dots.index(this.dots.filter('.n2-active')));
     };
 
-    NextendSmartSliderWidgetThumbnailDefault.prototype.adjustScrollerSize = function () {
+    SmartSliderWidgetThumbnailDefault.prototype.adjustScrollerSize = function () {
         var prop = this[this.orientation].prop,
             size = Math.ceil(this.dots.length / this.group) * this.thumbnailDimension[prop] * this.ratio,
             diff = this.scroller['outer' + this[this.orientation].Prop]() - this.scroller[prop](),
@@ -163,11 +164,11 @@
 
     };
 
-    NextendSmartSliderWidgetThumbnailDefault.prototype.onDotClick = function (e) {
+    SmartSliderWidgetThumbnailDefault.prototype.onDotClick = function (e) {
         this.slider.directionalChangeToReal(this.dots.index(e.currentTarget));
     };
 
-    NextendSmartSliderWidgetThumbnailDefault.prototype.onSlideSwitch = function (e, targetSlideIndex, realTargetSlideIndex) {
+    SmartSliderWidgetThumbnailDefault.prototype.onSlideSwitch = function (e, targetSlideIndex, realTargetSlideIndex) {
         this.dots.filter('.n2-active').removeClass('n2-active');
         this.dots.eq(realTargetSlideIndex).addClass('n2-active');
 
@@ -175,15 +176,15 @@
 
     };
 
-    NextendSmartSliderWidgetThumbnailDefault.prototype.previousPane = function () {
+    SmartSliderWidgetThumbnailDefault.prototype.previousPane = function () {
         this.goToDot(this.currentI - this.itemPerPane * this.group);
     };
 
-    NextendSmartSliderWidgetThumbnailDefault.prototype.nextPane = function () {
+    SmartSliderWidgetThumbnailDefault.prototype.nextPane = function () {
         this.goToDot(this.currentI + this.itemPerPane * this.group);
     };
 
-    NextendSmartSliderWidgetThumbnailDefault.prototype.goToDot = function (i) {
+    SmartSliderWidgetThumbnailDefault.prototype.goToDot = function (i) {
 
         var variables = this[this.orientation],
             ratio = 1,
@@ -257,7 +258,7 @@
 
     };
 
-    NextendSmartSliderWidgetThumbnailDefault.prototype._goToDot = function (i) {
+    SmartSliderWidgetThumbnailDefault.prototype._goToDot = function (i) {
         if (this.forceHidden) {
             return;
         }
@@ -339,17 +340,16 @@
         this.itemPerPane = itemPerPane;
     };
 
-    NextendSmartSliderWidgetThumbnailDefault.prototype.isVisible = function () {
+    SmartSliderWidgetThumbnailDefault.prototype.isVisible = function () {
         return this.outerBar.is(':visible');
     };
 
-    NextendSmartSliderWidgetThumbnailDefault.prototype.getSize = function () {
+    SmartSliderWidgetThumbnailDefault.prototype.getSize = function () {
         if (this.orientation == 'horizontal') {
             return this.outerBar.height() + this.offset;
         }
         return this.outerBar.width() + this.offset;
     };
 
-    scope.NextendSmartSliderWidgetThumbnailDefault = NextendSmartSliderWidgetThumbnailDefault;
-
-})(n2, window);
+    return SmartSliderWidgetThumbnailDefault;
+});

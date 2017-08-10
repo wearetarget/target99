@@ -25,6 +25,7 @@ class N2UriAbstract {
 
     static function getBaseUri() {
         $i = N2Uri::getInstance();
+
         return $i->_baseuri;
     }
 
@@ -47,19 +48,19 @@ class N2UriAbstract {
 
     static function ajaxUri($query = '', $magento = 'nextendlibrary') {
         $i = N2Uri::getInstance();
-        
+
         return $i->_baseuri;
     }
 
     static function fixrelative($uri) {
         if (substr($uri, 0, 1) == '/' || strpos($uri, '://') !== false) return $uri;
-        
+
         return self::getInstance()->_baseuri . $uri;
     }
 
     static function relativetoabsolute($uri) {
         if (substr($uri, 0, 1) == '/' || strpos($uri, '://') !== false) return $uri;
-        
+
         return self::getInstance()->_currentbase . $uri;
     }
 }

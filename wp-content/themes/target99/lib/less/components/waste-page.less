@@ -1,0 +1,41 @@
+@import '../base/variables';
+@import '../base/layout';
+
+.waste-page {
+  min-height: 60vh;
+
+  background-color: @background-color-3;
+
+  .waste-page__title-container {
+    width: 100%;
+    padding: 5px 5px 30px 5px;
+
+    text-align: center;
+  }
+
+  .waste-page__title {
+    display: inline-block;
+
+    font-family: @main-control-font;
+    font-size: 24px;
+
+    text-transform: uppercase;
+
+    color: @text-color-3;
+    border-bottom: 1px solid @border-color-2;
+  }
+
+  .waste-page__tiles-list {
+    display: flex;
+
+    align-items: stretch;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .waste-page__tile {
+    display: inline-block;
+
+    padding: 8px;
+  }
+}

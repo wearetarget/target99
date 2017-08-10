@@ -43,6 +43,22 @@ class N2AssetsPredefined {
             'jquery-ui-core',
             'jquery-ui-widget'
         ), '1.0', 1);
+        wp_enqueue_script('nextend-ui-nextendspacing', N2Uri::pathToUri(N2LIBRARYASSETS . "/js/core/jquery/ui/jquery-ui.nextendSpacing.js"), array(
+            'jquery-ui-core',
+            'jquery-ui-widget',
+            'jquery-ui-mouse'
+        ), '1.0', 1);
+        wp_enqueue_script('nextend-ui-nextendnormalsizing', N2Uri::pathToUri(N2LIBRARYASSETS . "/js/core/jquery/ui/jquery-ui.nextendNormalSizing.js"), array(
+            'jquery-ui-core',
+            'jquery-ui-widget',
+            'jquery-ui-mouse'
+        ), '1.0', 1);
+        wp_enqueue_script('nextend-ui-nextendresizable', N2Uri::pathToUri(N2LIBRARYASSETS . "/js/core/jquery/ui/jquery-ui.nextendResizable.js"), array(
+            'jquery-ui-core',
+            'jquery-ui-widget',
+            'jquery-ui-mouse',
+            'jquery-ui-resizable'
+        ), '1.0', 1);
     
         N2JS::addStaticGroup(N2LIBRARYASSETS . '/dist/nextend-backend.min.js', 'nextend-backend');
     

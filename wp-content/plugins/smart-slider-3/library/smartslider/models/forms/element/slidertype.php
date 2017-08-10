@@ -9,7 +9,7 @@ class N2ElementSliderType extends N2ElementSubformImage
     function renderSelector() {
 
         N2JS::addInline('
-        new NextendElementSliderType(
+        new N2Classes.FormElementSliderType(
               "' . $this->_id . '"
             );
         ');

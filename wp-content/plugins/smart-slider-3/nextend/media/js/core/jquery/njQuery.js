@@ -32,6 +32,36 @@ window.n2jQuery.ready(function () {
 
     window.nextend.$ = window.n2('');
 
+    window.N2Classes = {};
+    (function ($, undefined) {
+        "use strict";
+        var a = {};
+
+        window.N2Require = function (name, dependencies, injection, fn) {
+            var deps = [];
+            if (a[name] == undefined) {
+                a[name] = $.Deferred();
+            }
+            for (var i = 0; i < dependencies.length; i++) {
+                if (a[dependencies[i]] == undefined) {
+                    a[dependencies[i]] = $.Deferred();
+                }
+                deps.push(a[dependencies[i]]);
+            }
+            $.when.apply($, deps).done(function () {
+                var args = [$, window.N2Classes];
+                if (injection.length) {
+                    for (var i = 0; i < injection.length; i++) {
+                        args.push(nextend[injection[i]]);
+                    }
+                }
+
+                window.N2Classes[name] = fn.apply(window.N2Classes, args);
+                a[name].resolve();
+            });
+        }
+    })(n2);
+
     var readyDeferred = window.n2.Deferred();
     window.nextend.deferreds.push(readyDeferred);
 
@@ -48,7 +78,7 @@ window.n2jQuery.ready(function () {
     });
 
     window.nextend.loadDeferred = window.n2.Deferred();
-    window.n2(window).load(function () {
+    window.n2(window).on('load', function () {
         window.nextend.loadDeferred.resolve();
     });
 });
@@ -89,3 +119,13 @@ function NextendDeBounce(func, wait, immediate) {
         if (callNow) func.apply(context, args);
     };
 };
+
+window.n2FilterProperty = false;
+var element = document.createElement('div');
+if (/Edge\/\d./i.test(navigator.userAgent)) {
+    //Edge has buggy filter implementation
+} else if (element.style.webkitFilter !== undefined) {
+    window.n2FilterProperty = 'webkitFilter';
+} else if (element.style.filter !== undefined) {
+    window.n2FilterProperty = 'filter';
+}

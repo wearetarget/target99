@@ -1,5 +1,4 @@
-;
-(function ($, window, document, undefined) {
+(function ($, undefined) {
     function useragentIsIphone() {
         return (navigator.userAgent.match(/iPhone/i) != null) || (navigator.userAgent.match(/iPod/i) != null);
     }
@@ -438,4 +437,4 @@
         });
     };
 
-})(n2, window, document);
+})(n2);

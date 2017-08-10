@@ -1,11 +1,12 @@
-(function ($, scope, undefined) {
-    function NextendSmartSliderWidgetArrowImage(id, desktopRatio, tabletRatio, mobileRatio) {
+N2Require('SmartSliderWidgetArrowImage', [], [], function ($, scope, undefined) {
+
+    function SmartSliderWidgetArrowImage(id, desktopRatio, tabletRatio, mobileRatio) {
         this.slider = window[id];
 
         this.slider.started($.proxy(this.start, this, id, desktopRatio, tabletRatio, mobileRatio));
     };
 
-    NextendSmartSliderWidgetArrowImage.prototype.start = function (id, desktopRatio, tabletRatio, mobileRatio) {
+    SmartSliderWidgetArrowImage.prototype.start = function (id, desktopRatio, tabletRatio, mobileRatio) {
         if (this.slider.sliderElement.data('arrow')) {
             return false;
         }
@@ -27,6 +28,7 @@
             this.previousResize = this.previous;
         }
 
+
         this.next = $('#' + id + '-arrow-next').on('click', $.proxy(function (e) {
             e.stopPropagation();
             this.slider[nextend.rtl.next]();
@@ -44,7 +46,7 @@
         $.when(this.previous.n2imagesLoaded(), this.next.n2imagesLoaded()).always($.proxy(this.loaded, this));
     };
 
-    NextendSmartSliderWidgetArrowImage.prototype.loaded = function () {
+    SmartSliderWidgetArrowImage.prototype.loaded = function () {
         this.previousWidth = this.previousResize.width();
         this.previousHeight = this.previousResize.height();
 
@@ -59,7 +61,7 @@
         this.deferred.resolve();
     };
 
-    NextendSmartSliderWidgetArrowImage.prototype.onDevice = function (e, device) {
+    SmartSliderWidgetArrowImage.prototype.onDevice = function (e, device) {
         var ratio = 1;
         switch (device.device) {
             case 'tablet':
@@ -77,6 +79,5 @@
         this.nextResize.height(this.nextHeight * ratio);
     };
 
-
-    scope.NextendSmartSliderWidgetArrowImage = NextendSmartSliderWidgetArrowImage;
-})(n2, window);
+    return SmartSliderWidgetArrowImage;
+});

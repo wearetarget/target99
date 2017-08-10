@@ -152,9 +152,9 @@
   .nextend-thumbnail-default .nextend-thumbnail-scroller > div {
     position: relative;
     flex: 0 0 auto;
-    -webkit-box-sizing: border-box !important;
-    -moz-box-sizing: border-box !important;
-    box-sizing: border-box !important;
+    -webkit-box-sizing: content-box !important;
+    -moz-box-sizing: content-box !important;
+    box-sizing: content-box !important;
     cursor: pointer;
   }
 

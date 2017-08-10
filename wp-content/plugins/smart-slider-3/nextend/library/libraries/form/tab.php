@@ -120,7 +120,13 @@ class N2Tab {
      * @param $i
      */
     function decorateElement(&$el, $out, $i) {
-        echo "<tr class='" . N2XmlHelper::getAttribute($el->_xml, 'class') . "'>";
+        $attrs = array();
+        if (isset($el->_xml->attribute)) {
+            foreach ($el->_xml->attribute AS $attr) {
+                $attrs[N2XmlHelper::getAttribute($attr, 'type')] = (string)$attr;
+            }
+        }
+        echo N2Html::openTag('tr', $attrs + array('class' => N2XmlHelper::getAttribute($el->_xml, 'class')));
         $colSpan = '';
         if ($out[0] != '') {
             echo "<td class='n2-label" . ($el->hasLabel ? '' : ' n2-empty-label') . "'>" . $out[0] . "</td>";

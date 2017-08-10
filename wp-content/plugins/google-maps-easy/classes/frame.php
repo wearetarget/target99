@@ -464,4 +464,8 @@ class frameGmp {
 	public function getActivationErrors() {
 		return get_option(GMP_CODE. '_plugin_activation_errors');
 	}
+
+	public function getPluginUrl() {
+		return plugins_url('', dirname(__FILE__));
+	}
 }

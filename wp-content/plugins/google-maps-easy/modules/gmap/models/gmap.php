@@ -50,7 +50,7 @@ class gmapModelGmp extends modelGmp {
 	}
 	public function getParamsList() {
 		$mapOptKeys = dispatcherGmp::applyFilters('mapParamsKeys', 
-				array('width_units', 'adapt_map_to_screen_height',
+				array('width_units', 'membershipEnable', 'adapt_map_to_screen_height',
 					'type' /*used "map_type" insted - as this was already nulled*/, 'map_type', 'map_display_mode', 'map_center', 'language',
 					'enable_zoom', 'enable_mouse_zoom' /*we used "mouse_wheel_zoom" insted of this - same reason as prev. one*/, 'zoom', 'zoom_min', 'zoom_max',
 					'type_control', 'zoom_control', 'street_view_control', 'pan_control', 'overview_control', 'draggable',

@@ -10,6 +10,8 @@
         </param>
         <param type="onoff" name="responsiveForceFull" label="Force full width" default="1"
                tip="The slider tries to fill the full width of the browser."/>
+		<param type="text" name="responsiveForceFullHorizontalSelector" label="Adjust slider width to parent selector"
+               default="" tip="When the jQuery selector of one of the slider's parent elements is specified, the slider tries to have the width and fill up that element instead of the window."/>
         <param type="radio" name="responsiveSliderOrientation" label="Portrait or Landscape algorithm"
                default="width_and_height">
             <option value="width_and_height">Screen width and height</option>

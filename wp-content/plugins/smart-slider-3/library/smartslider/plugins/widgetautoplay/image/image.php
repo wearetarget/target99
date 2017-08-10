@@ -119,10 +119,10 @@ class N2SSPluginWidgetAutoplayImage extends N2SSPluginWidgetAbstract {
             list($style, $attributes) = self::getPosition($params, self::$key);
 
 
-            N2JS::addInline('new NextendSmartSliderWidgetAutoplayImage("' . $id . '", ' . n2_floatval($params->get(self::$key . 'responsive-desktop')) . ', ' . n2_floatval($params->get(self::$key . 'responsive-tablet')) . ', ' . n2_floatval($params->get(self::$key . 'responsive-mobile')) . ');');
+            N2JS::addInline('new N2Classes.SmartSliderWidgetAutoplayImage("' . $id . '", ' . n2_floatval($params->get(self::$key . 'responsive-desktop')) . ', ' . n2_floatval($params->get(self::$key . 'responsive-tablet')) . ', ' . n2_floatval($params->get(self::$key . 'responsive-mobile')) . ');');
 
             $html = N2Html::tag('div', $displayAttributes + $attributes + array(
-                    'class' => $displayClass . $styleClass . 'nextend-autoplay n2-ib nextend-autoplay-image',
+                    'class' => $displayClass . $styleClass . 'nextend-autoplay n2-ib n2-ow nextend-autoplay-image',
                     'style' => $style,
                     'role' => 'button',
                     'aria-label' => 'Pause autoplay'

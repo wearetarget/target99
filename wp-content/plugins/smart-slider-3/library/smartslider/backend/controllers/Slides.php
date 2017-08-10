@@ -31,9 +31,9 @@ class N2SmartsliderBackendSlidesController extends N2SmartSliderController {
 
     public function actionCreate() {
         if ($this->validatePermission('smartslider_edit')) {
+            $sliderId = N2Request::getInt('sliderid');
 
             $slidersModel = new N2SmartsliderSlidersModel();
-            $sliderId     = N2Request::getInt('sliderid');
             $slider       = $slidersModel->get($sliderId);
             if ($this->validateDatabase($slider)) {
                 $this->initAdminSlider();
@@ -61,15 +61,31 @@ class N2SmartsliderBackendSlidesController extends N2SmartSliderController {
                 $this->layout->addBreadcrumb(N2Html::tag('a', array(
                     'href'  => '#',
                     'class' => 'n2-h4 n2-active'
-                ), 'Add empty slide'));
+                ), n2_('Add empty slide')));
 
-                $this->addView("edit", array(
-                    "slidesModel" => new N2SmartsliderSlidesModel(),
-                    "sliderId"    => $sliderId,
-                    "slider"      => $slider
-                ));
-                $this->render();
+                if (N2Request::getCmd('mode') == 'sample') {
 
+                    $this->addView("edit", array(
+                        "slidesModel" => new N2SmartsliderSlidesModel(),
+                        "sliderId"    => $sliderId,
+                        "slider"      => $slider,
+                        "isAddSample" => true
+                    ));
+
+                    $this->render(array(
+                        'class' => 'n2-ss-add-slide-with-sample'
+                    ));
+                } else {
+
+                    $this->addView("edit", array(
+                        "slidesModel" => new N2SmartsliderSlidesModel(),
+                        "sliderId"    => $sliderId,
+                        "slider"      => $slider,
+                        "isAddSample" => false
+                    ));
+
+                    $this->render();
+                }
             }
         }
     }
@@ -133,13 +149,14 @@ class N2SmartsliderBackendSlidesController extends N2SmartSliderController {
                 $this->addView("edit", array(
                     "slidesModel" => new N2SmartsliderSlidesModel(),
                     "sliderId"    => $sliderId,
-                    "slider"      => $slider
+                    "slider"      => $slider,
+                    "isAddSample" => false
                 ));
+
                 $this->render();
             }
         }
     }
-
 
     public function actionDelete() {
         if ($this->validateToken() && $this->validatePermission('smartslider_delete')) {
@@ -214,4 +231,4 @@ class N2SmartsliderBackendSlidesController extends N2SmartSliderController {
         }
     }
 
-} 
+}

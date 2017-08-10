@@ -1,0 +1,40 @@
+@import '../base/variables';
+@import '../base/layout';
+
+.post-list {
+  background-color: @background-color-3;
+
+  .post-list__inner-container {
+    position: relative;
+
+    display: flex;
+
+    flex-flow: row wrap;
+    justify-content: center;
+  }
+
+  .post-list__post-container {
+    text-align: center;
+
+    flex-basis: 25%;
+
+    @media @large-screen {
+      flex-basis: 28%;
+    }
+
+    @media @medium-screen {
+      flex-basis: 50%;
+    }
+
+    @media @small-screen {
+      flex-basis: 100%;
+    }
+  }
+
+  .post-list__pagination-container {
+    margin: 0 auto;
+    padding-bottom: 50px;
+
+    text-align: center;
+  }
+}

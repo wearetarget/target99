@@ -4,47 +4,44 @@
 		Template Name: Waste Info
 	*/
 
-	// Post query arguments
-	$paged = ( get_query_var('paged') ) ? get_query_var('paged') : 1;
-	$post_args = [
-		'post_status'       => array('publish'),
-		'posts_per_page'    => 10,
-		'post_type'         => array( 'post'),
-		'order'             => 'DSC',
-		'orderby'           => 'date',
-		'paged'             => $paged
+// Waste Info request
+	$waste_info_args = [
+		'post_status' => array('publish'),
+		'post_type' => array('waste-info'),
+		'order' => 'ASC',
+		'orderby' => 'date',
 	];
 
-	$the_query = new WP_Query($post_args);
+	$waste_info_query = new WP_Query($waste_info_args);
 
 	get_header();
 ?>
 
-<section class="post-page">
+<?php if ($waste_info_query->have_posts()) : ?>
+	<section class="waste-page">
+		<div class="waste-page__inner-container layout__content">
+			<div class="waste-page__title-container">
+				<h2 class="waste-page__title">Информация об отходах</h2>
+			</div>
 
-	<section class="post-page__posts-container">
-			<?php
-				if ( $the_query->have_posts() ) {
-					while ( $the_query->have_posts() ) {
-						$the_query->the_post();
-						$post_image_url = wp_get_attachment_image_src( get_post_thumbnail_id(), 'medium')[0];
-						$content_width_class = (bool)$post_image_url ? '' : 'news-post-single__details--full';
+			<div class="waste-page__tiles-list">
+				<?php
+					while ($waste_info_query->have_posts()) {
+					$waste_info_query->the_post();
+					$waste_info_background = wp_get_attachment_image_src(get_post_thumbnail_id(), 'full')[0];
 
-						include('template-parts/template-part-news-short.php');
-					}
+					echo '<div class="waste-page__tile">';
+					include('template-parts/template-part-waste-info.php');
+					echo '</div>';
+				}
 
-					wp_reset_postdata();
-				} else {
-			?>
-				<p><?php _e('There haven\'t been any posts yet. Check back soon!'); ?></p>
-			<?php } ?>
-
+				wp_reset_postdata();
+				?>
+			</div>
+		</div>
 	</section>
+<?php endif; ?>
 
-	<div class="post-page__pagination-container">
-	</div>
-
-</section>
 
 <?php get_footer(); ?>
 

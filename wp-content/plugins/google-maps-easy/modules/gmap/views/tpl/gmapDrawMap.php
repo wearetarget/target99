@@ -15,6 +15,12 @@ $mapOptsClassname = $popup ? 'display_as_popup' : '';
 <?php } ?>
 		<div class="gmp_map_opts <?php echo $mapOptsClassname;?>" id="mapConElem_<?php echo $viewId;?>"
 			data-id="<?php echo $this->currentMap['id']; ?>" data-view-id="<?php echo $viewId;?>"
+			<?php if(!empty($this->mbsIntegrating)) {
+				echo 'data-mbs-gme-map="' . $this->currentMap['id'] . '" style="display:none;"';
+			} else if(!empty($this->mbsMapId) && !empty($this->mbsMapInfo)) {
+				echo "data-mbs-gme-map-id='" . $this->mbsMapId . "' data-mbs-gme-map-info='" . $this->mbsMapInfo . "'";
+			}
+			?>
 			>
 			<div class="gmpMapDetailsContainer" id="gmpMapDetailsContainer_<?php echo $viewId ;?>">
 				<i class="gmpKMLLayersPreloader fa fa-spinner fa-spin" aria-hidden="true" style="display: none;"></i>
@@ -32,6 +38,7 @@ $mapOptsClassname = $popup ? 'display_as_popup' : '';
 			<div class="gmpSocialSharingShell gmpSocialSharingShell_<?php echo $viewId ;?>">
 				<?php echo $this->currentMap['params']['ss_html'];?>
 			</div>
+			<div style="clear: both;"></div>
 		</div>
 <?php if($popup){ ?>
 	</div>

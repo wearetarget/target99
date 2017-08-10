@@ -2,8 +2,7 @@
 
 N2Loader::import('libraries.plugins.N2SliderWidgetAbstract', 'smartslider');
 
-class N2SSPluginWidgetShadowShadow extends N2SSPluginWidgetAbstract
-{
+class N2SSPluginWidgetShadowShadow extends N2SSPluginWidgetAbstract {
 
     var $_name = 'shadow';
 
@@ -34,6 +33,7 @@ class N2SSPluginWidgetShadowShadow extends N2SSPluginWidgetAbstract
             self::$key . 'position-',
             'shadow'
         );
+
         return $positions;
     }
 
@@ -73,13 +73,16 @@ class N2SSPluginWidgetShadowShadow extends N2SSPluginWidgetAbstract
             'area'    => intval($params->get(self::$key . 'position-area'))
         );
 
-        N2JS::addInline('new NextendSmartSliderWidgetShadow("' . $id . '", ' . json_encode($parameters) . ');');
+        N2JS::addInline('new N2Classes.SmartSliderWidgetShadow("' . $id . '", ' . json_encode($parameters) . ');');
 
 
         return N2Html::tag('div', $displayAttributes + $attributes + array(
-                'class' => $displayClass . "nextend-shadow",
+                'class' => $displayClass . "nextend-shadow n2-ow",
                 'style' => $style
-            ), N2Html::image(N2ImageHelper::fixed($shadow), 'Shadow', array('style' => 'display: block; width:100%;max-width:none;','class'=>'n2-ow nextend-shadow-image')));
+            ), N2Html::image(N2ImageHelper::fixed($shadow), 'Shadow', array(
+            'style' => 'display: block; width:100%;max-width:none;',
+            'class' => 'n2-ow nextend-shadow-image'
+        )));
     }
 
     public static function prepareExport($export, $params) {

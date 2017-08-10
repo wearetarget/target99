@@ -1,12 +1,13 @@
-(function ($, scope, undefined) {
-    function NextendSmartSliderWidgetBulletTransition(id, parameters) {
+N2Require('SmartSliderWidgetBulletTransition', [], [], function ($, scope, undefined) {
+
+    function SmartSliderWidgetBulletTransition(id, parameters) {
 
         this.slider = window[id];
 
         this.slider.started($.proxy(this.start, this, id, parameters));
     };
 
-    NextendSmartSliderWidgetBulletTransition.prototype.start = function (id, parameters) {
+    SmartSliderWidgetBulletTransition.prototype.start = function (id, parameters) {
 
         if (this.slider.sliderElement.data('bullet')) {
             return false;
@@ -72,27 +73,27 @@
         this.initThumbnails();
     };
 
-    NextendSmartSliderWidgetBulletTransition.prototype.onDotClick = function (e) {
+    SmartSliderWidgetBulletTransition.prototype.onDotClick = function (e) {
         this.slider.directionalChangeToReal(this.originalDots.index(e.currentTarget));
     };
 
-    NextendSmartSliderWidgetBulletTransition.prototype.onSlideSwitch = function (e, targetSlideIndex) {
+    SmartSliderWidgetBulletTransition.prototype.onSlideSwitch = function (e, targetSlideIndex) {
         this.dots.filter('.n2-active').removeClass('n2-active');
         this.dots.eq(targetSlideIndex).addClass('n2-active');
     };
 
-    NextendSmartSliderWidgetBulletTransition.prototype.isVisible = function () {
+    SmartSliderWidgetBulletTransition.prototype.isVisible = function () {
         return this.bar.is(':visible');
     };
 
-    NextendSmartSliderWidgetBulletTransition.prototype.getSize = function () {
+    SmartSliderWidgetBulletTransition.prototype.getSize = function () {
         if (this.axis == 'horizontal') {
             return this.bar.height() + this.offset;
         }
         return this.bar.width() + this.offset;
     };
 
-    NextendSmartSliderWidgetBulletTransition.prototype.initThumbnails = function () {
+    SmartSliderWidgetBulletTransition.prototype.initThumbnails = function () {
         if (this.parameters.thumbnails.length > 0) {
             this.dots.each($.proxy(function (i, el) {
                 if (this.parameters.thumbnails[i] != '') {
@@ -107,7 +108,7 @@
         }
     };
 
-    NextendSmartSliderWidgetBulletTransition.prototype.showThumbnail = function (i, e) {
+    SmartSliderWidgetBulletTransition.prototype.showThumbnail = function (i, e) {
         var thumbnail = this.getThumbnail(i);
 
         NextendTween.to(thumbnail, 0.3, {
@@ -117,7 +118,7 @@
         this.originalDots.eq(i).on('universalleave', $.proxy(this.hideThumbnail, this, thumbnail));
     };
 
-    NextendSmartSliderWidgetBulletTransition.prototype.hideThumbnail = function (thumbnail, e) {
+    SmartSliderWidgetBulletTransition.prototype.hideThumbnail = function (thumbnail, e) {
         e.stopPropagation();
         NextendTween.to(thumbnail, 0.3, {
             opacity: 0,
@@ -127,7 +128,7 @@
         }).play();
     };
 
-    NextendSmartSliderWidgetBulletTransition.prototype.getThumbnail = function (i) {
+    SmartSliderWidgetBulletTransition.prototype.getThumbnail = function (i) {
         var target = this.originalDots.eq(i);
         var targetOffset = target.offset(),
             targetW = target.outerWidth(),
@@ -180,7 +181,7 @@
         return thumbnail;
     };
 
-    NextendSmartSliderWidgetBulletTransition.prototype.onSlideCountChanged = function (e, newCount, slidesInGroup) {
+    SmartSliderWidgetBulletTransition.prototype.onSlideCountChanged = function (e, newCount, slidesInGroup) {
         this.dots = $();
         for (var i = 0; i < this.originalDots.length; i++) {
             if (i % slidesInGroup == 0) {
@@ -196,5 +197,5 @@
         }
     };
 
-    scope.NextendSmartSliderWidgetBulletTransition = NextendSmartSliderWidgetBulletTransition;
-})(n2, window);
+    return SmartSliderWidgetBulletTransition;
+});

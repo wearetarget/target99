@@ -30,10 +30,18 @@ class N2JS {
         N2AssetsManager::$js->addInline($code, $global, $unshift);
     }
 
-    public static function jQuery($force = false) {
+    public static function addInlineFile($path, $global = false, $unshift = false) {
+        static $loaded = array();
+        if (!isset($loaded[$path])) {
+            N2AssetsManager::$js->addInline(N2Filesystem::readFile($path), $global, $unshift);
+            $loaded[$path] = 1;
+        }
+    }
+
+    public static function jQuery($force = false, $overrideJQuerySetting = false) {
         // WordPress only
         if ($force) {
-            if (N2Settings::get('jquery')) {
+            if ($overrideJQuerySetting || N2Settings::get('jquery')) {
                 self::addFiles(ABSPATH . '/wp-includes/js/jquery/', array(
                     "jquery.js",
                     "jquery-migrate.min.js"

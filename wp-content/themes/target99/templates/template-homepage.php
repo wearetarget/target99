@@ -19,7 +19,7 @@ $news_args = [
     'post_status' => array('publish'),
     'post_type' => array('post'),
     'category_name' => 'news',
-    'posts_per_page' => get_field('amount_of_news'),
+    'posts_per_page' => 2,
     'order' => 'DSC',
     'orderby' => 'date',
 ];
@@ -31,7 +31,7 @@ $events_args = [
     'post_status' => array('publish'),
     'post_type' => array('post'),
     'category_name' => 'event',
-    'posts_per_page' => get_field('amount_of_events'),
+    'posts_per_page' => 2,
     'order' => 'DSC',
     'orderby' => 'date',
 ];
@@ -92,8 +92,11 @@ get_header();
                     $waste_info_query->the_post();
                     $waste_info_background = wp_get_attachment_image_src(get_post_thumbnail_id(), 'full')[0];
 
+                    echo '<div class="waste-info__tile">';
                     include('template-parts/template-part-waste-info.php');
-                }
+                    echo '</div>';
+
+                    }
 
                 wp_reset_postdata();
                 ?>
@@ -123,7 +126,7 @@ get_header();
             </div>
 
             <div class="short-news-panel__footer">
-                <span class="button button--warning button--mobile-full">Смотреть всю информацию</span>
+                <a href="/category/news/"><span class="button button--warning button--mobile-full">Смотреть всю информацию</span></a>
             </div>
         </div>
     </section>
@@ -150,7 +153,7 @@ get_header();
             </div>
 
             <div class="events__footer">
-                <span class="button button--warning button--mobile-full">Смотреть все мероприятия</span>
+                <a href="/category/event/"><span class="button button--warning button--mobile-full">Смотреть все мероприятия</span></a>
             </div>
         </div>
     </section>

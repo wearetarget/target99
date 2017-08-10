@@ -2,35 +2,35 @@
 @import '../base/layout';
 
 .partners {
-    background-color: @background-color-3;
+  background-color: @background-color-3;
 
 
 
-    .partners__list {
-        display: block;
+  .partners__list {
+    display: block;
 
-        text-align: center;
+    text-align: center;
+  }
+
+  .partner {
+    display: inline-block;
+
+
+
+    .partner__banner {
+      display: block;
+
+      border-top: 18px solid @border-color-2;
+      border-right: 28px solid @border-color-2;
+      border-bottom: 18px solid @border-color-2;
+      border-left: 28px solid @border-color-2;
+
+      &:hover {
+        border-top: 18px solid @text-color-3;
+        border-right: 28px solid @text-color-3;
+        border-bottom: 18px solid @text-color-3;
+        border-left: 28px solid @text-color-3;
+      }
     }
-
-    .partner {
-        display: inline-block;
-
-
-
-        .partner__banner {
-            display: block;
-
-            border-top: 18px solid @border-color-2;
-            border-right: 28px solid @border-color-2;
-            border-bottom: 18px solid @border-color-2;
-            border-left: 28px solid @border-color-2;
-
-            &:hover {
-                border-top: 18px solid @text-color-3;
-                border-right: 28px solid @text-color-3;
-                border-bottom: 18px solid @text-color-3;
-                border-left: 28px solid @text-color-3;
-            }
-        }
-    }
+  }
 }

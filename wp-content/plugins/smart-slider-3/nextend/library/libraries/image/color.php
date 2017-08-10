@@ -19,12 +19,15 @@
  * @version  $Id$
  *
  */
-class N2Color
-{
+class N2Color {
 
     static function colorToRGBA($value) {
         $rgba = self::hex2rgba($value);
         return 'RGBA(' . $rgba[0] . ',' . $rgba[1] . ',' . $rgba[2] . ',' . round($rgba[3] / 127, 2) . ')';
+    }
+
+    static function hex2alpha($value) {
+        return intval(hexdec(substr($value, 6, 2)) / 2);
     }
 
     static function colorToCss($value) {

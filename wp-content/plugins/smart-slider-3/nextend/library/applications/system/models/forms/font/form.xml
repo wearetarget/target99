@@ -12,6 +12,7 @@
         <param name="weight" label="Font weight" type="list" default="" translateable="1">
             <option value="0">Normal</option>
             <option value="1">Bold</option>
+            <option value="100">100</option>
             <option value="200">200 - Extra Light</option>
             <option value="300">300 - Light</option>
             <option value="600">600 - Semi Bold</option>
@@ -21,10 +22,10 @@
         <param name="decoration" label="Decoration" type="decoration" default=""/>
         <param name="lineheight" label="Line height" type="textautocomplete" default="18px"
                style="width:70px;" values="normal,1,1.2,1.5,1.8,2"/>
-        <param name="textalign" type="textalign" label="Text align" default="left"/>
+        <param name="textalign" type="textalign" label="Text align" default="inherit"/>
 
         <param name="letterspacing" label="Letter spacing" type="textautocomplete" default="normal"
-               style="width:50px;" values="normal,2px,5px,10px,15px"/>
+               style="width:50px;" values="normal,1px,2px,5px,10px,15px"/>
         <param name="wordspacing" label="Word spacing" type="textautocomplete" default="normal"
                style="width:50px;" values="normal,2px,5px,10px,15px"/>
         <param name="texttransform" label="Transform" type="list" default="none" translateable="1">

@@ -15,8 +15,9 @@ class N2SmartSliderController extends N2BackendController {
 
     public function loadSliderManager() {
 
+        N2SS3::initLicense();
 
-        N2JS::addInline("new NextendSmartSliderManageSliders('" . N2Request::getInt('sliderid', 0) . "', '" . $this->appType->router->createUrl(array('slider/create')) . "');");
+        N2JS::addInline("new N2Classes.ManageSliders('" . N2Request::getInt('sliderid', 0) . "', '" . $this->appType->router->createUrl(array('slider/create')) . "');");
 
         N2Localization::addJS(array(
             'Create Slider',

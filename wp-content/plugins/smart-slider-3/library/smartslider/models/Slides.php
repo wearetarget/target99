@@ -7,7 +7,7 @@
  */
 class N2SmartsliderSlidesModel extends N2Model {
 
-    private $currentData;
+    private $currentData, $slider;
 
     public function __construct() {
         parent::__construct("nextend2_smartslider3_slides");
@@ -39,6 +39,8 @@ class N2SmartsliderSlidesModel extends N2Model {
 
         $generator_id = isset($slide['generator_id']) ? intval($slide['generator_id']) : 0;
 
+        $slide['version'] = N2SS3::$version;
+
         $params = $slide;
         unset($params['title']);
         unset($params['slide']);
@@ -47,10 +49,7 @@ class N2SmartsliderSlidesModel extends N2Model {
         unset($params['published']);
         unset($params['first']);
         unset($params['publishdates']);
-
-        if (isset($params['generator_id'])) {
-            unset($params['generator_id']);
-        }
+        unset($params['generator_id']);
 
         return array(
             'title'        => $slide['title'],
@@ -98,9 +97,9 @@ class N2SmartsliderSlidesModel extends N2Model {
         return 0;
     }
 
-    public function renderEditForm($slide) {
+    public function renderEditForm($slider, $slide) {
+        $this->slider = $slider;
         if ($slide) {
-
             $params = json_decode($slide['params'], true);
             if ($params == null) $params = array();
             $params += $slide;
@@ -117,7 +116,7 @@ class N2SmartsliderSlidesModel extends N2Model {
 
         if ($data->get('background-type') == '') {
             $params['background-type'] = 'color';
-            if ($data->get('backgroundVideoMp4') || $data->get('backgroundVideoWebm') || $data->get('backgroundVideoOgg')) {
+            if ($data->get('backgroundVideoMp4')) {
                 $params['background-type'] = 'video';
             } else if ($data->get('backgroundImage')) {
                 $params['background-type'] = 'image';
@@ -201,7 +200,7 @@ class N2SmartsliderSlidesModel extends N2Model {
     private function editForm($data = array()) {
 
         $this->currentData = $data;
-        if ((!isset($data['static-slide']) || $data['static-slide'] != 1)) {
+        if (!$this->slider->isStaticEdited || (!isset($data['static-slide']) || $data['static-slide'] != 1)) {
             N2Pluggable::addAction('N2TabTabbedslide-settings', array(
                 $this,
                 'extendSlideSettings'
@@ -240,6 +239,8 @@ class N2SmartsliderSlidesModel extends N2Model {
         $up   = strtotime(isset($date[0]) ? $date[0] : '');
         $down = strtotime(isset($date[1]) ? $date[1] : '');
 
+        $slide['version'] = N2SS3::$version;
+
         $tmpslide = $slide;
         unset($tmpslide['title']);
         unset($tmpslide['slide']);
@@ -247,6 +248,7 @@ class N2SmartsliderSlidesModel extends N2Model {
         unset($tmpslide['thumbnail']);
         unset($tmpslide['published']);
         unset($tmpslide['publishdates']);
+        unset($tmpslide['generator_id']);
 
         $this->db->update(array(
             'title'        => $slide['title'],
@@ -319,6 +321,8 @@ class N2SmartsliderSlidesModel extends N2Model {
             $parameters['backgroundAlt'] = $image['alt'];
         }
 
+        $parameters['version'] = N2SS3::$version;
+
         return $this->_create($image['title'], json_encode(array()), $image['description'], $image['image'], 1, $publish_up, $publish_down, 0, json_encode($parameters), $sliderId, $this->getMaximalOrderValue($sliderId), '');
     }
 
@@ -362,6 +366,8 @@ class N2SmartsliderSlidesModel extends N2Model {
         }
         $layers = $slide->data['slide'];
 
+        $parameters['version'] = N2SS3::$version;
+
         return $this->_create($video['title'], json_encode($layers), $video['description'], $video['image'], 1, $publish_up, $publish_down, 0, json_encode($parameters), $sliderId, $this->getMaximalOrderValue($sliderId), '');
     }
 
@@ -379,12 +385,16 @@ class N2SmartsliderSlidesModel extends N2Model {
         $title       = $data->get('title');
         $description = $data->get('description');
 
+
+        $parameters['version'] = N2SS3::$version;
+
         return $this->_create($title, json_encode($this->getSlideLayers($title, $description)), $description, $data->get('image'), 1, $publish_up, $publish_down, 0, json_encode($parameters), $sliderId, $this->getMaximalOrderValue($sliderId), '');
     }
 
     private function getSlideLayers($hasTitle = false, $hasDescription = false) {
         $slide = new N2SmartSliderSlideHelper();
         if ($hasTitle && $hasDescription) {
+
             new N2SmartSliderItemHelper($slide, 'heading', array(
                 'desktopportraitleft'   => 30,
                 'desktopportraittop'    => 12,
@@ -393,6 +403,7 @@ class N2SmartsliderSlidesModel extends N2Model {
             ), array(
                 'heading' => '{name/slide}'
             ));
+
             new N2SmartSliderItemHelper($slide, 'text', array(
                 'desktopportraitleft'   => 30,
                 'desktopportraittop'    => 70,
@@ -457,7 +468,7 @@ class N2SmartsliderSlidesModel extends N2Model {
             $slide['generator_id'] = $generatorModel->duplicate($slide['generator_id']);
         }
 
-        $slide['slide'] = N2Data::json_encode(N2SmartSliderLayer::translateIds(json_decode($slide['slide'], true)));
+        $slide['slide'] = N2Data::json_encode(N2SSSlideComponentLayer::translateIds(json_decode($slide['slide'], true)));
 
         $slideId = $this->_create($slide['title'] . n2_(' - copy'), $slide['slide'], $slide['description'], $slide['thumbnail'], $slide['published'], $slide['publish_up'], $slide['publish_down'], 0, $slide['params'], $slide['slider'], $slide['ordering'] + 1, $slide['generator_id']);
 
@@ -471,12 +482,12 @@ class N2SmartsliderSlidesModel extends N2Model {
         $slide = $this->get($id);
         if ($slide['generator_id'] > 0) {
             $generatorModel        = new N2SmartSliderGeneratorModel();
-            $slide['generator_id'] = $generatorModel->duplicate($slide['generator_id'], $targetSliderId);
+            $slide['generator_id'] = $generatorModel->duplicate($slide['generator_id']);
         }
 
-        $slide['slide'] = N2Data::json_encode(N2SmartSliderLayer::translateIds(json_decode($slide['slide'], true)));
+        $slide['slide'] = N2Data::json_encode(N2SSSlideComponentLayer::translateIds(json_decode($slide['slide'], true)));
 
-        $slideId = $this->_create($slide['title'] . n2_(' - copy'), $slide['slide'], $slide['description'], $slide['thumbnail'], $slide['published'], $slide['publish_up'], $slide['publish_down'], 0, $slide['params'], $targetSliderId, $slide['ordering'], $slide['generator_id']);
+        $slideId = $this->_create($slide['title'], $slide['slide'], $slide['description'], $slide['thumbnail'], $slide['published'], $slide['publish_up'], $slide['publish_down'], 0, $slide['params'], $targetSliderId, $this->getMaximalOrderValue($targetSliderId), $slide['generator_id']);
         self::markChanged($slide['slider']);
 
         return $slideId;
@@ -625,7 +636,7 @@ class N2SmartsliderSlidesModel extends N2Model {
 
         $image = $slide->getThumbnail();
         if (empty($image)) {
-            $image = '$system$/images/placeholder/image.png';
+            $image = N2ImageHelper::fixed('$system$/images/placeholder/image.png');
         }
 
         $editUrl = $appType->router->createUrl(array(
@@ -686,8 +697,9 @@ class N2SmartsliderSlidesModel extends N2Model {
                 ), N2Html::link($slide->getTitle() . ($slide->hasGenerator() ? ' [' . $slide->getSlideStat() . ']' : ''), $editUrl, array('class' => 'n2-h4'))) . N2Html::tag('div', array(
                     'class' => 'n2-box-placeholder-buttons'
                 ), N2Html::tag('i', array('class' => 'n2-slide-first n2-i n2-it n2-i-star'), '') . N2Html::tag('a', array(
-                        'class' => 'n2-slide-published',
-                        'href'  => $appType->router->createUrl(array(
+                        'class'      => 'n2-slide-published',
+                        'data-n2tip' => 'Publish - Unpublish',
+                        'href'       => $appType->router->createUrl(array(
                             'slides/publish',
                             array(
                                 'sliderid' => $slider->sliderId,
@@ -697,5 +709,31 @@ class N2SmartsliderSlidesModel extends N2Model {
                     ), N2Html::tag('i', array('class' => 'n2-i n2-it n2-i-unpublished'), '')))
 
         ));
+    }
+
+    public static function prepareSample(&$layers) {
+        for ($i = 0; $i < count($layers); $i++) {
+
+            if (isset($layers[$i]['type'])) {
+                switch ($layers[$i]['type']) {
+                    case 'content':
+                        N2SSSlideComponentContent::prepareSample($layers[$i]);
+                        break;
+                    case 'row':
+                        N2SSSlideComponentRow::prepareSample($layers[$i]);
+                        break;
+                    case 'col':
+                        N2SSSlideComponentCol::prepareSample($layers[$i]);
+                        break;
+                    case 'group':
+                        N2SSSlideComponentGroup::prepareSample($layers[$i]);
+                        break;
+                    default:
+                        N2SSSlideComponentLayer::prepareSample($layers[$i]);
+                }
+            } else {
+                N2SSSlideComponentLayer::prepareSample($layers[$i]);
+            }
+        }
     }
 } 

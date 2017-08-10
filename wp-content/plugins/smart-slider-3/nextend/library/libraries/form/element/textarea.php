@@ -5,7 +5,7 @@ class N2ElementTextarea extends N2Element
 
     function fetchElement() {
 
-        N2JS::addInline('new NextendElementText("' . $this->_id . '");');
+        N2JS::addInline('new N2Classes.FormElementText("' . $this->_id . '");');
 
         return N2Html::tag('div', array(
             'class' => 'n2-form-element-textarea n2-border-radius',

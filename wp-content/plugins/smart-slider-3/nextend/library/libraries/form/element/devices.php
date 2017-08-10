@@ -12,7 +12,7 @@ class N2ElementDevices extends N2ElementHidden {
             'class' => 'n2-form-element-radio-tab n2-form-element-icon-radio'
         ), $this->generateOptions());
 
-        N2JS::addInline('new NextendElementDevices("' . $this->_id . '", ' . json_encode($this->values) . ');');
+        N2JS::addInline('new N2Classes.FormElementDevices("' . $this->_id . '", ' . json_encode($this->values) . ');');
 
         return $html;
     }

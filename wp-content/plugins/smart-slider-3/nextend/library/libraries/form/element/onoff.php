@@ -20,7 +20,7 @@ class N2ElementOnoff extends N2ElementHidden
         $html .= parent::fetchElement();
         $html .= "</div>";
 
-        N2JS::addInline('new NextendElementOnoff("' . $this->_id . '");');
+        N2JS::addInline('new N2Classes.FormElementOnoff("' . $this->_id . '");');
         return $html;
     }
 

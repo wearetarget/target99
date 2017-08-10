@@ -24,7 +24,7 @@ class N2ElementNumber extends N2ElementText {
             }
         }
 
-        N2JS::addInline('new NextendElementNumber("' . $this->_id . '", ' . $min . ', ' . $max . ', ' . json_encode($units) . ');');
+        N2JS::addInline('new N2Classes.FormElementNumber("' . $this->_id . '", ' . $min . ', ' . $max . ', ' . json_encode($units) . ');');
 
         $html = N2Html::openTag('div', array(
             'class' => 'n2-form-element-text ' . $this->getClass() . ($this->_xml->unit ? 'n2-text-has-unit ' : '') . 'n2-border-radius',

@@ -17,7 +17,7 @@ class N2ElementSubformImage extends N2ElementSubform
         }
 
         N2JS::addInline('
-        new NextendElementSubform(
+        new N2Classes.FormElementSubform(
                "' . $this->_id . '",
                "nextend-' . $this->_name . '-panel",
                "' . $this->_tab->_name . '",
@@ -25,7 +25,7 @@ class N2ElementSubformImage extends N2ElementSubform
             );
         ');
         N2JS::addInline('
-        new NextendElementSubformImage(
+        new N2Classes.FormElementSubformImage(
               "' . $this->_id . '",
               "' . $this->_id . '_options"
             );
