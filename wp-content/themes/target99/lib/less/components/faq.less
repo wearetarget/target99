@@ -2,12 +2,13 @@
 @import '../base/layout';
 
 .faq {
+  display: block;
 
   background-color: @background-color-4;
-  display: block;
   .faq__inner-container {
-    padding: 50px 0;
     position: relative;
+
+    padding: 50px 0;
   }
 
   .faq__title-container {
@@ -28,27 +29,29 @@
     text-transform: uppercase;
 
     color: @text-color-2;
-    @media @small-screen{
+    @media @small-screen {
       margin-bottom: 20px;
     }
   }
 
   .faq__form-container {
     width: 100%;
-    text-align: center;
     margin-bottom: -60px;
+
+    text-align: center;
   }
 
   .faq__button {
     width: 20%;
 
     @media @small-screen {
-        text-align: center;
-        width: 100%;
+      position: absolute;
+      bottom: 0;
+      left: 0;
 
-        position: absolute;
-        bottom: 0;
-        left: 0;
+      width: 100%;
+
+      text-align: center;
     }
   }
 
@@ -60,17 +63,20 @@
 
     @media @small-screen {
       position: absolute;
-      width: 100%;
       bottom: 0;
       left: 0;
+
+      width: 100%;
     }
   }
 
-  .faq__forms{
-    align-content: center;
+  .faq__forms {
     display: table;
-    margin: 0 auto;
     clear: both;
+
+    margin: 0 auto;
+
+    align-content: center;
 
     @media @small-screen {
       width: 100%;
@@ -79,14 +85,15 @@
 
   .faq__half__input {
     display: inline-block;
+    float: left;
+
     width: 49%;
     height: 54px;
     margin: 20px 0;
-    float: left;
     @media @small-screen {
       margin-top: 0;
     }
-    &:nth-child(2n+1){
+    &:nth-child(2n+1) {
       float: right;
       @media @small-screen {
         float: none;
@@ -98,12 +105,12 @@
 
   .faq__input {
     box-sizing: border-box;
+    padding-top: 5px;
+    padding-left: 20px;
+
     font-family: @main-control-font;
     font-size: 14px;
     font-weight: bold;
-
-    padding-left: 20px;
-    padding-top: 5px;
 
     color: @text-color-1;
     border: 1px solid @text-color-2;
@@ -137,24 +144,25 @@
     }
 
     @media @small-screen {
+      float: none;
+
       width: 80%;
       padding-bottom: 20px;
-      float: none;
     }
   }
 
   .faq__full__input {
-    height: 108px;
     width: 100%;
-    padding-top: 15px;
+    height: 108px;
     margin-bottom: 40px;
+    padding-top: 15px;
     @media @small-screen {
-      width: 80%;
-      padding-bottom: 20px;
       float: none;
-      margin-bottom: 65px;
-    }
 
+      width: 80%;
+      margin-bottom: 65px;
+      padding-bottom: 20px;
+    }
   }
 
   @media @small-screen {

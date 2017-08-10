@@ -4,19 +4,7 @@
     Template Name: Faq
 */
 
-//// Post query arguments
-//$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
-//$post_args = [
-//    'post_status' => array('publish'),
-//    'posts_per_page' => 10,
-//    'post_type' => array('post'),
-//    'order' => 'DSC',
-//    'orderby' => 'date',
-//    'paged' => $paged
-//];
-//
-//$the_query = new WP_Query($post_args);
-
+the_post();
 get_header();
 ?>
 
@@ -25,9 +13,11 @@ get_header();
 <section class="faq-info">
     <div class="faq-info__inner-container layout__service">
         <div class="faq-info__title-container">
-            <h2 class="faq-info__title">Вопросы и ответы</h2>
+            <h2 class="faq-info__title"><?php echo get_the_title(); ?></h2>
         </div>
-        <?php echo do_shortcode("[accordions id=\"76\"]"); ?>
+        <div class="faq-info__content">
+            <?php echo do_shortcode("[accordions id=\"76\"]"); ?>
+        </div>
     </div>
 </section>
 
