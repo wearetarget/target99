@@ -25,36 +25,36 @@
 	window.target99.activePromoPreviewId = null;
 
 	function previewPromo(id){
-		var promoToPreview = $('#promo__image--' + id);
+		var promoToPreview = jQuery('#promo__image--' + id);
 		var promoContainer = promoToPreview.parent();
         var previewImgSrc = promoToPreview.get(0).src;
-        var tipElement = $('#promo-preview__tip').get(0);
+        var tipElement = jQuery('#promo-preview__tip').get(0);
         var fileUrl = promoContainer.get(0).dataset.fileUrl;
 
 		if (window.target99.activePromoPreviewId !== id) {
-            $('#promo-preview__download').get(0).href = fileUrl;
-            $('#promo-preview__controls-container').show();
+            jQuery('#promo-preview__download').get(0).href = fileUrl;
+            jQuery('#promo-preview__controls-container').show();
 
             if (previewImgSrc !== window.location.href ) {
-                $('#promo-preview__tip-container').hide();
-                $('#promo-preview__image').get(0).src = previewImgSrc;
-                $('#promo-preview__image-container').show();
+                jQuery('#promo-preview__tip-container').hide();
+                jQuery('#promo-preview__image').get(0).src = previewImgSrc;
+                jQuery('#promo-preview__image-container').show();
             } else {
-                $('#promo-preview__image-container').hide();
-                $('#promo-preview__tip-container').show();
+                jQuery('#promo-preview__image-container').hide();
+                jQuery('#promo-preview__tip-container').show();
                 tipElement.innerHTML = "Предпросмотр недоступен.";
             }
 
 			window.target99.activePromoPreviewId = id;
-			$('#promo-page .promo').removeClass('promo--active');
+            jQuery('#promo-page .promo').removeClass('promo--active');
 			promoContainer.addClass('promo--active');
 
 		} else {
-			$('#promo-preview__image-container').hide();
-            $('#promo-preview__controls-container').hide();
+            jQuery('#promo-preview__image-container').hide();
+            jQuery('#promo-preview__controls-container').hide();
 
-            $('#promo-preview__tip-container').show();
-			$('#promo-preview__image').get(0).src = null;
+            jQuery('#promo-preview__tip-container').show();
+            jQuery('#promo-preview__image').get(0).src = null;
             tipElement.innerHTML = "Выберите один из промо файлов.";
 
 			promoContainer.removeClass('promo--active');
