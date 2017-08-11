@@ -17,12 +17,12 @@ get_header();
 ?>
 
 
-<section class="faq-info">
-    <div class="faq-info__inner-container layout__content">
-        <div class="faq-info__title-container">
-            <h2 class="faq-info__title"><?php echo get_the_title(); ?></h2>
+<section class="faq-panel">
+    <div class="faq-panel__inner-container layout__content">
+        <div class="faq-panel__title-container">
+            <h2 class="faq-panel__title"><?php echo get_the_title(); ?></h2>
         </div>
-        <div class="faq-info__content">
+        <div class="faq-panel__content">
             <div id="faq-accordion" class="faq-accordion">
                 <?php
                 if ($the_query->have_posts()) {

@@ -4,7 +4,7 @@ html,
 body {
   height: 100%;
 
-  background: @border-color-1;
+  background: @dark-gray-3;
 }
 
 .layout {
@@ -17,29 +17,29 @@ body {
   min-height: 100%;
   margin: 0 auto;
   padding-bottom: 220px;
-}
 
-.layout__service {
-  box-sizing: border-box;
-  margin: 0 auto;
+  .layout__service {
+    box-sizing: border-box;
+    margin: 0 auto;
 
-  @media @small-screen, @medium-screen {
-    min-width: @mobile-min-width;
-  }
-}
-
-.layout__content {
-  box-sizing: border-box;
-  margin: 0 auto;
-  padding: 90px 20px 70px;
-
-  @media @medium-screen, @large-screen, @xl-screen {
-    max-width: @large-content-layout-width;
+    @media @small-screen, @medium-screen {
+      min-width: @mobile-min-width;
+    }
   }
 
-  @media @small-screen {
-    min-width: @mobile-min-width;
-    padding-bottom: 90px;
+  .layout__content {
+    box-sizing: border-box;
+    margin: 0 auto;
+    padding: 90px 20px 70px;
+
+    @media @medium-screen, @large-screen, @xl-screen {
+      max-width: @large-content-layout-width;
+    }
+
+    @media @small-screen {
+      min-width: @mobile-min-width;
+      padding-bottom: 90px;
+    }
   }
 }
 

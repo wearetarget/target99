@@ -1,49 +1,6 @@
 @import '../base/variables';
 @import '../base/layout';
 
-.waste-info {
-  background-color: @background-color-3;
-
-  .waste-info__title-container {
-    padding-bottom: 50px;
-
-    text-align: right;
-
-    @media @small-screen {
-      text-align: center;
-    }
-  }
-
-  .waste-info__title {
-    display: inline-block;
-
-    min-width: 210px;
-    padding-bottom: 12px;
-
-    font-family: @main-control-font;
-    font-size: 24px;
-
-    text-transform: uppercase;
-
-    color: @text-color-1;
-    border-bottom: 1px solid @text-color-1;
-  }
-
-  .waste-info__tiles-list {
-    display: flex;
-
-    align-items: stretch;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .waste-info__tile {
-    display: inline-block;
-
-    padding: 8px;
-  }
-}
-
 .waste-info-tile {
   position: relative;
 
@@ -55,7 +12,7 @@
 
   &:hover {
     .waste-info-tile__content {
-      background-color: @background-color-2;
+      background-color: @turquoise-2;
 
        > .waste-info-tile__title-container {
         padding-top: 0;
@@ -90,13 +47,11 @@
   }
 
   .waste-info-tile__title {
-    font-family: @main-control-font;
-    font-size: 22px;
     font-weight: bold;
 
     text-transform: uppercase;
 
-    color: @text-color-3;
+    color: @yellow-1;
   }
 
   .waste-info-tile__text-container {
@@ -106,11 +61,8 @@
   }
 
   .waste-info-tile__text {
-    font-size: 14px;
-    line-height: 18px;
-
     text-align: justify;
 
-    color: @text-color-2;
+    color: @white-1;
   }
 }

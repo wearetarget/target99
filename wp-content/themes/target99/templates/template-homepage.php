@@ -80,19 +80,19 @@ get_header();
 </section>
 
 <?php if ($waste_info_query->have_posts()) : ?>
-    <section class="waste-info">
-        <div class="waste-info__inner-container layout__content">
-            <div class="waste-info__title-container">
-                <h2 class="waste-info__title">Информация об отходах</h2>
+    <section class="waste-info-panel">
+        <div class="waste-info-panel__inner-container layout__content">
+            <div class="waste-info-panel__title-container">
+                <h2 class="waste-info-panel__title">Информация об отходах</h2>
             </div>
 
-            <div class="waste-info__tiles-list">
+            <div class="waste-info-panel__tiles-list">
                 <?php
                 while ($waste_info_query->have_posts()) {
                     $waste_info_query->the_post();
                     $waste_info_background = wp_get_attachment_image_src(get_post_thumbnail_id(), 'full')[0];
 
-                    echo '<div class="waste-info__tile">';
+                    echo '<div class="waste-info-panel__tile">';
                     include('template-parts/template-part-waste-info.php');
                     echo '</div>';
 
@@ -133,26 +133,29 @@ get_header();
 <?php endif; ?>
 
 <?php if ($events_query->have_posts()) : ?>
-    <section class="events">
-        <div class="events__inner-container layout__content">
-            <div class="events__title-container">
-                <h2 class="events__title">Актуально</h2>
+    <section class="event-panel">
+        <div class="event-panel__inner-container layout__content">
+            <div class="event-panel__title-container">
+                <h2 class="event-panel__title">Актуально</h2>
             </div>
 
-            <div class="event__list">
+            <div class="event-panel__list">
                 <?php
                 while ($events_query->have_posts()) {
                     $events_query->the_post();
                     $event_background = wp_get_attachment_image_src(get_post_thumbnail_id(), 'medium')[0];
 
+                    echo '<div class="event-panel__list-item">';
                     include('template-parts/template-part-event-short.php');
+
+                    echo '</div>';
                 }
 
                 wp_reset_postdata();
                 ?>
             </div>
 
-            <div class="events__footer">
+            <div class="event-panel__footer">
                 <a href="/category/event/"><span class="button button--warning button--mobile-full">Смотреть все мероприятия</span></a>
             </div>
         </div>
@@ -160,17 +163,19 @@ get_header();
 <?php endif; ?>
 
 <?php if ($achievements_query->have_posts()) : ?>
-    <section class="achievements">
-        <div class="achievements__inner-container layout__content">
-            <div class="achievements__title-container">
-                <h2 class="achievements__title">Достижения</h2>
+    <section class="achievements-panel">
+        <div class="achievements-panel__inner-container layout__content">
+            <div class="achievements-panel__title-container">
+                <h2 class="achievements-panel__title">Достижения</h2>
             </div>
-            <div class="achievements__list">
+            <div class="achievements-panel__list">
                 <?php
                 while ($achievements_query->have_posts()) {
                     $achievements_query->the_post();
 
+                    echo '<div class="achievements-panel__list-item">';
                     include('template-parts/template-part-achievement.php');
+                    echo '</div>';
                 }
 
                 wp_reset_postdata();
@@ -223,10 +228,10 @@ get_header();
     </div>
 </section>
 
-<section class="contact">
-    <div class="contact__inner-container">
+<section class="contact-panel">
+    <div class="contact-panel__inner-container">
         <?php echo do_shortcode('[google_map_easy id="1"]') ?>
-        <div class="contact__panel">
+        <div class="contact-panel__card-container">
             <div class="contact-info">
                 <?php echo get_theme_mod('target99_contact_info'); ?>
             </div>

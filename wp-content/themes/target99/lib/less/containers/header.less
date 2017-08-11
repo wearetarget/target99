@@ -1,10 +1,13 @@
 @import '../base/variables';
 @import '../base/layout';
+@import '../mixins/layout';
 
 .header {
-  background-color: @background-color-1;
+  background-color: @dark-gray-2;
 
   .header__inner-container {
+    .clearfix();
+
     margin: 0 auto;
     padding: 10px 50px;
 
@@ -14,13 +17,6 @@
 
     @media @small-screen {
       padding: 10px;
-    }
-
-    &:after {
-      display: table;
-      clear: both;
-
-      content: '';
     }
   }
 
@@ -120,9 +116,7 @@
 
     padding-bottom: 10px;
 
-    font-family: @main-control-font;
-
-    color: @text-color-2;
+    color: @white-1;
 
     &.header__logo-text--primary {
       font-size: 18px;

@@ -1,0 +1,43 @@
+@import '../base/variables';
+@import '../base/layout';
+
+.achievements-panel {
+  background-color: @turquoise-3;
+
+  .achievements-panel__title-container {
+    padding-bottom: 50px;
+
+    text-align: left;
+
+    @media @small-screen {
+      text-align: center;
+    }
+  }
+
+  .achievements-panel__title {
+    display: inline-block;
+
+    min-width: 200px;
+    padding-bottom: 12px;
+
+    text-transform: uppercase;
+
+    color: @dark-gray-1;
+    border-bottom: 1px solid @dark-gray-1;
+  }
+
+  .achievements-panel__list {
+    display: flex;
+
+    align-items: stretch;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .achievements-panel__list-item {
+    display: block;
+
+    box-sizing: border-box;
+    padding: 10px;
+  }
+}

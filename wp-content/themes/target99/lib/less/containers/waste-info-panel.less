@@ -1,0 +1,42 @@
+@import '../base/variables';
+@import '../base/layout';
+
+.waste-info-panel {
+  background-color: @light-gray-1;
+
+  .waste-info-panel__title-container {
+    padding-bottom: 50px;
+
+    text-align: right;
+
+    @media @small-screen {
+      text-align: center;
+    }
+  }
+
+  .waste-info-panel__title {
+    display: inline-block;
+
+    min-width: 210px;
+    padding-bottom: 12px;
+
+    text-transform: uppercase;
+
+    color: @dark-gray-1;
+    border-bottom: 1px solid @dark-gray-1;
+  }
+
+  .waste-info-panel__tiles-list {
+    display: flex;
+
+    align-items: stretch;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .waste-info-panel__tile {
+    display: inline-block;
+
+    padding: 8px;
+  }
+}

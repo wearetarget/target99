@@ -2,20 +2,14 @@
 @import '../base/layout';
 
 .post-page {
-  background-color: @background-color-3;
+  background-color: @light-gray-1;
 
   .post-page__inner-container {
+    .clearfix();
+
     width: 85%;
     padding-top: 50px;
     padding-bottom: 50px;
-
-    &:after {
-      display: table;
-      visibility: hidden;
-      clear: both;
-
-      content: '';
-    }
 
     @media @medium-screen, @small-screen {
       width: 98%;

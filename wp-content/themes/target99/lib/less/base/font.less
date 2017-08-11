@@ -1,5 +1,47 @@
 @import 'variables';
+@import '../mixins/fonts';
 
 body {
   font-family: @main-control-font;
+}
+
+h1 {
+  .makeFontsResponsive(@h1-size, @h2-size, @h3-size);
+}
+
+h2 {
+  .makeFontsResponsive(@h2-size, @h3-size, @h4-size);
+}
+
+h3 {
+  .makeFontsResponsive(@h3-size, @h4-size, @normal-font-size);
+}
+
+p {
+  .makeFontsResponsive(@normal-font-size, @tablet-font-size, @mobile-font-size);
+
+  color: @dark-gray-1;
+}
+
+span {
+  .makeFontsResponsive(@normal-font-size, @tablet-font-size, @mobile-font-size);
+}
+
+ul,
+ol {
+  .makeFontsResponsive(@normal-font-size, @tablet-font-size, @mobile-font-size);
+
+  color: @dark-gray-1;
+}
+
+a {
+  .makeFontsResponsive(@normal-font-size, @tablet-font-size, @mobile-font-size);
+
+  text-decoration: none;
+
+  color: @yellow-1;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }

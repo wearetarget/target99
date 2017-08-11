@@ -1,3 +1,4 @@
+@import '../mixins/fonts';
 @import '../base/variables';
 @import '../base/layout';
 
@@ -24,13 +25,10 @@
 
     min-width: 210px;
 
-    font-family: @main-control-font;
-    font-size: 24px;
-
     text-transform: uppercase;
 
-    color: @text-color-3;
-    border-bottom: 1px solid @text-color-1;
+    color: @yellow-1;
+    border-bottom: 1px solid @dark-gray-1;
   }
 
   .about-us__content {
@@ -39,37 +37,28 @@
     h1 {
       display: block;
 
-      font-family: @main-control-font;
-      font-size: 30px;
-
       text-align: center;
       text-transform: uppercase;
 
-      color: @text-color-4;
+      color: @turquoise-1;
     }
 
     h2 {
       display: block;
 
-      font-family: @main-control-font;
-      font-size: 24px;
-
       text-align: center;
       text-transform: uppercase;
 
-      color: @text-color-4;
+      color: @turquoise-1;
     }
 
     h3 {
       display: block;
 
-      font-family: @main-control-font;
-      font-size: 20px;
-
       text-align: center;
       text-transform: uppercase;
 
-      color: @text-color-4;
+      color: @turquoise-1;
     }
 
     p {
@@ -78,8 +67,6 @@
       box-sizing: border-box;
       margin: 20px auto;
       padding: 0 20px;
-
-      font-size: 18px;
 
       text-align: justify;
 
@@ -90,8 +77,6 @@
       @media @small-screen {
         min-width: @mobile-min-width;
         padding: 20px;
-
-        font-size: 14px;
       }
     }
 

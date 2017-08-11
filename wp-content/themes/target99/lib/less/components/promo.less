@@ -7,7 +7,7 @@
   width: 100%;
   min-height: 110px;
 
-  background: @border-color-1;
+  background: @dark-gray-3;
 
   [id*='promo__image--'] {
     display: none;
@@ -24,24 +24,18 @@
   }
 
   .promo__title {
-    font-family: @main-control-font;
-    font-size: 18px;
     font-weight: bold;
 
-    color: @text-color-2;
-
-    @media @medium-screen, @small-screen {
-      font-size: 16px;
-    }
+    color: @white-1;
   }
 
   &:hover {
     cursor: pointer;
 
-    background: @text-color-3;
+    background: @yellow-1;
   }
 
   &.promo--active {
-    background: @text-color-3;
+    background: @yellow-1;
   }
 }

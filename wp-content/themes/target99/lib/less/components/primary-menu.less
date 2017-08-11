@@ -37,7 +37,7 @@
   }
 
   .menu-item {
-    .indicator(@background-color-1, 2px solid white);
+    .indicator(@dark-gray-2, 2px solid white);
 
     position: relative;
 
@@ -50,11 +50,11 @@
     border-bottom: 1px solid white;
 
     &:hover {
-      .indicator(@border-color-1, 1px solid white);
+      .indicator(@dark-gray-3, 1px solid white);
     }
 
     &.current-menu-item {
-      .indicator(@text-color-3, 2px solid @text-color-3);
+      .indicator(@yellow-1, 2px solid @yellow-1);
     }
 
     a {
@@ -65,20 +65,11 @@
       height: 100%;
       padding: 10px;
 
-      font-family: @main-control-font;
-      font-size: 14px;
-
       vertical-align: middle;
       text-decoration: none;
       text-transform: uppercase;
 
-      color: @text-color-2;
-    }
-
-    @media @xl-screen {
-      a {
-        font-size: 18px;
-      }
+      color: @white-1;
     }
 
     @media @large-screen, @xl-screen {
@@ -108,8 +99,6 @@
 
     padding: 15px;
 
-    font-family: @main-control-font;
-    font-size: 14px;
     font-weight: normal;
 
     cursor: pointer;

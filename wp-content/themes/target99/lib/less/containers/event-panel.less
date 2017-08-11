@@ -1,0 +1,67 @@
+@import '../base/variables';
+@import '../base/layout';
+
+.event-panel {
+  position: relative;
+
+  background-color: @light-gray-1;
+
+  .event-panel__title-container {
+    padding-bottom: 50px;
+
+    text-align: left;
+
+    @media @small-screen {
+      text-align: center;
+    }
+  }
+
+  .event-panel__title {
+    display: inline-block;
+
+    min-width: 210px;
+    padding-bottom: 12px;
+
+    text-transform: uppercase;
+
+    color: @dark-gray-1;
+    border-bottom: 1px solid @dark-gray-1;
+  }
+
+  .event-panel__list {
+    display: block;
+
+    margin: 0 auto;
+    padding-bottom: 40px;
+
+    font-size: 0;
+
+    text-align: center;
+    letter-spacing: 20px;
+  }
+
+  .event-panel__list-item {
+    display: inline-block;
+
+    box-sizing: border-box;
+    padding: 20px;
+
+    letter-spacing: normal;
+
+    @media @small-screen {
+      display: block;
+    }
+  }
+
+  .event-panel__footer {
+    text-align: center;
+
+    @media @small-screen {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+
+      width: 100%;
+    }
+  }
+}

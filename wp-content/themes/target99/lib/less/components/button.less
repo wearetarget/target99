@@ -5,33 +5,32 @@
 
   padding: 20px 50px;
 
-  font-family: @main-control-font;
   font-size: 14px;
   font-weight: bold;
 
   cursor: pointer;
   text-transform: uppercase;
 
-  color: @text-color-1;
-  border: 1px solid @text-color-1;
+  color: @dark-gray-1;
+  border: 1px solid @dark-gray-1;
 
   &.button--dark {
-    color: @text-color-1;
-    border: 3px solid @background-color-1;
+    color: @dark-gray-1;
+    border: 3px solid @dark-gray-2;
   }
 
   &.button--light {
-    color: @text-color-2;
-    border: 3px solid @text-color-2;
+    color: @white-1;
+    border: 3px solid @white-1;
   }
 
   &.button--warning {
     color: white;
     border: 0;
-    background-color: @text-color-3;
+    background-color: @yellow-1;
 
     &:hover {
-      background-color: lighten(@text-color-3, 10%);
+      background-color: lighten(@yellow-1, 10%);
     }
   }
 

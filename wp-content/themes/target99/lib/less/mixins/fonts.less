@@ -1,0 +1,14 @@
+@import '../base/variables';
+
+
+.makeFontsResponsive(@normal-font-size, @tablet-font-size, @mobile-font-size) {
+  font-size: @normal-font-size;
+
+  @media @medium-screen {
+    font-size: @tablet-font-size;
+  }
+
+  @media @small-screen {
+    font-size: @mobile-font-size;
+  }
+}
