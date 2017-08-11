@@ -792,14 +792,43 @@ body {
   color: #fbbc2d;
   border-bottom: 1px solid #1f1f1f;
 }
-[id^='accordions'] {
-  margin: 0 40px;
-}
-[id^='accordions'] p {
+.faq-accordion .faq-accordion__button {
+  position: relative;
+  margin-bottom: 15px;
+  padding: 15px 30px;
+  font-family: 'PT Sans', sans-serif;
+  font-size: 16px;
   font-weight: bold;
+  cursor: pointer;
+  text-align: left;
+  text-transform: uppercase;
+  color: white;
+  background: #434343;
 }
-.ui-accordion-content-active {
-  height: auto !important;
+.faq-accordion .faq-accordion__button .faq-accordion__active-indicator .fa-chevron-up {
+  display: none;
+}
+.faq-accordion .faq-accordion__button.faq-accordion__button--active {
+  margin-bottom: 0;
+  background: rgba(0, 171, 143, 0.7);
+}
+.faq-accordion .faq-accordion__button.faq-accordion__button--active .faq-accordion__active-indicator .fa-chevron-down {
+  display: none;
+}
+.faq-accordion .faq-accordion__button.faq-accordion__button--active .faq-accordion__active-indicator .fa-chevron-up {
+  display: inline-block;
+}
+.faq-accordion .faq-accordion__content {
+  display: none;
+  margin-bottom: 15px;
+  padding: 15px;
+  background: white;
+}
+.faq-accordion .fa {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 24px;
 }
 .footer {
   position: absolute;
@@ -1986,9 +2015,9 @@ body {
   }
 }
 .full-post .full-post__category {
+  text-decoration: none;
   text-transform: uppercase;
   color: #fbbc2d;
-  text-decoration: none;
 }
 .full-post .full-post__category:hover {
   text-decoration: underline;
@@ -2476,22 +2505,22 @@ body {
   position: relative;
 }
 .search-result .search-result__inner-container {
+  display: table;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  display: table;
   width: 100%;
 }
 .search-result .search-result__image-container {
+  display: table-cell;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  display: table-cell;
-  vertical-align: top;
   min-width: 200px;
+  vertical-align: top;
 }
 @media screen and (max-width: 599px) {
   .search-result .search-result__image-container {
-    width: 100%;
     display: table-row;
+    width: 100%;
     margin-bottom: 20px;
   }
 }
@@ -2508,27 +2537,27 @@ body {
   }
 }
 .search-result .search-result__content {
+  display: table-cell;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  display: table-cell;
-  vertical-align: top;
   width: 80%;
   padding-left: 20px;
+  vertical-align: top;
 }
 @media screen and (max-width: 599px) {
   .search-result .search-result__content {
-    width: 100%;
     display: table-row;
+    width: 100%;
   }
 }
 .search-result .search-result__title-container {
-  text-align: left;
   padding-bottom: 20px;
+  text-align: left;
 }
 @media screen and (max-width: 599px) {
   .search-result .search-result__title-container {
-    text-align: center;
     padding-top: 20px;
+    text-align: center;
   }
 }
 .search-result .search-result__title {

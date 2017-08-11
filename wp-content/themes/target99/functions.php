@@ -7,30 +7,18 @@
 // Below is the proper way to load Javascript and CSS files. Stop loading them in your header/footer files!
 function my_scripts_method()
 {
+    wp_enqueue_style('main-font', 'https://fonts.googleapis.com/css?family=PT+Sans:400,700');
     wp_enqueue_style('main-style', get_stylesheet_directory_uri() . '/css/main.min.css');
+    wp_enqueue_style('font-awesome', get_stylesheet_directory_uri() . '/css/fa/css/font-awesome.min.css');
+
+    wp_enqueue_script('jqueryUI', 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js', array('jquery'), '', false);
     wp_enqueue_script('main-script', get_stylesheet_directory_uri() . '/js/main.min.js', array('jquery'), '', true);
 }
 
 add_action('wp_enqueue_scripts', 'my_scripts_method');
 
-// ------
-// JQuery
-// ------
-
-// Force Wordpress to use the latest version of JQuery
-// if we're not logged in as an admin...
-// ...it seems like Wordpress is touchy about it's version of JQuery there.
-if( !is_admin() ){
-    function latest_jquery_method() {
-        wp_deregister_script('jquery');
-        wp_register_script('jquery', ("https://code.jquery.com/jquery-3.2.1.min.js"), '', true);
-        wp_enqueue_script('jquery');
-    }
-
-    add_action( 'wp_enqueue_scripts', 'latest_jquery_method' );
-}
-
 add_action('get_header', 'remove_admin_login_header');
+
 function remove_admin_login_header() {
     remove_action('wp_head', '_admin_bar_bump_cb');
 }
@@ -139,6 +127,22 @@ function create_post_types()
                 'title',
                 'thumbnail'
              )
+    ));
+
+    register_post_type('faq', array(
+        'labels' => array(
+            'name' => __('Часто задаваемые вопросы'),
+            'singular_name' => __('Вопрос')
+        ),
+        'description' => 'FAQ вопросы в аккордионе.',
+        'exclude_from_search' => true,
+        'publicly_queryable' => false,
+        'show_ui' => true,
+        'show_in_admin_bar' => true,
+        'supports' => array(
+            'title',
+            'editor'
+        )
     ));
 }
 

@@ -1,10 +1,6 @@
 <?php
-    $achievements_image_url = wp_get_attachment_image_src(get_post_thumbnail_id(), 'thumbnail')[0];
-
-    if (!$achievements_image_url){
-        $selected_icon = get_field('achievement_icon');
-        $achievements_image_url = get_bloginfo('template_url') . '/images/' . $selected_icon . '.png';
-    }
+    $selected_icon = get_field('achievement_icon');
+    $achievements_image_url = get_bloginfo('template_url') . '/images/' . $selected_icon . '.png';
 ?>
 
 <div class="achievement">

@@ -1,0 +1,57 @@
+@import '../base/variables';
+@import '../base/layout';
+
+.faq-accordion {
+  .faq-accordion__button {
+    position: relative;
+
+    margin-bottom: 15px;
+    padding: 15px 30px;
+
+    font-family: @main-control-font;
+    font-size: 16px;
+    font-weight: bold;
+
+    cursor: pointer;
+    text-align: left;
+    text-transform: uppercase;
+
+    color: white;
+    background: @border-color-1;
+
+    .faq-accordion__active-indicator .fa-chevron-up {
+      display: none;
+    }
+
+    &.faq-accordion__button--active {
+      margin-bottom: 0;
+
+      background: @background-color-2;
+
+      .faq-accordion__active-indicator .fa-chevron-down {
+        display: none;
+      }
+
+      .faq-accordion__active-indicator .fa-chevron-up {
+        display: inline-block;
+      }
+    }
+  }
+
+  .faq-accordion__content {
+    display: none;
+
+    margin-bottom: 15px;
+    padding: 15px;
+
+    background: white;
+  }
+
+  .fa {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+
+    font-size: 24px;
+  }
+}

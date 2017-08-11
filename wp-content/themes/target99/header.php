@@ -9,20 +9,9 @@ $navigation_menu_args = array(
 <head>
     <meta charset="<?php bloginfo('charset'); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <title><?php wp_title('|', true, 'right'); ?></title>
-    <link href="https://fonts.googleapis.com/css?family=PT+Sans:400,700" rel="stylesheet"/>
-    <link rel="stylesheet" href="<?php bloginfo('template_url'); ?>/css/fa/css/font-awesome.min.css">
 
     <?php wp_head(); ?>
-    <?php wp_enqueue_script('jqueryUI', 'https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js', 'jquery'); ?>
-
-    <script
-            src="https://code.jquery.com/jquery-migrate-3.0.0.min.js"
-            integrity="sha256-JklDYODbg0X+8sPiKkcFURb5z7RvlNMIaE3RA2z97vw="
-            crossorigin="anonymous">
-    </script>
-
 </head>
 <body <?php body_class(); ?>>
 <div class="layout">
@@ -57,24 +46,8 @@ $navigation_menu_args = array(
 
 
             <div class="header__menu-container">
-                <script>
-                    $( function() {
-                        var icons = {
-                            header: "fa fa-bars",
-                            activeHeader: "fa fa-minus"
-                        };
-                        $( ".mobile-menu" ).accordion({
-                            icons: icons,
-                            collapsible: true,
-                            autoHeight: false,
-                            active: false,
-                            heightStyle: "content"
-                        });
-                    } );
-                </script>
-
                 <div class="visibility-layout visibility-layout--mobile">
-                    <div class="mobile-menu">
+                    <div id="mobile-menu" class="mobile-menu">
                         <h3 class="mobile-menu__main-button">Меню</h3>
                         <div class="mobile-menu__inner-container">
                             <?php wp_nav_menu($navigation_menu_args); ?>
@@ -85,6 +58,21 @@ $navigation_menu_args = array(
                 <div class="visibility-layout visibility-layout--desktop visibility-layout--tablet">
                     <?php wp_nav_menu($navigation_menu_args); ?>
                 </div>
+
+                <script>
+                    jQuery(document).ready( function() {
+                        jQuery( "#mobile-menu" ).accordion({
+                            icons: {
+                                header: "fa fa-bars",
+                                activeHeader: "fa fa-minus"
+                            },
+                            collapsible: true,
+                            animate: 0,
+                            active: false,
+                            heightStyle: "content"
+                        });
+                    } );
+                </script>
             </div>
         </div>
     </header>
