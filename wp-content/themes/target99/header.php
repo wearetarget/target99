@@ -15,7 +15,7 @@ $navigation_menu_args = array(
     <link rel="stylesheet" href="<?php bloginfo('template_url'); ?>/css/fa/css/font-awesome.min.css">
 
     <?php wp_head(); ?>
-    <?php wp_enqueue_script('jqueryUI', 'https://code.jquery.com/ui/1.12.1/jquery-ui.min.js', 'jquery'); ?>
+    <?php wp_enqueue_script('jqueryUI', 'https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js', 'jquery'); ?>
 
     <script
             src="https://code.jquery.com/jquery-migrate-3.0.0.min.js"

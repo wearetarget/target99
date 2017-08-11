@@ -14,7 +14,7 @@
                 <div class="full-post__headline">
                     <div class="full-post__category-container">
                         <span class="full-post__category--prefix">Target99 / </span>
-                        <span class="full-post__category"><?php echo $category->cat_name; ?></span>
+                        <a class="full-post__category" href="<?php echo get_category_link($category->cat_ID); ?>"><?php echo $category->cat_name; ?></a>
                     </div>
                     <img src="<?php echo $post_image_url; ?>" class="full-post__featured-image"/>
 

@@ -1,0 +1,41 @@
+@import '../base/variables';
+@import '../base/layout';
+
+.archive-page {
+  min-height: 60vh;
+
+  background-color: @background-color-3;
+
+  .archive-page__title-container {
+    width: 100%;
+    padding: 5px 5px 50px 5px;
+
+    text-align: center;
+  }
+
+  .archive-page__title {
+    display: inline-block;
+
+    font-family: @main-control-font;
+    font-size: 24px;
+
+    text-transform: uppercase;
+
+    color: @text-color-3;
+    border-bottom: 1px solid @border-color-2;
+  }
+
+  .archive-page__posts-list {
+    display: block;
+
+  }
+
+  .archive-page__post {
+    display: block;
+    padding-bottom: 30px;
+  }
+
+  .archive-page__pagination-container {
+    text-align: center;
+  }
+}
