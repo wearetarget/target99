@@ -491,19 +491,44 @@ a:hover {
     width: 100%;
   }
 }
-.faq .faq__forms {
-  display: table;
+.faq .faq__form {
   clear: both;
+  display: table;
   margin: 0 auto;
   -ms-flex-line-pack: center;
   align-content: center;
 }
 @media screen and (max-width: 599px) {
-  .faq .faq__forms {
+  .faq .faq__form {
     width: 100%;
   }
 }
-.faq .faq__half__input {
+.faq .faq__input-container {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+@media screen and (max-width: 599px) {
+  .faq .faq__input-container {
+    float: none;
+    width: 80%;
+    padding-bottom: 20px;
+  }
+}
+.faq .faq__input-container.faq__input-container--full {
+  width: 100%;
+  height: 108px;
+  margin-bottom: 40px;
+  padding-top: 15px;
+}
+@media screen and (max-width: 599px) {
+  .faq .faq__input-container.faq__input-container--full {
+    float: none;
+    width: 80%;
+    margin-bottom: 65px;
+    padding-bottom: 20px;
+  }
+}
+.faq .faq__input-container.faq__input-container--half {
   display: inline-block;
   float: left;
   width: 49%;
@@ -511,70 +536,56 @@ a:hover {
   margin: 20px 0;
 }
 @media screen and (max-width: 599px) {
-  .faq .faq__half__input {
+  .faq .faq__input-container.faq__input-container--half {
     margin-top: 0;
   }
 }
-.faq .faq__half__input:nth-child(2n+1) {
+.faq .faq__input-container.faq__input-container--half:nth-child(2n+1) {
   float: right;
 }
 @media screen and (max-width: 599px) {
-  .faq .faq__half__input:nth-child(2n+1) {
+  .faq .faq__input-container.faq__input-container--half:nth-child(2n+1) {
     float: none;
   }
 }
-.faq .faq__input {
+.faq .faq__input-container input,
+.faq .faq__input-container textarea {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  padding-top: 5px;
-  padding-left: 20px;
   font-size: 14px;
+  font-family: 'PT Sans', sans-serif;
   font-weight: bold;
+  padding-top: 5px;
+  padding-left: 10px;
   color: #1f1f1f;
   border: 1px solid white;
   background-color: white;
   /* Firefox 19+ */
   /* Firefox 18- */
 }
-.faq .faq__input:focus {
+.faq .faq__input-container input:focus,
+.faq .faq__input-container textarea:focus {
   outline-width: 0;
 }
-.faq .faq__input::-webkit-input-placeholder {
+.faq .faq__input-container input::-webkit-input-placeholder,
+.faq .faq__input-container textarea::-webkit-input-placeholder {
   text-transform: uppercase;
   color: #1f1f1f;
 }
-.faq .faq__input::-moz-placeholder {
+.faq .faq__input-container input::-moz-placeholder,
+.faq .faq__input-container textarea::-moz-placeholder {
   text-transform: uppercase;
   color: #1f1f1f;
 }
-.faq .faq__input:-moz-placeholder {
+.faq .faq__input-container input:-moz-placeholder,
+.faq .faq__input-container textarea:-moz-placeholder {
   text-transform: uppercase;
   color: #1f1f1f;
 }
-.faq .faq__input:-ms-input-placeholder {
+.faq .faq__input-container input:-ms-input-placeholder,
+.faq .faq__input-container textarea:-ms-input-placeholder {
   text-transform: uppercase;
   color: #1f1f1f;
-}
-@media screen and (max-width: 599px) {
-  .faq .faq__input {
-    float: none;
-    width: 80%;
-    padding-bottom: 20px;
-  }
-}
-.faq .faq__full__input {
-  width: 100%;
-  height: 108px;
-  margin-bottom: 40px;
-  padding-top: 15px;
-}
-@media screen and (max-width: 599px) {
-  .faq .faq__full__input {
-    float: none;
-    width: 80%;
-    margin-bottom: 65px;
-    padding-bottom: 20px;
-  }
 }
 @media screen and (max-width: 599px) {
   .faq {

@@ -66,13 +66,7 @@ get_header();
             <h2 class="faq__title">
                 ЗАДАТЬ ВОПРОС, НАПИСАТЬ СООБЩЕНИЕ
             </h2>
-            <div class="faq__forms">
-                <input type="text" class="faq__input faq__half__input" placeholder="ИМЯ ФАМИЛИЯ" name="full_name">
-                <input type="text" class="faq__input faq__half__input" placeholder="EMAIL" name="email">
-                <textarea type="text" class="faq__input faq__full__input" placeholder="ВОПРОС"
-                          name="question"></textarea>
-                <span class="button button--warning button--mobile-full faq__button">Отправить</span>
-            </div>
+            <?php echo do_shortcode('[contact-form-7 id="119" title="Contact form"]'); ?>
         </div>
     </div>
 </section>
