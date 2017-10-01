@@ -15,6 +15,19 @@
 
   .footer__inner-container {
     position: relative;
+    display: flex;
+    flex-flow: row nowrap;
+
+    .footer__item {
+      flex-basis: 33%;
+    }
+
+    @media @small-screen {
+      flex-flow: column nowrap;
+      .footer__contact-container {
+        align-items: center;
+      }
+    }
 
     &:after {
       display: table;
@@ -23,12 +36,39 @@
 
       content: '';
     }
+
+    .footer__contact-container {
+      display: flex;
+      flex-flow: column nowrap;
+
+      // align-items: center;
+      padding-left: 30px;
+
+      .footer__link-to-map {
+        &:hover {
+          text-decoration: none;
+        }
+      }
+
+      .footer__contact-info {
+        display: flex;
+        flex-flow: column nowrap;
+
+        margin-bottom: 1em;
+
+        font-size: 12px;
+        
+        text-transform: uppercase;
+    
+        color: @white-1;
+      }
+    }
   }
 
   .footer__site-map-link {
-    position: absolute;
-    bottom: 0;
-    left: 20px;
+    // position: absolute;
+    // bottom: 0;
+    // left: 20px;
 
     display: block;
 

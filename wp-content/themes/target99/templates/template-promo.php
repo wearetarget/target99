@@ -73,7 +73,9 @@
 		<div class="promo-page__preview-container">
 			<div class="promo-preview">
 				<div id="promo-preview__image-container" class="promo-preview__image-container">
-					<img id="promo-preview__image" class="promo-preview__image" src="" />
+					<div class="promo-preview__image-wrap">
+						<img id="promo-preview__image" class="promo-preview__image" src="" />	
+					</div>
 				</div>
 				<div id="promo-preview__tip-container" class="promo-preview__tip-container">
 					<div id="promo-preview__tip" class="promo-preview__tip">Выберите один из промо файлов.</div>

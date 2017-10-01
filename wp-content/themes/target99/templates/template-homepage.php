@@ -204,31 +204,7 @@ get_header();
     </section>
 <?php endif; ?>
 
-<section class="subscription">
-    <div class="subscription__inner-container layout__service">
-        <div class="subscription__title-container">
-            <h3 class="subscription__title">Хотите быть в курсе всех событий?</h3>
-        </div>
-
-        <div class="subscription__form-container">
-            <form action="https://target99.us16.list-manage.com/subscribe/post" method="POST" target="_blank">
-                <input type="hidden" name="u" value="6b794d30ade1369da55eaf7b1">
-                <input type="hidden" name="id" value="d67980ed43">
-
-                <div class="subscription__email-container">
-                    <input type="email" class="subscription__email" autocapitalize="off" autocorrect="off" name="MERGE0"
-                           id="MERGE0" size="25" value="" placeholder="EMAIL"/>
-                </div>
-                <div class="subscription__button-container">
-                    <input type="submit" class="button button--warning button--mobile-full" name="submit"
-                           value="Подписаться">
-                </div>
-            </form>
-        </div>
-    </div>
-</section>
-
-<section class="contact-panel">
+<!-- <section class="contact-panel">
     <div class="contact-panel__inner-container">
         <?php echo do_shortcode('[google_map_easy id="1"]') ?>
         <div class="contact-panel__card-container">
@@ -237,7 +213,7 @@ get_header();
             </div>
         </div>
     </div>
-</section>
+</section> --> 
 
 <?php get_footer(); ?>
 

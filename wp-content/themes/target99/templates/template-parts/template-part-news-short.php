@@ -10,8 +10,9 @@
                 </p>
             </div>
             <div class="short-news__image-container">
-                <img src="<?php echo $news_image_url; ?>" class="short-news__image"/>
-
+                <a href="<?php echo get_the_permalink(); ?>">
+                    <img src="<?php echo $news_image_url; ?>" class="short-news__image"/>
+                </a>
                 <div  class="short-news__content-link-container">
                     <a href="<?php echo get_the_permalink(); ?>" class="short-news__content-link">
                         <span>Читать дальше</span>
@@ -22,7 +23,9 @@
 
         <div class="visibility-layout visibility-layout--desktop visibility-layout--tablet">
             <div class="short-news__image-container">
-                <img src="<?php echo $news_image_url; ?>" class="short-news__image"/>
+                <a href="<?php echo get_the_permalink(); ?>">
+                    <img src="<?php echo $news_image_url; ?>" class="short-news__image"/>
+                </a>
             </div>
 
             <div class="short-news__content">
