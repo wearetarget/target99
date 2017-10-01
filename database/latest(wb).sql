@@ -18,7 +18,7 @@
 --
 -- Table structure for table `wp_commentmeta`
 --
-
+use 'heroku_1a1ca61af35dc86';
 DROP TABLE IF EXISTS `wp_commentmeta`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
