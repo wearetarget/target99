@@ -31,12 +31,7 @@ error_reporting( E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_ERROR | E_W
  *
  * If neither set of conditions is true, initiate loading the setup process.
  */
-// Require AWS config if WP_CONFIG env variable is set to "aws"
-if ($_SERVER["WP_CONFIG"] == "aws") {
-
-	require_once( ABSPATH . 'wp-config-aws.php' );
-
-} elseif ( file_exists( ABSPATH . 'wp-config.php') ) {
+if ( file_exists( ABSPATH . 'wp-config.php') ) {
 
 	/** The config file resides in ABSPATH */
 	require_once( ABSPATH . 'wp-config.php' );

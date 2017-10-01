@@ -9,8 +9,6 @@
  * @package WordPress
  */
 
-define('DISABLE_WP_CRON', 'true');
-
 ignore_user_abort(true);
 
 if ( !empty($_POST) || defined('DOING_AJAX') || defined('DOING_CRON') )
