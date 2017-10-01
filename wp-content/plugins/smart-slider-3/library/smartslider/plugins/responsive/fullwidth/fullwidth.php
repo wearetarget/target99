@@ -21,8 +21,8 @@ class N2SSResponsiveFullWidth {
     private $params, $responsive;
 
     public function __construct($params, $responsive, $features) {
-        $this->params     = $params;
-        $this->responsive = $responsive;
+        $this->params           = $params;
+        $this->responsive       = $responsive;
         $features->align->align = 'normal';
 
         $this->responsive->scaleDown = 1;
@@ -36,7 +36,7 @@ class N2SSResponsiveFullWidth {
             $this->responsive->maximumSlideWidth = intval($this->params->get('responsiveSlideWidthMax', 3000));
         }
 
-        if ($this->params->get('responsiveSlideWidthDesktopLandscape', 1)) {
+        if ($this->params->get('responsiveSlideWidthDesktopLandscape', 0)) {
             $this->responsive->maximumSlideWidthLandscape = intval($this->params->get('responsiveSlideWidthMaxDesktopLandscape', 1600));
         }
 
@@ -61,7 +61,7 @@ class N2SSResponsiveFullWidth {
         $this->responsive->orientationMode = $this->params->get('responsiveSliderOrientation', 'width_and_height');
 
         $this->responsive->forceFull = intval($this->params->get('responsiveForceFull', 1));
-		
-		$this->responsive->forceFullHorizontalSelector = $this->params->get('responsiveForceFullHorizontalSelector', '');
+
+        $this->responsive->forceFullHorizontalSelector = $this->params->get('responsiveForceFullHorizontalSelector', '');
     }
 }

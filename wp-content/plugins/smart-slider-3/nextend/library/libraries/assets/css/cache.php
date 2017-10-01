@@ -1,28 +1,35 @@
 <?php
 
-class N2AssetsCacheCSS extends N2AssetsCache
-{
+class N2AssetsCacheCSS extends N2AssetsCache {
 
     public $outputFileType = "css";
 
     private $baseUrl = '', $basePath = '';
 
     public function getAssetFileFolder() {
-        return N2Cache::$accessiblePath . NDS . $this->group . NDS;
+        return N2Filesystem::getWebCachePath() . NDS . $this->group . NDS;
     }
 
-    protected function parseFile($content, $originalFilePath) {
+    protected function parseFile($cache, $content, $originalFilePath) {
 
         $this->basePath = dirname($originalFilePath);
         $this->baseUrl  = N2Filesystem::pathToAbsoluteURL($this->basePath);
 
+        if (!$cache->storage->isFilesystem()) {
+
+            return preg_replace_callback('#url\([\'"]?([^"\'\)]+)[\'"]?\)#', array(
+                $this,
+                'makeAbsoluteUrl'
+            ), $content);
+        }
+
         return preg_replace_callback('#url\([\'"]?([^"\'\)]+)[\'"]?\)#', array(
             $this,
-            'makeUrl'
+            'makeRelativeUrl'
         ), $content);
     }
 
-    private function makeUrl($matches) {
+    private function makeRelativeUrl($matches) {
         if (substr($matches[1], 0, 5) == 'data:') return $matches[0];
         if (substr($matches[1], 0, 4) == 'http') return $matches[0];
         if (substr($matches[1], 0, 2) == '//') return $matches[0];
@@ -32,14 +39,35 @@ class N2AssetsCacheCSS extends N2AssetsCache
         $realPath = realpath($this->basePath . '/' . $exploded[0]);
         if ($realPath === false) {
             return 'url(' . str_replace(array(
-                'http://',
-                'https://'
-            ), '//', $this->baseUrl) . '/' . $matches[1] . ')';
+                    'http://',
+                    'https://'
+                ), '//', $this->baseUrl) . '/' . $matches[1] . ')';
         }
 
         $realPath  = N2Filesystem::fixPathSeparator($realPath);
         $assetPath = N2Filesystem::fixPathSeparator($this->getAssetFileFolder());
+
         return 'url(' . N2Filesystem::toLinux($this->find_relative_path($assetPath, $realPath)) . (isset($exploded[1]) ? '?' . $exploded[1] : '') . ')';
+    }
+
+    private function makeAbsoluteUrl($matches) {
+        if (substr($matches[1], 0, 5) == 'data:') return $matches[0];
+        if (substr($matches[1], 0, 4) == 'http') return $matches[0];
+        if (substr($matches[1], 0, 2) == '//') return $matches[0];
+
+        $exploded = explode('?', $matches[1]);
+
+        $realPath = realpath($this->basePath . '/' . $exploded[0]);
+        if ($realPath === false) {
+            return 'url(' . str_replace(array(
+                    'http://',
+                    'https://'
+                ), '//', $this->baseUrl) . '/' . $matches[1] . ')';
+        }
+
+        $realPath = N2Filesystem::fixPathSeparator($realPath);
+
+        return 'url(' . N2Uri::pathToUri($realPath, false) . (isset($exploded[1]) ? '?' . $exploded[1] : '') . ')';
     }
 
     private function find_relative_path($frompath, $topath) {

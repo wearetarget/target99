@@ -45,7 +45,7 @@ class N2SSPluginItemFactoryYouTube extends N2SSPluginItemFactoryAbstract {
         return dirname(__FILE__) . DIRECTORY_SEPARATOR . $this->type . DIRECTORY_SEPARATOR;
     }
 
-    public function getFilled($slide, $data) {
+    public static function getFilled($slide, $data) {
         $data->set('image', $slide->fill($data->get('image', '')));
         $data->set('youtubeurl', $slide->fill($data->get('youtubeurl', '')));
 

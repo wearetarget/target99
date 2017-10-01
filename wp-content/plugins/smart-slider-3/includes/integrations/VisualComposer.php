@@ -3,14 +3,18 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
+function n2_visualcomposer_force_iframe() {
+    N2SS3Shortcode::forceIframe('visualcomposer');
+}
+
 class NextendSmartSlider3VisualComposer {
 
     public static function init() {
         self::vc_add_element();
 
-        add_action('vc_frontend_editor_render', 'N2SS3Shortcode::forceIframe');
-        add_action('vc_front_load_page_', 'N2SS3Shortcode::forceIframe');
-        add_action('vc_load_shortcode', 'N2SS3Shortcode::forceIframe');
+        add_action('vc_frontend_editor_render', 'n2_visualcomposer_force_iframe');
+        add_action('vc_front_load_page_', 'n2_visualcomposer_force_iframe');
+        add_action('vc_load_shortcode', 'n2_visualcomposer_force_iframe');
     }
 
     public static function vc_add_element() {

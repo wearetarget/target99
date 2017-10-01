@@ -122,8 +122,8 @@ class N2SSPluginWidgetBarHorizontal extends N2SSPluginWidgetAbstract {
                 "style" => $style
             ), N2Html::tag("div", array(
             "class" => $styleClass . ' n2-ow',
-            "style" => $innerStyle . ($slides[$slider->_activeSlide]['hasLink'] ? 'cursor:pointer;' : '')
-        ), $slides[$slider->_activeSlide]['html']));
+            "style" => $innerStyle . ($slides[$slider->firstSlideIndex]['hasLink'] ? 'cursor:pointer;' : '')
+        ), $slides[$slider->firstSlideIndex]['html']));
     }
 
     public static function prepareExport($export, $params) {

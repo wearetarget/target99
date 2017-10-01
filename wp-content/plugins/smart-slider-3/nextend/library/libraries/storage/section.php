@@ -1,7 +1,6 @@
 <?php
 
-class N2StorageSectionAdmin
-{
+class N2StorageSectionAdmin {
 
     /**
      * @var N2Model
@@ -23,15 +22,15 @@ class N2StorageSectionAdmin
 
     public static function getById($id, $section = null) {
         static $cache = array();
-        if($id === 0){
+        if ($id === 0) {
             return null;
         }
-        if(!isset($cache[$section])){
+        if (!isset($cache[$section])) {
             $cache[$section] = array();
-        }else if(isset($cache[$section][$id])){
+        } else if (isset($cache[$section][$id])) {
             return $cache[$section][$id];
         }
-        
+
         $cache[$section][$id] = null;
         if ($section) {
             N2Pluggable::doAction($section, array(
@@ -48,8 +47,10 @@ class N2StorageSectionAdmin
         ));
         if ($section && $cache[$section][$id]['section'] != $section) {
             $cache[$section][$id] = null;
+
             return $cache[$section][$id];
         }
+
         return $cache[$section][$id];
     }
 
@@ -80,14 +81,20 @@ class N2StorageSectionAdmin
     }
 
     public static function add($application, $section, $referenceKey, $value, $system = 0, $editable = 1) {
-        self::$model->db->insert(array(
-            "application"  => $application,
-            "section"      => $section,
-            "referencekey" => $referenceKey,
-            "value"        => $value,
-            "system"       => $system,
-            "editable"     => $editable
-        ));
+        $row = array(
+            "application" => $application,
+            "section"     => $section,
+            "value"       => $value,
+            "system"      => $system,
+            "editable"    => $editable
+        );
+
+        if ($referenceKey !== null) {
+            $row["referencekey"] = $referenceKey;
+        }
+
+        self::$model->db->insert($row);
+
         return self::$model->db->insertId();
     }
 
@@ -108,6 +115,7 @@ class N2StorageSectionAdmin
                 $attributes['referencekey'] = $referenceKey;
             }
             self::$model->db->update(array('value' => $value), $attributes);
+
             return true;
         }
     }
@@ -120,8 +128,10 @@ class N2StorageSectionAdmin
             self::$model->db->update(array('value' => $value), array(
                 "id" => $id
             ));
+
             return true;
         }
+
         return false;
     }
 
@@ -138,6 +148,7 @@ class N2StorageSectionAdmin
         }
 
         self::$model->db->deleteByAttributes($attributes);
+
         return true;
     }
 
@@ -154,8 +165,7 @@ class N2StorageSectionAdmin
 
 N2StorageSectionAdmin::$model = new N2Model("nextend2_section_storage");
 
-class N2StorageSection
-{
+class N2StorageSection {
 
     private $application = 'system';
 
@@ -184,6 +194,7 @@ class N2StorageSection
         if (is_array($result)) {
             return $result['value'];
         }
+
         return $default;
     }
 
@@ -197,6 +208,10 @@ class N2StorageSection
 
     public function add($section, $referenceKey, $value) {
         return N2StorageSectionAdmin::add($this->application, $section, $referenceKey, $value);
+    }
+
+    public function delete($section, $referenceKey = null) {
+        return N2StorageSectionAdmin::delete($this->application, $section, $referenceKey);
     }
 
     public function deleteById($id) {

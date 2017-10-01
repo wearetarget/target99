@@ -79,7 +79,7 @@ class N2SSPluginItemFactoryButton extends N2SSPluginItemFactoryAbstract {
         return dirname(__FILE__) . DIRECTORY_SEPARATOR . $this->type . DIRECTORY_SEPARATOR;
     }
 
-    public function getFilled($slide, $data) {
+    public static function getFilled($slide, $data) {
         $data->set('content', $slide->fill($data->get('content', '')));
         $data->set('link', $slide->fill($data->get('link', '#|*|')));
 

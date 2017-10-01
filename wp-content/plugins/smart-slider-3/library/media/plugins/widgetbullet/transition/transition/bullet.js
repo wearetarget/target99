@@ -26,25 +26,27 @@ N2Require('SmartSliderWidgetBulletTransition', [], [], function ($, scope, undef
         }
         this.originalDots = this.dots = this.bar.find('div').on(event, $.proxy(this.onDotClick, this));
 
-        if (typeof this.slider.shuffled !== 'undefined') {
-            var _temp = [],
-                _temp2 = [];
-            for (var i = 0; i < this.slider.shuffled.length; i++) {
-                _temp.push(this.dots.get(this.slider.shuffled[i]));
-                _temp2.push(this.parameters.thumbnails[this.slider.shuffled[i]]);
+        if (this.slider.isShuffled) {
+            var dots = [],
+                thumbnails = [];
+            for (var i = 0; i < this.slider.realSlides.length; i++) {
+                var slide = this.slider.realSlides[i];
+                dots.push(this.dots.get(slide.originalIndex));
+                thumbnails.push(this.parameters.thumbnails[slide.originalIndex]);
                 if (parameters.numeric) {
-                    this.dots.eq(this.slider.shuffled[i]).html(i + 1);
+                    this.dots.eq(slide.originalIndex).html(i + 1);
                 }
             }
-            this.originalDots = this.dots = $(_temp).appendTo(this.dots.parent());
-            this.parameters.thumbnails = _temp2;
+            this.originalDots = this.dots = $(dots).appendTo(this.dots.parent());
+            this.parameters.thumbnails = thumbnails;
         }
 
-        this.slider.sliderElement
-            .on('slideCountChanged', $.proxy(this.onSlideCountChanged, this))
-            .on('sliderSwitchTo', $.proxy(this.onSlideSwitch, this));
+        this.slider.sliderElement.on({
+            slideCountChanged: $.proxy(this.onSlideCountChanged, this),
+            sliderSwitchTo: $.proxy(this.onSlideSwitch, this)
+        });
 
-        this.onSlideSwitch(null, this.slider.currentSlideIndex);
+        this.slider.firstSlideReady.done($.proxy(this.onFirstSlideSet, this));
 
         if (parameters.overlay == 0) {
             var side = false;
@@ -73,8 +75,13 @@ N2Require('SmartSliderWidgetBulletTransition', [], [], function ($, scope, undef
         this.initThumbnails();
     };
 
+    SmartSliderWidgetBulletTransition.prototype.onFirstSlideSet = function (slide) {
+        this.dots.eq(slide.index).addClass('n2-active');
+    };
+
     SmartSliderWidgetBulletTransition.prototype.onDotClick = function (e) {
         this.slider.directionalChangeToReal(this.originalDots.index(e.currentTarget));
+        $(e.target).blur();
     };
 
     SmartSliderWidgetBulletTransition.prototype.onSlideSwitch = function (e, targetSlideIndex) {
@@ -98,8 +105,7 @@ N2Require('SmartSliderWidgetBulletTransition', [], [], function ($, scope, undef
             this.dots.each($.proxy(function (i, el) {
                 if (this.parameters.thumbnails[i] != '') {
                     $(el).on({
-                        universalenter: $.proxy(this.showThumbnail, this, i)/*,
-                         universalleave: $.proxy(this.hideThumbnail, this, i)*/
+                        universalenter: $.proxy(this.showThumbnail, this, i)
                     }, {
                         leaveOnSecond: true
                     })
@@ -138,7 +144,7 @@ N2Require('SmartSliderWidgetBulletTransition', [], [], function ($, scope, undef
             width: this.parameters.thumbnailWidth,
             height: this.parameters.thumbnailHeight,
             backgroundImage: 'url("' + this.parameters.thumbnails[i] + '")',
-            backgroundSize: 'inherit',
+            backgroundSize: 'cover',
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center'
         }).addClass('n2-bullet-thumbnail'))

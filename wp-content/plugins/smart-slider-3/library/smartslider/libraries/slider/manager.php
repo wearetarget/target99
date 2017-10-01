@@ -34,13 +34,15 @@ class N2SmartSliderManager {
             return $this->slider->render();
         }
         N2Loader::import("libraries.slider.cache.slider", "smartslider");
+
         return $this->slider->addCMSFunctions($this->cacheSlider());
     }
 
     private function cacheSlider() {
-        $cache        = new N2CacheManifestSlider($this->slider->cacheId, array(
+        $cache = new N2CacheManifestSlider($this->slider->cacheId, array(
             'slider' => $this->slider
         ));
+
         $cachedSlider = $cache->makeCache('slider' . N2Translation::getCurrentLocale(), '', array(
             $this,
             'renderCachedSlider'

@@ -37,16 +37,18 @@ class N2SmartSliderTypeSimple extends N2SmartSliderType {
         $background = $params->get('background');
         $sliderCSS  = $params->get('slider-css');
         if (!empty($background)) {
-            $sliderCSS .= 'background-image: url(' . N2ImageHelper::fixed($background) . ');';
+            $sliderCSS .= 'background-image: URL(' . N2ImageHelper::fixed($background) . ');';
         }
 
         $slideCSS = $params->get('slide-css');
 
         $this->initBackgroundAnimation();
+
         echo $this->openSliderElement();
+        $this->widgets->echoAbove();
         ?>
 
-        <div class="n2-ss-slider-1 n2-ow" style="<?php echo $sliderCSS; ?>">
+        <div class="n2-ss-slider-1 n2-ss-swipe-element n2-ow" style="<?php echo $sliderCSS; ?>">
             <?php
             echo $this->getBackgroundVideo($params);
             ?>
@@ -58,8 +60,10 @@ class N2SmartSliderTypeSimple extends N2SmartSliderType {
 
                     <?php
                     echo $this->slider->staticHtml;
-                    foreach ($this->slider->slides AS $i => $slide) {
 
+                    echo N2Html::tag('div', array('class' => 'n2-ss-slide-backgrounds'));
+
+                    foreach ($this->slider->slides AS $i => $slide) {
                         echo N2Html::tag('div', $slide->attributes + array(
                                 'class' => 'n2-ss-slide n2-ss-canvas n2-ow ' . $slide->classes,
                                 'style' => $slide->style
@@ -68,9 +72,12 @@ class N2SmartSliderTypeSimple extends N2SmartSliderType {
                     ?>
                 </div>
             </div>
+            <?php
+            $this->widgets->echoRemainder();
+            ?>
         </div>
         <?php
-        $this->widgets->echoRemainder();
+        $this->widgets->echoBelow();
         echo N2Html::closeTag('div');
 
         $this->javaScriptProperties['mainanimation'] = array(
@@ -97,7 +104,7 @@ class N2SmartSliderTypeSimple extends N2SmartSliderType {
         echo N2Html::clear();
     }
 
-    private function loadResources() {
+    public function loadResources() {
         N2JS::addStaticGroup(N2Filesystem::translate(dirname(__FILE__)) . '/dist/smartslider-simple-type-frontend.min.js', 'smartslider-simple-type-frontend');
     
     }

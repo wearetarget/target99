@@ -78,12 +78,38 @@ class N2SSSlideComponentCol extends N2SSSlideComponent {
 
         $this->attributes['style'] .= 'width: ' . $width . '%;';
 
+        if (!N2SSSlideComponent::$isAdmin) {
+            $this->makeLink();
+        }
     }
 
     public function updateRowSpecificProperties($gutter) {
 
         $this->attributes['style'] .= 'margin-right: ' . $gutter . 'px;margin-top: ' . $gutter . 'px;';
 
+    }
+
+    private function makeLink() {
+
+        N2Loader::import('libraries.link.link');
+
+        list($link, $target) = array_pad((array)N2Parse::parse($this->data->get('link', '#|*|')), 2, '');
+
+        if (($link != '#' && !empty($link))) {
+
+            $link                          = N2LinkParser::parse($this->slide->fill($link), $this->attributes);
+            $this->attributes['data-href'] = $link;
+
+            if (!isset($this->attributes['onclick'])) {
+                if (empty($target) || $target == '_self') {
+                    $this->attributes['onclick'] = 'window.location=this.getAttribute("data-href");';
+                } else {
+                    $this->attributes['onclick'] = 'var w=window.open();w.opener=null;w.location=this.getAttribute("data-href");';
+                }
+            }
+            $this->attributes['style'] .= 'cursor:pointer;';
+
+        }
     }
 
     public function render() {
@@ -101,6 +127,7 @@ class N2SSSlideComponentCol extends N2SSSlideComponent {
     public function admin() {
 
         $this->createProperty('colwidth');
+        $this->createProperty('link');
 
         $this->createProperty('verticalalign');
 
@@ -153,8 +180,12 @@ class N2SSSlideComponentCol extends N2SSSlideComponent {
         N2SmartsliderSlidesModel::prepareSample($layer['layers']);
     }
 
-    public function getFilled(&$layer) {
+    /**
+     * @param N2SmartSliderSlide $slide
+     * @param array              $layer
+     */
+    public static function getFilled($slide, &$layer) {
 
-        N2SmartSliderSlide::fillLayers($layer['layers']);
+        $slide->fillLayers($layer['layers']);
     }
 }

@@ -12,7 +12,7 @@ class N2SSPluginWidgetShadowShadow extends N2SSPluginWidgetAbstract {
         return array(
             'widget-shadow-position-mode'  => 'simple',
             'widget-shadow-position-area'  => 12,
-            'widget-shadow-position-stack' => 4,
+            'widget-shadow-position-stack' => 3,
             'widget-shadow-width'          => '100%',
             'widget-shadow-shadow-image'   => '',
             'widget-shadow-shadow'         => '$ss$/plugins/widgetshadow/shadow/shadow/shadow/dark.png'
@@ -81,7 +81,9 @@ class N2SSPluginWidgetShadowShadow extends N2SSPluginWidgetAbstract {
                 'style' => $style
             ), N2Html::image(N2ImageHelper::fixed($shadow), 'Shadow', array(
             'style' => 'display: block; width:100%;max-width:none;',
-            'class' => 'n2-ow nextend-shadow-image'
+            'class' => 'n2-ow nextend-shadow-image',
+            'data-no-lazy' => '1',
+            'data-hack'    => 'data-lazy-src'
         )));
     }
 

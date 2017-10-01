@@ -22,8 +22,8 @@ class N2SmartSliderFeatureResponsive {
     public $scaleUp = 0;
 
     public $forceFull = 0;
-	
-	public $forceFullHorizontalSelector = '';
+
+    public $forceFullHorizontalSelector = '';
 
     public $constrainRatio = 1;
 
@@ -411,7 +411,7 @@ class N2SmartSliderFeatureResponsive {
             'maximumSlideWidthMobileLandscape' => $this->maximumSlideWidthMobileLandscape,
             'maximumSlideWidthConstrainHeight' => intval($this->maximumSlideWidthConstrainHeight),
             'forceFull'                        => $this->forceFull,
-			'forceFullHorizontalSelector'      => $this->forceFullHorizontalSelector,
+            'forceFullHorizontalSelector'      => $this->forceFullHorizontalSelector,
             'constrainRatio'                   => $this->constrainRatio,
             'verticalOffsetSelectors'          => $this->verticalOffsetSelectors,
 
@@ -448,6 +448,7 @@ class N2SmartSliderFeatureResponsive {
         foreach ($this->minimumFontSizes AS $k => $v) {
             $return['data-minFontSize' . $k] = $v;
         }
+
         return $return;
     }
 }

@@ -3,8 +3,7 @@
     src: url('../fonts/Nextend.eot?jk6d47');
     src: url('../fonts/Nextend.eot?jk6d47#iefix') format('embedded-opentype'),
     url('../fonts/Nextend.ttf?jk6d47') format('truetype'),
-    url('../fonts/Nextend.woff?jk6d47') format('woff'),
-    url('../fonts/Nextend.svg?jk6d47#Nextend') format('svg');
+    url('../fonts/Nextend.woff?jk6d47') format('woff');
     font-weight: normal;
     font-style: normal;
 }
@@ -1071,6 +1070,10 @@ div#system-debug {
     display: inline;
 }
 
+#system-message-container {
+    display: none;
+}
+
 /**
 Magento
 */
@@ -1087,6 +1090,10 @@ body.n2-platform-native {
     font-size: 13px;
     line-height: 1.4em;
     overflow: auto;
+}
+
+iframe{
+    border: 0;
 }
 
 /**
@@ -1109,7 +1116,6 @@ jQuery UI
 
 #n2-admin {
     min-width: 980px;
-    /*min-height: 100vh;*/
     background-color: #e9edf0;
 }
 
@@ -2066,6 +2072,7 @@ html[dir="rtl"] .n2-heading-menu {
 }
 
 .n2-lb-header {
+    position: relative;
     background-color: #fff;
     border-bottom: 1px solid #e0e6ed;
     z-index: 10;
@@ -3753,7 +3760,7 @@ NextendCheckbox
     line-height: 22px;
 }
 
-.n2-form-element-icon .n2-form-element-preview > * {
+.n2-form-element-icon .n2-form-element-preview > .n2i {
     color: #fff;
     font-size: 22px;
     vertical-align: top;
@@ -5017,6 +5024,12 @@ html[dir="rtl"] .n2-button-menu-open .n2-button-menu {
     padding: 5px 0;
     background-color: #ffffff;
     border-radius: 5px;
+}
+
+.n2-box-generator .n2-button-menu-inner{
+	max-height: 150px;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 .n2-button-menu-open.n2-active .n2-button-menu {

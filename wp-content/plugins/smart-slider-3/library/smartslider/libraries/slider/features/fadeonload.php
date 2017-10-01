@@ -1,7 +1,6 @@
 <?php
 
-class N2SmartSliderFeatureFadeOnLoad
-{
+class N2SmartSliderFeatureFadeOnLoad {
 
     private $slider;
 
@@ -11,13 +10,16 @@ class N2SmartSliderFeatureFadeOnLoad
 
     public $playWhenVisible = 1;
 
+    public $playWhenVisibleAt = 0.5;
+
     public function __construct($slider) {
 
         $this->slider = $slider;
 
-        $this->fadeOnLoad      = intval($slider->params->get('fadeOnLoad', 1));
-        $this->fadeOnScroll    = intval($slider->params->get('fadeOnScroll', 0));
-        $this->playWhenVisible = intval($slider->params->get('playWhenVisible', 1));
+        $this->fadeOnLoad        = intval($slider->params->get('fadeOnLoad', 1));
+        $this->fadeOnScroll      = intval($slider->params->get('fadeOnScroll', 0));
+        $this->playWhenVisible   = intval($slider->params->get('playWhenVisible', 1));
+        $this->playWhenVisibleAt = max(0, min(100, intval($slider->params->get('playWhenVisibleAt', 50)))) / 100;
 
         if (!empty($this->fadeOnScroll) && $this->fadeOnScroll) {
             $this->fadeOnLoad   = 1;
@@ -37,6 +39,7 @@ class N2SmartSliderFeatureFadeOnLoad
         if ($this->fadeOnLoad) {
             return 'n2-ss-load-fade ';
         }
+
         return '';
     }
 
@@ -61,15 +64,17 @@ class N2SmartSliderFeatureFadeOnLoad
         } else {
             N2CSS::addCode("#{$this->slider->elementId}.n2-ss-load-fade{position: relative !important;}", $this->slider->cacheId);
         }
+
         return '';
     }
 
     public function makeJavaScriptProperties(&$properties) {
-        $properties['load']            = array(
+        $properties['load']              = array(
             'fade'   => $this->fadeOnLoad,
             'scroll' => ($this->fadeOnScroll & !$this->slider->isAdmin)
         );
-        $properties['playWhenVisible'] = $this->playWhenVisible;
+        $properties['playWhenVisible']   = $this->playWhenVisible;
+        $properties['playWhenVisibleAt'] = $this->playWhenVisibleAt;
     }
 
 
@@ -94,7 +99,7 @@ class N2SmartSliderFeatureFadeOnLoad
         return base64_encode('<svg xmlns="http://www.w3.org/2000/svg" version="1.0" width="' . $width . '" height="' . $height . '" ></svg>');
     }
 
-    private static function  gcd($a, $b) {
+    private static function gcd($a, $b) {
         return ($a % $b) ? self::gcd($b, $a % $b) : $b;
     }
 }

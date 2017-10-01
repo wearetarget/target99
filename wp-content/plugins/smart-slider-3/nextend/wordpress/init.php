@@ -140,7 +140,11 @@ N2Wordpress::init();
 do_action('nextend_loaded');
 
 function nextend_comment_for_css() {
-    echo "<!--n2css-->";
+    static $once;
+    if (!$once) {
+        echo "<!--n2css-->";
+        $once = true;
+    }
 }
 
 add_action('wp_print_scripts', 'nextend_comment_for_css');

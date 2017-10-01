@@ -12,8 +12,8 @@ function Nextend_ET_Builder_Module_Smart_Slider_Field() {
 class Nextend_ET_Builder_Module_Smart_Slider extends ET_Builder_Module {
 
     function init() {
-        $this->name = 'Smart Slider 3';
-        $this->slug = 'et_pb_nextend_smart_slider_3';
+        $this->name               = 'Smart Slider 3';
+        $this->slug               = 'et_pb_nextend_smart_slider_3';
         $this->whitelisted_fields = array(
             'admin_label'
         );
@@ -47,7 +47,7 @@ class Nextend_ET_Builder_Module_Smart_Slider extends ET_Builder_Module {
 
     function get_fields() {
         $fields = array(
-            'slider' => array(
+            'slider'      => array(
                 'label'               => 'Slider',
                 'option_category'     => 'basic_option',
                 'type'                => 'text',
@@ -55,9 +55,9 @@ class Nextend_ET_Builder_Module_Smart_Slider extends ET_Builder_Module {
                 'renderer_with_field' => true
             ),
             'admin_label' => array(
-                'label'       => esc_html__( 'Admin Label', 'et_builder' ),
+                'label'       => esc_html__('Admin Label', 'et_builder'),
                 'type'        => 'text',
-                'description' => esc_html__( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
+                'description' => esc_html__('This will change the label of the module in the builder for easy identification.', 'et_builder'),
                 'toggle_slug' => 'admin_label',
             )
         );
@@ -93,11 +93,20 @@ function Nextend_et_builder_get_child_modules_fix($child_modules) {
 
 add_filter('et_builder_get_child_modules', 'Nextend_et_builder_get_child_modules_fix');
 
-if (function_exists('et_fb_is_enabled') && et_fb_is_enabled()) {
-    N2SS3Shortcode::forceIframe();
+
+function n2_divi_force_iframe() {
+    N2SS3Shortcode::forceIframe('divi');
 }
 
-add_action('wp_ajax_et_fb_retrieve_builder_data', 'N2SS3Shortcode::forceIframe', 9);
+if (function_exists('et_fb_is_enabled') && et_fb_is_enabled()) {
+    n2_divi_force_iframe();
+}
+
+if (function_exists('is_et_pb_preview') && is_et_pb_preview()) {
+    n2_divi_force_iframe();
+}
+
+add_action('wp_ajax_et_fb_retrieve_builder_data', 'n2_divi_force_iframe', 9);
 
 new Nextend_ET_Builder_Module_Smart_Slider;
 new Nextend_ET_Builder_Module_Smart_Slider_Fullwidth;

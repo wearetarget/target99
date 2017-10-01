@@ -63,4 +63,8 @@ abstract class N2GeneratorAbstract {
     public function hash($key) {
         return md5($key);
     }
+
+    public static function cacheKey($params) {
+        return '';
+    }
 }

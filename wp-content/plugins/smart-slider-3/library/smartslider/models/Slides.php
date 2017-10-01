@@ -1,10 +1,5 @@
 <?php
 
-/**
- * User: David
- * Date: 2014.06.03.
- * Time: 8:32
- */
 class N2SmartsliderSlidesModel extends N2Model {
 
     private $currentData, $slider;
@@ -664,7 +659,7 @@ class N2SmartsliderSlidesModel extends N2Model {
         $class .= ($slide->isCurrentlyEdited() ? ' n2-ss-slide-active' : '');
 
         $attributes = array(
-            'style'            => 'background-image: url("' . $optimize->optimizeThumbnail($image) . '");',
+            'style'            => 'background-image: URL("' . $optimize->optimizeThumbnail($image) . '");',
             'class'            => $class,
             'data-slideid'     => $slide->id,
             'data-title'       => $slide->getRawTitle(),

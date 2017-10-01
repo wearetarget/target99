@@ -322,7 +322,7 @@
 
                     $iframe.attr('src', src);
 
-                    $iframe.load(function () {
+                    $iframe.on('load', function () {
                         $loader.remove();
                     });
                 }
@@ -351,7 +351,7 @@
 
                 $this.transitionContent('iframe', $currentContent, $iframe);
 
-                $iframe.load(function () {
+                $iframe.on('load', function () {
                     $loader.remove();
                 });
             }

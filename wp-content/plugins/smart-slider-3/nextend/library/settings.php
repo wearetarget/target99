@@ -18,7 +18,8 @@ class N2Settings {
             'show-joomla-admin-footer' => 0,
             'curl'                     => 1,
             'curl-clean-proxy'         => 0,
-            'css-mode'                 => 'normal'
+            'css-mode'                 => 'normal',
+            'icon-fa'                  => 1,
         );
         if (!defined('NEXTEND_INSTALL')) {
             global $wpdb;
@@ -38,8 +39,8 @@ class N2Settings {
         self::$data->loadArray($config);
     }
 
-    public static function get($key) {
-        return self::$data->get($key);
+    public static function get($key, $default = '') {
+        return self::$data->get($key, $default);
     }
 
     public static function getAll() {
@@ -58,8 +59,10 @@ class N2Settings {
                     self::set($key, $value);
                 }
             }
+
             return true;
         }
+
         return false;
     }
 

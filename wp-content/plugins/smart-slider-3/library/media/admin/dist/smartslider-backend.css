@@ -5,8 +5,13 @@
     display: none;
 }
 
-#html-body #anchor-content {
-    padding-top: 30px;
+#html-body #anchor-content #n2-admin {
+    mragin-top: 30px;
+}
+
+#html-body .header {
+    position: relative;
+    z-index: 1100;
 }
 
 .unselectable {
@@ -563,6 +568,8 @@ html[data-slides='0'] .n2-ss-create-static-slide {
     box-sizing: border-box;
     padding: 90px 60px 0;
     line-height: 12px;
+    border: 2px dashed #b2bfc9;
+    box-shadow: none;
 }
 
 html:not([data-slides='0']) #n2-ss-slides-container .n2-box-slide-drag-images,
@@ -1616,7 +1623,7 @@ html[dir=rtl] .n2-ss-small-more {
     margin: 5px;
     background-color: #6b7986;
     color: #ffffff;
-    line-height: 20px;
+    line-height: 15px;
     cursor: pointer;
     text-align: center;
 
@@ -1625,8 +1632,10 @@ html[dir=rtl] .n2-ss-small-more {
     border-radius: 3px;
 
     width: 90px;
-    height: 80px;
+    min-height: 73px;
     z-index: 1000;
+    vertical-align: top;
+    padding-bottom: 5px;
 }
 
 .n2-ss-core-item:before {
@@ -1635,7 +1644,8 @@ html[dir=rtl] .n2-ss-small-more {
     content: "\e943";
     display: block;
     line-height: 32px;
-    margin-top: 20px;
+    margin-top: 16px;
+    margin-bottom: 3px;
 }
 
 .n2-ss-core-item[data-item="heading"]:before {

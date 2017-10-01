@@ -1,6 +1,11 @@
 N2Require('ItemImage', ['Item'], ['smartSlider'], function ($, scope, smartSlider, undefined) {
     "use strict";
 
+    /**
+     * @constructor
+     * @augments Item
+     * @memberof scope
+     */
     function ItemImage() {
         this.type = 'image';
         scope.Item.prototype.constructor.apply(this, arguments);
@@ -8,6 +13,8 @@ N2Require('ItemImage', ['Item'], ['smartSlider'], function ($, scope, smartSlide
 
     ItemImage.prototype = Object.create(scope.Item.prototype);
     ItemImage.prototype.constructor = ItemImage;
+
+    ItemImage.needSize = false;
 
     ItemImage.prototype.getDefault = function () {
         return {

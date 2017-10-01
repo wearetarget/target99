@@ -67,7 +67,7 @@ window.n2jQuery.ready(function () {
 
     if (typeof window.n2CSS !== 'undefined') {
         var d = n2.Deferred();
-        n2('<link rel="stylesheet" type="text/css" href="' + window.n2CSS + '" media="all"/>').load(function () {
+        n2('<link rel="stylesheet" type="text/css" href="' + window.n2CSS + '" media="all"/>').on('load', function () {
             d.resolve();
         }).appendTo('head');
         window.nextend.deferreds.push(d);

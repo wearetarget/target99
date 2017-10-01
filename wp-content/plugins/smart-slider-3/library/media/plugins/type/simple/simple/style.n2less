@@ -3,7 +3,6 @@
 
 (~'div@{id}') {
   width: @width;
-  height: @height;
   float: left;
 
   html[dir="rtl"] & {
@@ -50,6 +49,10 @@
     height: 100%;
   }
 
+  .x-firefox & .n2-ss-slider-2 {
+    opacity: 0.99999;
+  }
+
   .n2-ss-slider-3 {
     position: relative;
     width: 100%;
@@ -59,17 +62,35 @@
     z-index: 10;
   }
 
-  .x-firefox & .n2-ss-slider-2 {
-    opacity: 0.99999;
+  .n2-ss-slide-backgrounds,
+  .n2-ss-slider-3 > .n-particles-js-canvas-el,
+  .n2-ss-slider-3 > .n2-ss-divider {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .n2-ss-slide-backgrounds {
+    z-index: 10;
+  }
+
+  .n2-ss-slider-3 > .n-particles-js-canvas-el {
+    z-index: 12;
+  }
+
+  .n2-ss-slide-backgrounds > * {
+    overflow: hidden;
   }
 
   .n2-ss-slide {
     position: absolute;
     top: 0;
     left: 0;
-    width: @canvaswidth;
-    height: @canvasheight;
-    z-index: 2;
+    width: 100%;
+    height: 100%;
+    z-index: 20;
     display: block;
     -webkit-backface-visibility: hidden;
   }
@@ -80,7 +101,12 @@
     height: @canvasheight;
   }
 
+  .n2-ss-parallax-clip > .n2-ss-layers-container {
+    position: absolute;
+    right: 0;
+  }
+
   .n2-ss-slide-active {
-    z-index: 3;
+    z-index: 21;
   }
 }

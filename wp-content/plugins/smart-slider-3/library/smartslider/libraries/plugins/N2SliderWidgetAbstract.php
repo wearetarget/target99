@@ -2,8 +2,7 @@
 
 N2Loader::import('libraries.parse.parse');
 
-class N2SSPluginWidgetAbstract extends N2PluginBase
-{
+class N2SSPluginWidgetAbstract extends N2PluginBase {
 
     static function getDefaults() {
         return array();
@@ -36,6 +35,18 @@ class N2SSPluginWidgetAbstract extends N2PluginBase
     }
 
     public static function getPosition(&$params, $key) {
+        $mode = $params->get($key . 'position-mode', 'simple');
+        if ($mode == 'above') {
+            return array(
+                'margin-bottom:' . $params->get($key . 'position-offset', 0) . 'px;',
+                array()
+            );
+        } else if ($mode == 'below') {
+            return array(
+                'margin-top:' . $params->get($key . 'position-offset', 0) . 'px;',
+                array()
+            );
+        }
         $attributes = array();
         $style      = 'position: absolute;';
 
@@ -77,6 +88,7 @@ class N2SSPluginWidgetAbstract extends N2PluginBase
                 return 'vertical';
                 break;
         }
+
         return 'horizontal';
     }
 

@@ -187,7 +187,7 @@ class N2SSPluginWidgetThumbnailDefault extends N2SSPluginWidgetAbstract {
         $slides = '';
         foreach ($slider->slides AS $slide) {
             $active = '';
-            if ($slider->_activeSlide == $i) {
+            if ($slider->firstSlideIndex == $i) {
                 $active = 'n2-active ';
             }
             if ($orientation == 'horizontal') {

@@ -40,7 +40,7 @@ class N2SSPluginItemFactoryVimeo extends N2SSPluginItemFactoryAbstract {
         return dirname(__FILE__) . DIRECTORY_SEPARATOR . $this->type . DIRECTORY_SEPARATOR;
     }
 
-    public function getFilled($slide, $data) {
+    public static function getFilled($slide, $data) {
         $data->set('image', $slide->fill($data->get('image', '')));
         $data->set('vimeourl', $slide->fill($data->get('vimeourl', '')));
 

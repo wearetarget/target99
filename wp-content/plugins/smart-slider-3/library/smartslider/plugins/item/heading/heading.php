@@ -49,7 +49,7 @@ class N2SSPluginItemFactoryHeading extends N2SSPluginItemFactoryAbstract {
         return dirname(__FILE__) . DIRECTORY_SEPARATOR . $this->type . DIRECTORY_SEPARATOR;
     }
 
-    public function getFilled($slide, $data) {
+    public static function getFilled($slide, $data) {
         $data->set('heading', $slide->fill($data->get('heading', '')));
         $data->set('link', $slide->fill($data->get('link', '#|*|')));
 

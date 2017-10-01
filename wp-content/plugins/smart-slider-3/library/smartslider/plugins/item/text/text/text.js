@@ -1,6 +1,11 @@
 N2Require('ItemText', ['Item'], ['smartSlider'], function ($, scope, smartSlider, undefined) {
     "use strict";
 
+    /**
+     * @constructor
+     * @augments Item
+     * @memberof scope
+     */
     function ItemText() {
         this.type = 'text';
         scope.Item.prototype.constructor.apply(this, arguments);
@@ -8,6 +13,8 @@ N2Require('ItemText', ['Item'], ['smartSlider'], function ($, scope, smartSlider
 
     ItemText.prototype = Object.create(scope.Item.prototype);
     ItemText.prototype.constructor = ItemText;
+
+    ItemText.needSize = false;
 
     ItemText.prototype.getDefault = function () {
         return {

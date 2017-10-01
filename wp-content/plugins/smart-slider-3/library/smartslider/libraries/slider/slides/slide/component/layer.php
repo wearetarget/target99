@@ -56,12 +56,16 @@ class N2SSSlideComponentLayer extends N2SSSlideComponent {
         return '';
     }
 
-    public function getFilled(&$layer) {
+    /**
+     * @param N2SmartSliderSlide $slide
+     * @param array              $layer
+     */
+    public static function getFilled($slide, &$layer) {
         if (empty($layer['item'])) {
             $layer['item'] = $layer['items'][0];
             unset($layer['items']);
         }
-        $layer['item'] = $this->item->getFilled($layer['item']);
+        N2SmartSliderItemsFactory::getFilled($slide, $layer['item']);
     }
 
     public static function prepareExport($export, $layer) {

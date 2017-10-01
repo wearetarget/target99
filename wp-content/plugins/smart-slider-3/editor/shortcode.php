@@ -55,9 +55,6 @@ class N2SSShortcodeInsert {
                 'addButtonDialog'
             ));
 
-            wp_enqueue_script('jquery-ui-dialog');
-            wp_enqueue_style("wp-jquery-ui-dialog");
-
             $added = true;
         }
     }

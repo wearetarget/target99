@@ -17,4 +17,9 @@ class N2SmartSliderSlideAdmin extends N2SmartSliderSlide {
 
     protected function onCreate() {
     }
+
+    public function setCurrentlyEdited() {
+        $this->underEdit = true;
+        $this->classes .= ' n2-ss-currently-edited-slide';
+    }
 }

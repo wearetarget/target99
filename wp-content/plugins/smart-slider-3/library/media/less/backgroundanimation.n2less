@@ -8,6 +8,10 @@
     height: 100%;
     z-index: 3;
 
+    .n2-ss-slide-background {
+      z-index: auto;
+    }
+
     img {
       max-width: none;
     }

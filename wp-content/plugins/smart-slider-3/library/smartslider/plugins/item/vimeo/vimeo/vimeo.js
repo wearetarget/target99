@@ -1,14 +1,20 @@
 N2Require('ItemVimeo', ['Item'], ['smartSlider'], function ($, scope, smartSlider, undefined) {
     "use strict";
 
+    /**
+     * @constructor
+     * @augments Item
+     * @memberof scope
+     */
     function ItemVimeo() {
         this.type = 'vimeo';
-        this.needSize = true;
         scope.Item.prototype.constructor.apply(this, arguments);
     };
 
     ItemVimeo.prototype = Object.create(scope.Item.prototype);
     ItemVimeo.prototype.constructor = ItemVimeo;
+
+    ItemVimeo.needSize = true;
 
     ItemVimeo.prototype.added = function () {
         this.needFill = ['vimeourl'];

@@ -30,7 +30,7 @@ class N2ElementImageListLabel extends N2ElementRadio
             $this->values[] = $value;
             $html .= N2Html::tag("div", array(
                 "class" => "n2-radio-option n2-imagelist-option" . ($selected ? ' n2-active' : ''),
-                "style" => "background-image:url(" . N2ImageHelper::fixed(N2XmlHelper::getAttribute($option, 'image')) . ");"
+                "style" => "background-image:URL(" . N2ImageHelper::fixed(N2XmlHelper::getAttribute($option, 'image')) . ");"
             ), N2Html::tag('span', array(), ($this->_translateable ? n2_((string)$option) : ((string)$option))));
         }
 

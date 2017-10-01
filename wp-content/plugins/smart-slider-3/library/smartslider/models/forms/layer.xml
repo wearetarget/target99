@@ -94,6 +94,13 @@
             <unit>px</unit>
           </param>
         </param>
+        <param name="col-link" type="mixed" default="#|*|_self">
+          <param type="url" label="Link" style="width:160px;"/>
+          <param type="list" label="Target" translateable="1">
+            <option value="_self">Self</option>
+            <option value="_blank">Blank</option>
+          </param>
+        </param>
         <param type="group" class="n2-ss-background-image-param">
           <param name="col-background-image" type="image" label="Background image" default=""/>
           <param name="col-background-focus-x" type="text" label="Focus X" default="50" max="100" min="0" style="width: 22px;">
@@ -337,16 +344,6 @@
           </param>
           <param name="responsive-size" type="onoff" label="Responsive" default="1"/></param>
         <param type="devices" name="show" label="Show on" default=""/>
-        <param type="group" class="n2-ss-parent-picker n2-expert">
-          <attribute type="data-placement">absolute</attribute>
-          <param type="layerpicker" name="parentid" label="Parent" default="" class="n2-layer-picker-container"/>
-          <param type="halign" name="parentalign" label="Horizontal" default="left">
-            <attribute type="data-devicespecific"/>
-          </param>
-          <param type="valign" name="parentvalign" label="Vertical" default="top">
-            <attribute type="data-devicespecific"/>
-          </param>
-        </param>
         <param type="text" name="class" label="CSS class" default=""/>
         <param name="resettodesktop" type="button" label="Reset position" default="Reset"/>
         <param type="text" name="id" label="ID" default="" class="n2-hidden"/>

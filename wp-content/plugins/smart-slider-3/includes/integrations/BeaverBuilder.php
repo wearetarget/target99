@@ -3,15 +3,19 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
-add_action('fl_builder_editing_enabled', 'N2SS3Shortcode::forceIframe');
+function n2_fl_builder_force_iframe() {
+    N2SS3Shortcode::forceIframe('beaverbuilder');
+}
+
+add_action('fl_builder_editing_enabled', 'n2_fl_builder_force_iframe');
 add_action('fl_builder_editing_enabled', "N2SSShortcodeInsert::addForcedFrontend");
 
 
-add_action('fl_ajax_before_render_new_module', 'N2SS3Shortcode::forceIframe');
-add_action('fl_ajax_before_render_layout', 'N2SS3Shortcode::forceIframe');
-add_action('fl_ajax_before_render_module_settings', 'N2SS3Shortcode::forceIframe');
-add_action('fl_ajax_before_save_settings', 'N2SS3Shortcode::forceIframe');
-add_action('fl_ajax_before_copy_module', 'N2SS3Shortcode::forceIframe');
+add_action('fl_ajax_before_render_new_module', 'n2_fl_builder_force_iframe');
+add_action('fl_ajax_before_render_layout', 'n2_fl_builder_force_iframe');
+add_action('fl_ajax_before_render_module_settings', 'n2_fl_builder_force_iframe');
+add_action('fl_ajax_before_save_settings', 'n2_fl_builder_force_iframe');
+add_action('fl_ajax_before_copy_module', 'n2_fl_builder_force_iframe');
 
 /**
  * Custom modules

@@ -1,5 +1,5 @@
 <?php
-N2Loader::import('libraries.zip.zip_lib');
+N2Loader::import('libraries.zip.creator');
 N2Loader::import('libraries.backup', 'smartslider');
 
 class N2SmartSliderExport {
@@ -25,7 +25,7 @@ class N2SmartSliderExport {
         $slidersModel = new N2SmartsliderSlidersModel();
         if ($this->backup->slider = $slidersModel->get($this->sliderId)) {
 
-            $zip = new N2ZipFile();
+            $zip = new N2ZipCreator();
 
             if (empty($this->backup->slider['type'])) {
                 $this->backup->slider['type'] = 'simple';
@@ -318,7 +318,7 @@ class N2SmartSliderExport {
             return $this->files;
         }
 
-        $zip = new N2ZipFile();
+        $zip = new N2ZipCreator();
         foreach ($this->files AS $path => $content) {
             $zip->addFile($content, $path);
         }

@@ -33,6 +33,7 @@ abstract class N2FilesystemAbstract {
         if (!is_object($instance)) {
             $instance = new N2Filesystem();
         }
+
         return $instance;
     }
 
@@ -78,13 +79,15 @@ abstract class N2FilesystemAbstract {
      */
     public static function getBasePath() {
         $i = N2Filesystem::getInstance();
+
         return $i->_basepath;
     }
 
     public static function getWebCachePath() {
-        if (!NEXTEND_CUSTOM_CACHE) {
+        if (!NEXTEND_CUSTOM_CACHE && !defined('NEXTEND_CACHE_STORAGE')) {
             self::check(self::getBasePath(), 'cache');
         }
+
         return self::getBasePath() . NEXTEND_RELATIVE_CACHE_WEB;
     }
 
@@ -105,6 +108,7 @@ abstract class N2FilesystemAbstract {
      */
     public static function getLibraryPath() {
         $i = N2Filesystem::getInstance();
+
         return $i->_librarypath;
     }
 
@@ -132,6 +136,7 @@ abstract class N2FilesystemAbstract {
      */
     public static function pathToRelativePath($path) {
         $i = N2Filesystem::getInstance();
+
         return preg_replace('/^' . preg_quote($i->_basepath, '/') . '/', '', str_replace('/', DIRECTORY_SEPARATOR, $path));
     }
 
@@ -142,6 +147,7 @@ abstract class N2FilesystemAbstract {
      */
     public static function pathToAbsolutePath($path) {
         $i = N2Filesystem::getInstance();
+
         return $i->_basepath . str_replace('/', DIRECTORY_SEPARATOR, $path);
     }
 
@@ -154,8 +160,10 @@ abstract class N2FilesystemAbstract {
         $baseUri = N2Uri::getBaseUri();
         if (substr($url, 0, strlen($baseUri)) == $baseUri) {
             $i = N2Filesystem::getInstance();
+
             return str_replace($baseUri, $i->_basepath, $url);
         }
+
         return $url;
     }
 
@@ -189,6 +197,7 @@ abstract class N2FilesystemAbstract {
             if ($file == '.' || $file == '..') continue;
             if (is_dir($dir . DIRECTORY_SEPARATOR . $file)) $folders[] = $file;
         }
+
         return $folders;
     }
 
@@ -224,6 +233,7 @@ abstract class N2FilesystemAbstract {
                 if (!self::deleteFolder($dir . DIRECTORY_SEPARATOR . $file)) return false;
             };
         }
+
         return rmdir($dir);
     }
 
@@ -253,6 +263,7 @@ abstract class N2FilesystemAbstract {
                 closedir($dh);
             }
         }
+
         return $files;
     }
 
@@ -316,6 +327,7 @@ abstract class N2FilesystemAbstract {
                 return str_replace($k, $v, $path);
             }
         }
+
         return $path;
     }
 

@@ -27,12 +27,13 @@ class N2Filesystem extends N2FilesystemAbstract {
     }
 
     public static function getWebCachePath() {
-        if (!NEXTEND_CUSTOM_CACHE) {
+        if (!NEXTEND_CUSTOM_CACHE && !defined('NEXTEND_CACHE_STORAGE')) {
             self::check(self::getBasePath(), 'cache');
         }
         if (is_multisite()) {
             return self::getBasePath() . NEXTEND_RELATIVE_CACHE_WEB . get_current_blog_id();
         }
+
         return self::getBasePath() . NEXTEND_RELATIVE_CACHE_WEB;
     }
 
@@ -40,11 +41,13 @@ class N2Filesystem extends N2FilesystemAbstract {
         if (is_multisite()) {
             return self::getBasePath() . NEXTEND_RELATIVE_CACHE_NOTWEB . get_current_blog_id();
         }
+
         return self::getBasePath() . NEXTEND_RELATIVE_CACHE_NOTWEB;
     }
 
     public static function getPaths() {
         $i = N2Filesystem::getInstance();
+
         return $i->paths;
     }
 
@@ -53,9 +56,11 @@ class N2Filesystem extends N2FilesystemAbstract {
         foreach ($uris AS $i => $uri) {
             if (substr($url, 0, strlen($uri)) == $uri) {
                 $ins = N2Filesystem::getInstance();
+
                 return str_replace($uri, $ins->paths[$i], $url);
             }
         }
+
         return $url;
     }
 }

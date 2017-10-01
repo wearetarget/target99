@@ -29,8 +29,8 @@ class N2SmartSliderSlidesAdmin extends N2SmartSliderSlides {
                     array_splice($slides, $this->maximumSlideCount - 1);
                 }
 
-                $staticSlide = N2Request::getInt('static', 0);
-                $slide       = $this->createSlide(array(
+                $staticSlide          = N2Request::getInt('static', 0);
+                $currentlyEditedSlide = $this->createSlide(array(
                     'id'           => 0,
                     'title'        => 'Title',
                     'slider'       => N2Request::getInt('sliderid'),
@@ -46,8 +46,9 @@ class N2SmartSliderSlidesAdmin extends N2SmartSliderSlides {
                     'ordering'     => count($slides),
                     'generator_id' => 0
                 ));
-                if ($slide->isStatic()) {
-                    $this->slider->addStaticSlide($slide);
+
+                if ($currentlyEditedSlide->isStatic()) {
+                    $this->slider->addStaticSlide($currentlyEditedSlide);
 
                     $this->slider->setStatic(1);
 
@@ -80,8 +81,8 @@ class N2SmartSliderSlidesAdmin extends N2SmartSliderSlides {
                         }
                     }
 
-                    array_push($slides, $slide);
-                    $this->slider->_activeSlide = count($slides) - 1;
+                    array_push($slides, $currentlyEditedSlide);
+                    $this->slider->firstSlideIndex = count($slides) - 1;
                 }
             } else {
 
@@ -154,12 +155,12 @@ class N2SmartSliderSlidesAdmin extends N2SmartSliderSlides {
                     } else {
                         $currentlyEditedSlide = $this->slider->staticSlides[0];
                     }
-                    $this->slider->_activeSlide = 0;
+                    $this->slider->firstSlideIndex = 0;
                 } else {
                     for ($i = 0; $i < count($slides); $i++) {
                         if ($slides[$i]->id == $currentlyEdited) {
-                            $this->slider->_activeSlide = $i;
-                            $currentlyEditedSlide       = $slides[$i];
+                            $this->slider->firstSlideIndex = $i;
+                            $currentlyEditedSlide          = $slides[$i];
                             break;
                         }
                     }
@@ -174,16 +175,14 @@ class N2SmartSliderSlidesAdmin extends N2SmartSliderSlides {
                             }
                         }
                         if (!$found) {
-                            $this->slider->_activeSlide          = count($slides) - 1;
-                            $slides[$this->slider->_activeSlide] = $currentlyEditedSlide;
+                            $this->slider->firstSlideIndex          = count($slides) - 1;
+                            $slides[$this->slider->firstSlideIndex] = $currentlyEditedSlide;
                         }
                     }
                 }
-
-                if ($currentlyEditedSlide) {
-                    $currentlyEditedSlide->setCurrentlyEdited();
-                }
             }
+
+            $currentlyEditedSlide->setCurrentlyEdited();
         }
     }
 }

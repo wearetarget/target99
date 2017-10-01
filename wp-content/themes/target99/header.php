@@ -11,6 +11,17 @@ $navigation_menu_args = array(
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?php wp_title('|', true, 'right'); ?></title>
 
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-107331312-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments)};
+  gtag('js', new Date());
+
+  gtag('config', 'UA-107331312-1');
+</script>
+
+
     <?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>

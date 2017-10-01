@@ -1,6 +1,11 @@
 N2Require('ItemHeading', ['Item'], ['smartSlider'], function ($, scope, smartSlider, undefined) {
     "use strict";
 
+    /**
+     * @constructor
+     * @augments Item
+     * @memberof scope
+     */
     function ItemHeading() {
         this.type = 'heading';
         scope.Item.prototype.constructor.apply(this, arguments);
@@ -8,6 +13,8 @@ N2Require('ItemHeading', ['Item'], ['smartSlider'], function ($, scope, smartSli
 
     ItemHeading.prototype = Object.create(scope.Item.prototype);
     ItemHeading.prototype.constructor = ItemHeading;
+
+    ItemHeading.needSize = false;
 
     ItemHeading.prototype.getDefault = function () {
         return {

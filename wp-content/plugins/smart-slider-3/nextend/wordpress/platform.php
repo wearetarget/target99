@@ -17,6 +17,13 @@ class N2Platform {
         }
     }
 
+    public static function getSiteUrl() {
+        return str_replace(array(
+            'http://',
+            'https://'
+        ), '//', site_url('/'));
+    }
+
     public static function getPlatform() {
         return 'wordpress';
     }
@@ -35,6 +42,7 @@ class N2Platform {
 
     public static function getPublicDir() {
         $upload_dir = wp_upload_dir();
+
         return N2Filesystem::fixPathSeparator(str_replace('//', '/', $upload_dir['basedir']));
     }
 
@@ -73,7 +81,7 @@ class N2Platform {
             'isFTPCredentialsNeeded'
         ));
 
-        N2Loader::import('libraries.zip.zip_read');
+        N2Loader::import('libraries.zip.reader');
 
         $tmpHandle = tmpfile();
         fwrite($tmpHandle, $fileRaw);
@@ -120,6 +128,7 @@ class N2Platform {
 
         if (self::$needCredentials) {
             fclose($tmpHandle);
+
             return 'CREDENTIALS';
         }
 
@@ -134,6 +143,7 @@ class N2Platform {
 
     public static function isFTPCredentialsNeeded($types) {
         self::$needCredentials = true;
+
         return $types;
     }
 

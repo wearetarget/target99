@@ -12,7 +12,7 @@ class N2SmartSliderSlide {
 
     public $parameters, $background = '';
 
-    protected $active = false;
+    protected $isProcessedFirst = false;
 
     protected $html = '';
 
@@ -130,8 +130,8 @@ class N2SmartSliderSlide {
         return !!$this->first;
     }
 
-    public function isActive() {
-        return $this->active;
+    public function isProcessedFirst() {
+        return $this->isProcessedFirst;
     }
 
     public function isCurrentlyEdited() {
@@ -142,9 +142,11 @@ class N2SmartSliderSlide {
         $this->index = $index;
     }
 
-    public function setActive() {
-        $this->classes .= ' n2-ss-slide-active';
-        $this->active = true;
+    public function setFirst() {
+        //$this->classes .= ' n2-ss-slide-active';
+        $this->isProcessedFirst = true;
+
+        $this->attributes['data-first'] = '1';
     }
 
     public function prepare() {
@@ -237,7 +239,7 @@ class N2SmartSliderSlide {
         }
 
         return N2Html::tag('div', array(
-            'class'             => 'n2-ss-static-slide n2-ow',
+            'class'             => 'n2-ss-static-slide n2-ow' . $this->classes,
             'data-csstextalign' => 'center'
         ), $mainContainer->render());
     }
@@ -474,32 +476,32 @@ class N2SmartSliderSlide {
             $children = N2SSSlideComponentLayer::translateIds($children);
         }
 
-        self::fillLayers($children);
+        $this->fillLayers($children);
 
         return json_encode($children);
     }
 
-    public static function fillLayers(&$layers) {
+    public function fillLayers(&$layers) {
         for ($i = 0; $i < count($layers); $i++) {
             if (isset($layers[$i]['type'])) {
                 switch ($layers[$i]['type']) {
                     case 'content':
-                        N2SSSlideComponentContent::getFilled($layers[$i]);
+                        N2SSSlideComponentContent::getFilled($this, $layers[$i]);
                         break;
                     case 'row':
-                        N2SSSlideComponentRow::getFilled($layers[$i]);
+                        N2SSSlideComponentRow::getFilled($this, $layers[$i]);
                         break;
                     case 'col':
-                        N2SSSlideComponentCol::getFilled($layers[$i]);
+                        N2SSSlideComponentCol::getFilled($this, $layers[$i]);
                         break;
                     case 'group':
-                        N2SSSlideComponentGroup::getFilled($layers[$i]);
+                        N2SSSlideComponentGroup::getFilled($this, $layers[$i]);
                         break;
                     default:
-                        N2SSSlideComponentLayer::getFilled($layers[$i]);
+                        N2SSSlideComponentLayer::getFilled($this, $layers[$i]);
                 }
             } else {
-                N2SSSlideComponentLayer::getFilled($layers[$i]);
+                N2SSSlideComponentLayer::getFilled($this, $layers[$i]);
             }
         }
     }
@@ -556,10 +558,6 @@ class N2SmartSliderSlide {
         }
 
         return '1/1';
-    }
-
-    public function setCurrentlyEdited() {
-        $this->underEdit = true;
     }
 }
 

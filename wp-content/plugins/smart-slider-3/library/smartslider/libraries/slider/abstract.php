@@ -12,6 +12,10 @@ N2Loader::import('libraries.slider.widget.widgets', 'smartslider');
 
 abstract class N2SmartSliderAbstract {
 
+    public $manifestData = array(
+        'generator' => array()
+    );
+
     protected $isGroup = false;
 
     public $sliderId = 0;
@@ -45,7 +49,7 @@ abstract class N2SmartSliderAbstract {
 
     public $isAdmin = false;
 
-    public $_activeSlide = 0;
+    public $firstSlideIndex = 0;
     /**
      * @var Mobile_Detect
      */
@@ -210,7 +214,7 @@ abstract class N2SmartSliderAbstract {
         $this->assets = $this->getSliderTypeResource('css');
         $this->assets->render();
         if (!$this->isGroup) {
-            $this->slides[$this->_activeSlide]->setActive();
+            $this->slides[$this->firstSlideIndex]->setFirst();
             for ($i = 0; $i < count($this->slides); $i++) {
                 $this->slides[$i]->prepare();
                 $this->slides[$i]->setSlidesParams();
@@ -261,8 +265,8 @@ abstract class N2SmartSliderAbstract {
 
             $slider .= $this->features->fadeOnLoad->renderPlaceholder($this->assets->sizes);
         }
-		
-		if (intval($this->params->get('clear-both', 0))) {
+
+        if (intval($this->params->get('clear-both', 0))) {
             $slider = '<div class="n2-clear"></div>' . $slider;
         }
 
@@ -288,11 +292,11 @@ abstract class N2SmartSliderAbstract {
     public function getPreviousSlide() {
         $length = count($this->slides);
 
-        if ($this->_activeSlide == 0) {
+        if ($this->firstSlideIndex == 0) {
             return $this->slides[$length - 1];
         }
 
-        return $this->slides[$this->_activeSlide - 1];
+        return $this->slides[$this->firstSlideIndex - 1];
     }
 
     /**
@@ -300,11 +304,11 @@ abstract class N2SmartSliderAbstract {
      */
     public function getNextSlide() {
         $length = count($this->slides);
-        if ($this->_activeSlide == $length - 1) {
+        if ($this->firstSlideIndex == $length - 1) {
             return $this->slides[0];
         }
 
-        return $this->slides[$this->_activeSlide + 1];
+        return $this->slides[$this->firstSlideIndex + 1];
     }
 
     public static function removeShortcode($content) {

@@ -1,6 +1,16 @@
 (~'div#@{sliderid}') {
 
-  .n2-bullet-bar-full-size {
+  .n2-ss-control-bullet {
+    visibility: hidden;
+    text-align: center;
+  }
+
+  .nextend-bullet-bar {
+    display: inline-block;
+    visibility: visible;
+  }
+
+  .nextend-bullet-bar.n2-bullet-bar-full-size {
     display: block;
     -moz-box-sizing: border-box !important;
     -webkit-box-sizing: border-box !important;

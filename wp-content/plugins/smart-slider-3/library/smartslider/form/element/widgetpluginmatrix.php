@@ -53,7 +53,7 @@ class N2ElementWidgetPluginMatrix extends N2ElementSubPluginMatrix
             'class' => 'n2-subform-image-option n2-subform-image-option-simple ' . $this->isActive($k)
         ), N2Html::tag('div', array(
             'class' => 'n2-subform-image-element',
-            'style' => 'background-image: url(' . $this->getImage($path, $k) . ');'
+            'style' => 'background-image: URL(' . $this->getImage($path, $k) . ');'
         )));
     }
 

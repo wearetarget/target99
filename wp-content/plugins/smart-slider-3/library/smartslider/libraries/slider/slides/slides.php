@@ -97,11 +97,11 @@ class N2SmartSliderSlides {
         }
 
         if (!$randomizeCache && $randomizeFirst) {
-            $this->slider->_activeSlide = mt_rand(0, count($slides) - 1);
+            $this->slider->firstSlideIndex = mt_rand(0, count($slides) - 1);
         } else {
             for ($i = 0; $i < count($slides); $i++) {
                 if ($slides[$i]->isFirst()) {
-                    $this->slider->_activeSlide = $i;
+                    $this->slider->firstSlideIndex = $i;
                     break;
                 }
             }
@@ -117,7 +117,7 @@ class N2SmartSliderSlides {
     }
 
     protected function loadSlides($extend, $dummy) {
-        $this->slider->_activeSlide = 0;
+        $this->slider->firstSlideIndex = 0;
 
         $where = $this->slidesWhereQuery();
 

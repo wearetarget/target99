@@ -58,7 +58,7 @@ class N2ElementImage extends N2ElementText {
         if (empty($image) || $image[0] == '{') {
             return '';
         }
-        return 'background-image:url(' . N2ImageHelper::fixed($image) . ');';
+        return 'background-image:URL(' . N2ImageHelper::fixed($image) . ');';
     }
 
     protected function post() {

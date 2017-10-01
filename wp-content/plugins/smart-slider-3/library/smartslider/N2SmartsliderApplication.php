@@ -1,8 +1,7 @@
 <?php
 N2Loader::import("smartslider3", "smartslider");
 
-class N2SmartSliderApplication extends N2Application
-{
+class N2SmartSliderApplication extends N2Application {
 
     public $name = "smartslider";
 
@@ -22,6 +21,7 @@ class N2SmartSliderApplication extends N2Application
     }
 
     public function hasExpertMode() {
-        return !!N2SSPRO;
+        return false;
+    
     }
 }

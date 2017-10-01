@@ -5,5 +5,5 @@ if (!defined('ABSPATH')) {
 }
 
 add_action('wp_ajax_tailor_render', function () {
-    \N2SS3Shortcode::forceIframe();
+    \N2SS3Shortcode::forceIframe('tailor');
 }, -1);

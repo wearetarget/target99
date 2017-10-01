@@ -5,14 +5,29 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
+function n2_elementor_force_iframe() {
+    \N2SS3Shortcode::forceIframe('elementor');
+}
+
 add_action('template_redirect', function () {
     if (\Elementor\Plugin::instance()->editor->is_edit_mode() || \Elementor\Plugin::instance()->preview->is_preview_mode()) {
-        \N2SS3Shortcode::forceIframe();
+        n2_elementor_force_iframe();
     }
 }, -1);
 
+add_action('admin_action_elementor', function () {
+    n2_elementor_force_iframe();
+}, -10000);
 
-add_action('wp_ajax_elementor_render_widget', 'N2SS3Shortcode::forceIframe', -1);
+add_action('wp_ajax_elementor_render_widget', '\Elementor\n2_elementor_force_iframe', -1);
+
+
+add_action('elementor/editor/before_enqueue_styles', function () {
+    wp_register_style('smart-slider-editor', plugin_dir_url(NEXTEND_SMARTSLIDER_3__FILE__) . 'editor/editor.min.css', array(), '3.22', 'screen');
+
+    wp_enqueue_style('smart-slider-editor');
+});
+
 add_action('elementor/editor/before_enqueue_scripts', 'N2SSShortcodeInsert::addForcedFrontend');
 
 add_action('elementor/widgets/widgets_registered', function () {
@@ -37,19 +52,15 @@ class Nextend_Widget_SmartSlider extends \Elementor\Widget_Base {
 
     protected function _register_controls() {
 
-        $this->start_controls_section('section_my_custom', [
+        $this->start_controls_section('section_smart_slider_elementor', [
             'label' => esc_html('Smart Slider'),
         ]);
-
-        NextendRegisterControlSmartSliderField();
-        \Elementor\Plugin::instance()->controls_manager->register_control('smartsliderfield', new Control_SmartSliderField());
-
 
         $this->add_control('smartsliderid', [
             'label'   => 'Slider ID',
             'type'    => 'smartsliderfield',
             'default' => '',
-            'title'   => __('Enter some text', 'elementor-custom-element'),
+            'title'   => 'Slider ID',
         ]);
 
         $this->end_controls_section();
@@ -74,47 +85,50 @@ class Nextend_Widget_SmartSlider extends \Elementor\Widget_Base {
 
 }
 
-function NextendRegisterControlSmartSliderField() {
-    static $registered;
-    if (!$registered) {
-        if (class_exists('\Elementor\Base_Data_Control')) {
 
-            class_alias('\Elementor\Base_Data_Control', '\Elementor\NextendElementorFieldAbstract');
-        } else {
+add_action('elementor/controls/controls_registered', function ($controls_manager) {
 
-            class_alias('\Elementor\Control_Base', '\Elementor\NextendElementorFieldAbstract');
+    if (class_exists('\Elementor\Base_Data_Control')) {
+
+        abstract class NextendElementorFieldAbstract extends Base_Data_Control {
+
+        }
+    } else {
+
+        abstract class NextendElementorFieldAbstract extends Control_Base {
+
+        }
+    }
+
+    class_exists('\Elementor\Group_Control_Background');
+
+    class Control_SmartSliderField extends \Elementor\NextendElementorFieldAbstract {
+
+        public function get_type() {
+            return 'smartsliderfield';
         }
 
-        class_exists('\Elementor\Group_Control_Background');
-
-        class Control_SmartSliderField extends \Elementor\NextendElementorFieldAbstract {
-
-            public function get_type() {
-                return 'smartsliderfield';
-            }
-
-            public function content_template() {
-                ?>
-                <div class="elementor-control-field">
+        public function content_template() {
+            ?>
+            <div class="elementor-control-field">
 			<label class="elementor-control-title">{{{ data.label }}}</label>
 			<div class="elementor-control-input-wrapper">
                 <a style="margin-bottom:10px;" href="#" onclick="return NextendSmartSliderSelectModal(jQuery(this).siblings('input'));" class="button button-primary elementor-button elementor-button-smartslider" title="Select slider">Select slider</a>
 				<input type="{{ data.input_type }}" title="{{ data.title }}" data-setting="{{ data.name }}""/>
 			</div>
 		</div>
-                <# if ( data.description ) { #>
+            <# if ( data.description ) { #>
 		<div class="elementor-control-field-description">{{{ data.description }}}</div>
 		<# } #>
-                <?php
-            }
-
-            public function get_default_settings() {
-                return [
-                    'input_type' => 'text',
-                ];
-            }
+            <?php
         }
 
-        $registered = true;
+        public function get_default_settings() {
+            return [
+                'input_type' => 'text',
+            ];
+        }
     }
-}
+
+    $controls_manager->register_control('smartsliderfield', new Control_SmartSliderField());
+});

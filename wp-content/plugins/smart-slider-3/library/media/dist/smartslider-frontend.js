@@ -1,340 +1,53 @@
-N2Require('SmartSliderBackgroundImage', [], [], function ($, scope, undefined) {
-
-    function SmartSliderBackgroundImage(i, element, manager) {
-        this.loadAllowed = false;
-
-        this.width = 0;
-        this.height = 0;
-
-        this.i = i;
-        this.element = element;
-        this.manager = manager;
-        this.loadDeferred = $.Deferred();
-
-        this.currentSrc = '';
-        this.mode = element.data('mode');
-        this.opacity = element.data('opacity');
-        this.blur = element.data('blur');
-        this.x = element.data('x');
-        this.y = element.data('y');
-
-
-        this.hasImage = false;
-        this.$image = element.find('img');
-
-        if (!this.$image.length) {
-            this.startColorMode();
-        } else {
-            this.hasImage = true;
-            this.startImageMode();
-        }
-    };
-
-    SmartSliderBackgroundImage.prototype.startColorMode = function () {
-        this.loadDeferred.resolve();
-    }
-
-    SmartSliderBackgroundImage.prototype.startImageMode = function () {
-        if (this.mode == 'fixed' && ((n2const.isPhone && !this.manager.slider.parameters['background.parallax.mobile']) || (n2const.isTablet && !this.manager.slider.parameters['background.parallax.tablet']))) {
-            this.mode = 'fill';
-        }
-        this.$image.css('display', 'none');
-        this.$background = $('<div class="n2-ss-background-image"/>')
-            .css({
-                opacity: this.opacity,
-                backgroundPosition: this.x + '% ' + this.y + '%'
-            })
-            .appendTo(this.element);
-
-        if (window.n2FilterProperty) {
-            if (this.blur > 0) {
-                this.$background.css({
-                    margin: '-' + (this.blur * 2) + 'px',
-                    padding: (this.blur * 2) + 'px'
-                }).css(window.n2FilterProperty, 'blur(' + this.blur + 'px)');
-            } else {
-                this.$background.css({
-                    margin: '',
-                    padding: ''
-                }).css(window.n2FilterProperty, '');
-            }
-        }
-
-        if (this.mode == 'fixed') {
-            this.startFixed();
-        }
-
-        this.desktopSrc = this.element.data('desktop') || '';
-        this.tabletSrc = this.element.data('tablet') || '';
-        this.mobileSrc = this.element.data('mobile') || '';
-
-        if (nextend.isRetina) {
-            var retina = this.element.data('desktop-retina');
-            if (retina) {
-                this.desktopSrc = retina;
-            }
-            retina = this.element.data('tablet-retina');
-            if (retina) {
-                this.tabletSrc = retina;
-            }
-            retina = this.element.data('mobile-retina');
-            if (retina) {
-                this.mobileSrc = retina;
-            }
-        }
-    }
-
-    SmartSliderBackgroundImage.prototype.preLoad = function () {
-        if (this.loadDeferred.state() == 'pending') {
-            this.loadAllowed = true;
-            this.manager.deviceDeferred.done($.proxy(function () {
-                this.updateBackgroundToDevice(this.manager.device);
-                this.$background.n2imagesLoaded({background: true}, $.proxy(function (e) {
-                    var img = e.images[0].img;
-                    this.width = img.naturalWidth;
-                    this.height = img.naturalHeight;
-
-                    this.isLoaded = true;
-                    this.loadDeferred.resolve(this.element);
-                }, this));
-            }, this));
-        }
-        return this.loadDeferred;
-    };
-
-    SmartSliderBackgroundImage.prototype.afterLoaded = function () {
-        return $.when(this.loadDeferred, this.manager.slider.responsive.ready);
-    };
-
-    SmartSliderBackgroundImage.prototype.updateBackgroundToDevice = function (device) {
-        var newSrc = this.desktopSrc;
-        if (device.device == 'mobile') {
-            if (this.mobileSrc) {
-                newSrc = this.mobileSrc;
-            } else if (this.tabletSrc) {
-                newSrc = this.tabletSrc;
-            }
-        } else if (device.device == 'tablet') {
-            if (this.tabletSrc) {
-                newSrc = this.tabletSrc;
-            }
-        }
-        if (newSrc) {
-            this.setSrc(newSrc);
-        } else {
-            this.setSrc('');
-        }
-    };
-
-    SmartSliderBackgroundImage.prototype.setSrc = function (src) {
-        if (this.loadAllowed) {
-            if (src != this.currentSrc) {
-                if (src === '') {
-                    this.$background.css('background-image', '');
-                } else {
-                    this.$background.css('background-image', 'url("' + src + '")');
-                }
-                this.currentSrc = src;
-            }
-        }
-    }
-
-    SmartSliderBackgroundImage.prototype.startFixed = function () {
-        if (!n2const.isEdge) {
-            if (this.manager.slider.parameters.allowBGImageAttachmentFixed && !n2const.isIOS) {
-                this.$background.css('background-repeat', 'repeat');
-                this.$background.css('position', 'static');
-                this.$background.css('background-attachment', 'fixed');
-            } else if (!n2const.isIE) {
-                this.manager.slider.startedDeferred.done($.proxy(function () {
-                    fixedBackground.addElement(this.$background, this.element);
-                }, this));
-            }
-        }
-    }
-
-    SmartSliderBackgroundImage.prototype.hack = function () {
-        NextendTween.set(this.element, {
-            rotation: 0.0001
-        });
-    };
-
-    return SmartSliderBackgroundImage;
-});
-N2Require('SmartSliderBackgroundImageAdmin', ['SmartSliderBackgroundImage'], [], function ($, scope, undefined) {
-
-
-    function SmartSliderBackgroundImageAdmin(i, element, manager) {
-        this.allowVisualLoad = true;
-
-        this.hash = element.data('hash');
-
-        scope.SmartSliderBackgroundImage.prototype.constructor.call(this, i, element, manager);
-        this.loadAllowed = true;
-
-        this.listenImageManager();
-    };
-
-    SmartSliderBackgroundImageAdmin.prototype = Object.create(scope.SmartSliderBackgroundImage.prototype);
-    SmartSliderBackgroundImageAdmin.prototype.constructor = SmartSliderBackgroundImageAdmin;
-
-
-    SmartSliderBackgroundImageAdmin.prototype.startColorMode = function () {
-
-        // Create an empty div for the background image in the editor
-        this.$background = $('<div class="n2-ss-background-image"/>')
-            .appendTo(this.element);
-        this.loadDeferred.resolve();
-    }
-
-    SmartSliderBackgroundImageAdmin.prototype.setVisualLoad = function (state) {
-        this.allowVisualLoad = state;
-    }
-
-    SmartSliderBackgroundImageAdmin.prototype.listenImageManager = function () {
-        if (this.hash != '') {
-            $(window).on(this.hash, $.proxy(this.onImageManagerChanged, this));
-        }
-    };
-
-    SmartSliderBackgroundImageAdmin.prototype.notListenImageManager = function () {
-        if (this.hash != '') {
-            $(window).off(this.hash, null, $.proxy(this.onImageManagerChanged, this));
-        }
-    };
-
-    SmartSliderBackgroundImageAdmin.prototype.onImageManagerChanged = function (e, imageData) {
-        this.tabletSrc = imageData.tablet.image;
-        this.mobileSrc = imageData.mobile.image;
-
-        this.updateBackgroundToDevice(this.manager.device);
-    };
-
-    SmartSliderBackgroundImageAdmin.prototype.setDesktopSrc = function (src) {
-        this.notListenImageManager();
-        this.desktopSrc = src;
-        this.hash = md5(src);
-
-        if (src != '' && this.allowVisualLoad) {
-            var img = new Image();
-            img.addEventListener("load", $.proxy(function () {
-                $.when(nextend.imageManager.getVisual(src))
-                    .done($.proxy(function (visual) {
-                        this.onImageManagerChanged(null, visual.value);
-                        this.listenImageManager();
-                    }, this));
-            }, this), false);
-            img.src = nextend.imageHelper.fixed(src);
-        } else {
-            this.tabletSrc = '';
-            this.mobileSrc = '';
-
-            this.setSrc(nextend.imageHelper.fixed(src));
-        }
-    }
-    SmartSliderBackgroundImageAdmin.prototype.setSrc = function (src) {
-        scope.SmartSliderBackgroundImage.prototype.setSrc.call(this, nextend.imageHelper.fixed(src));
-    }
-
-    SmartSliderBackgroundImageAdmin.prototype.startFixed = function () {
-
-    }
-
-    SmartSliderBackgroundImageAdmin.prototype.setMode = function (newMode) {
-        if (newMode == 'default') {
-            newMode = nextend.smartSlider.slideBackgroundMode;
-        }
-        this.element.attr('data-mode', newMode);
-        this.mode = newMode;
-    }
-
-    SmartSliderBackgroundImageAdmin.prototype.setFocus = function (x, y) {
-        this.$background.css('background-position', x + '% ' + y + '%');
-    }
-
-    SmartSliderBackgroundImageAdmin.prototype.setOpacity = function (opacity) {
-        this.opacity = opacity;
-        this.$background.css('opacity', opacity);
-    };
-
-    SmartSliderBackgroundImageAdmin.prototype.setBlur = function (blur) {
-        if (window.n2FilterProperty) {
-            if (blur > 0) {
-                this.$background.css({
-                    margin: '-' + (blur * 2) + 'px',
-                    padding: (blur * 2) + 'px'
-                }).css(window.n2FilterProperty, 'blur(' + blur + 'px)');
-            } else {
-                this.$background.css({
-                    margin: '',
-                    padding: ''
-                }).css(window.n2FilterProperty, '');
-            }
-        }
-        this.blur = blur;
-    };
-
-    return SmartSliderBackgroundImageAdmin;
-});
 N2Require('SmartSliderBackgroundImages', [], [], function ($, scope, undefined) {
 
     function SmartSliderBackgroundImages(slider) {
         this.device = null;
 
-        this.load = $.Deferred();
+        //this.load = $.Deferred();
 
         this.slider = slider;
-        this.slides = this.slider.realSlides;
-
-        this.loaded = [];
 
         this.lazyLoad = slider.parameters.lazyLoad;
         this.lazyLoadNeighbor = slider.parameters.lazyLoadNeighbor;
 
         this.deviceDeferred = $.Deferred();
 
-        /**
-         * @type {SmartSliderBackgroundImage[]}
-         */
-        this.backgroundImages = [];
-        for (var i = 0; i < this.slides.length; i++) {
-            this.loaded[i] = false;
-            var image = this.slides.eq(i).find('.n2-ss-slide-background');
-            if (image.length > 0) {
-                if (this.slider.isAdmin) {
-                    this.backgroundImages[i] = new scope.SmartSliderBackgroundImageAdmin(i, image, this);
-                } else {
-                    this.backgroundImages[i] = new scope.SmartSliderBackgroundImage(i, image, this);
-                }
-            } else {
-                this.backgroundImages[i] = false;
-            }
-            this.slides.eq(i).data('slideBackground', this.backgroundImages[i]);
-        }
-
         this.slider.sliderElement.one('SliderDevice', $.proxy(this.onSlideDeviceChangedFirst, this));
+        this.slider.sliderElement.on('visibleSlidesChanged', $.proxy(this.onVisibleSlidesChanged, this));
+        this.slider.sliderElement.on('slideCountChanged', $.proxy(this.onVisibleSlidesChanged, this));
 
-    };
+    }
 
     SmartSliderBackgroundImages.prototype.whenWithProgress = function (arrayOfPromises) {
-        var cntr = 0, defer = $.Deferred();
+        var cntr = 0, deferred = $.Deferred();
         for (var i = 0; i < arrayOfPromises.length; i++) {
-            arrayOfPromises[i].done(function () {
-                defer.notify(++cntr, arrayOfPromises.length);
+            $.when(arrayOfPromises[i]).done(function () {
+                deferred.notify(++cntr, arrayOfPromises.length);
             });
         }
-        // It is kind of an anti-pattern to use our own deferred and
-        // then just resolve it when the promise is resolved
-        // But, we can only call .notify() on a defer so if we want to use that,
-        // we are forced to make our own deferred
+
         $.when.apply($, arrayOfPromises).done(function () {
-            defer.resolveWith(null, arguments);
+            deferred.resolveWith(null, arguments);
         });
-        return defer.promise();
+
+        return deferred;
     };
 
     SmartSliderBackgroundImages.prototype.getBackgroundImages = function () {
-        return this.backgroundImages;
+        var images = [];
+        for (var i = 0; i < this.slider.realSlides.length; i++) {
+            images.push(this.slider.realSlides[i].backgroundImage);
+        }
+        return images;
+    };
+
+    SmartSliderBackgroundImages.prototype.onVisibleSlidesChanged = function () {
+
+        if (this.lazyLoad == 1) {
+            this.load = this.preLoadSlides(this.slider.getVisibleSlides(this.slider.currentSlide));
+        } else if (this.lazyLoad == 2) { // delayed
+            this.load = this.preLoadSlides(this.slider.getVisibleSlides(this.slider.currentSlide));
+        }
     };
 
     SmartSliderBackgroundImages.prototype.onSlideDeviceChangedFirst = function (e, device) {
@@ -343,14 +56,15 @@ N2Require('SmartSliderBackgroundImages', [], [], function ($, scope, undefined) 
 
         this.slider.sliderElement.on('SliderDevice', $.proxy(this.onSlideDeviceChanged, this));
 
+        this.preLoadSlides = this._preLoadSlides;
         if (this.lazyLoad == 1) {
-            this.preLoad = this.preLoadLazyNeighbor;
+            this.preLoadSlides = this.preloadSlidesLazyNeighbor;
 
-            this.load = $.when(this.preLoad(this.slider.currentSlideIndex));
+            this.load = this.preLoadSlides(this.slider.getVisibleSlides(this.slider.currentSlide));
         } else if (this.lazyLoad == 2) { // delayed
             $(window).on('load', $.proxy(this.preLoadAll, this));
 
-            this.load = $.when(this.preLoad(this.slider.currentSlideIndex));
+            this.load = this.preLoadSlides(this.slider.getVisibleSlides(this.slider.currentSlide));
         } else {
             this.load = this.whenWithProgress(this.preLoadAll());
         }
@@ -358,71 +72,53 @@ N2Require('SmartSliderBackgroundImages', [], [], function ($, scope, undefined) 
 
     SmartSliderBackgroundImages.prototype.onSlideDeviceChanged = function (e, device) {
         this.device = device;
-        for (var i = 0; i < this.backgroundImages.length; i++) {
-            if (this.backgroundImages[i]) {
-                this.backgroundImages[i].updateBackgroundToDevice(device);
+        for (var i = 0; i < this.slider.realSlides.length; i++) {
+            if (this.slider.realSlides[i].backgroundImage) {
+                this.slider.realSlides[i].backgroundImage.updateBackgroundToDevice(device);
             }
         }
-    };
-
-    SmartSliderBackgroundImages.prototype.changed = function (i) {
-        if (this.lazyLoad == 1 || this.lazyLoad == 2) {
-            if (i == this.slider.currentSlideIndex) {
-                this.preLoad(i);
-            }
-        } else {
-            this.preLoad(i);
-        }
-    };
-
-    SmartSliderBackgroundImages.prototype.preLoadCurrent = function () {
-        this.preLoad(this.slider.currentSlideIndex);
     };
 
     SmartSliderBackgroundImages.prototype.preLoadAll = function () {
         var deferreds = [];
-        for (var i = 0; i < this.backgroundImages.length; i++) {
-            deferreds.push(this._preLoad(i));
+        for (var i = 0; i < this.slider.realSlides.length; i++) {
+            deferreds.push(this.slider.realSlides[i].preLoad());
         }
         return deferreds;
     };
 
-    SmartSliderBackgroundImages.prototype.preLoad = function (i) {
-        return this._preLoad(i);
+    SmartSliderBackgroundImages.prototype._preLoadSlides = function (slides) {
+        var deferreds = [];
+        if (Object.prototype.toString.call(slides) !== '[object Array]') {
+            slides = [slides];
+        }
+        for (var i = 0; i < slides.length; i++) {
+            deferreds.push(slides[i].preLoad());
+        }
+
+        return $.when.apply($, deferreds);
     };
 
-    SmartSliderBackgroundImages.prototype.preLoadLazyNeighbor = function (i) {
+    SmartSliderBackgroundImages.prototype.preloadSlidesLazyNeighbor = function (slides) {
+        var deferreds = [this._preLoadSlides(slides)];
 
-        var lazyLoadNeighbor = this.lazyLoadNeighbor,
-            deferreds = [this._preLoad(i)];
-
-        if (lazyLoadNeighbor) {
+        if (this.lazyLoadNeighbor) {
             var j = 0,
-                k = i;
-            while (j < lazyLoadNeighbor) {
-                k--;
-                if (k < 0) {
-                    k = this.backgroundImages.length - 1;
-                }
-                deferreds.push(this._preLoad(k));
-                j++;
-            }
-            j = 0;
-            k = i;
-            while (j < lazyLoadNeighbor) {
-                k++;
-                if (k >= this.backgroundImages.length) {
-                    k = 0;
-                }
-                deferreds.push(this._preLoad(k));
+                previousSlide = slides[0].previousSlide,
+                nextSlide = slides[slides.length - 1].nextSlide;
+            while (j < this.lazyLoadNeighbor) {
+                deferreds.push(previousSlide.preLoad());
+                previousSlide = previousSlide.previousSlide;
+                deferreds.push(nextSlide.preLoad());
+                nextSlide = nextSlide.nextSlide;
                 j++;
             }
         }
 
         var renderedDeferred = $.Deferred();
-        if (deferreds[0].state() != true && deferreds[0].state() != 'resolved') {
+        if (deferreds[0].state() != 'resolved') {
             var timeout = setTimeout($.proxy(function () {
-                this.slider.load.showSpinner('backgroundImage' + i);
+                this.slider.load.showSpinner('backgroundImage' + slides[0].index);
                 timeout = null;
             }, this), 50);
 
@@ -431,7 +127,7 @@ N2Require('SmartSliderBackgroundImages', [], [], function ($, scope, undefined) 
                     clearTimeout(timeout);
                     timeout = null;
                 } else {
-                    this.slider.load.removeSpinner('backgroundImage' + i);
+                    this.slider.load.removeSpinner('backgroundImage' + slides[0].index);
                 }
                 setTimeout(function () {
                     renderedDeferred.resolve();
@@ -447,25 +143,10 @@ N2Require('SmartSliderBackgroundImages', [], [], function ($, scope, undefined) 
         return renderedDeferred;
     };
 
-    SmartSliderBackgroundImages.prototype._preLoad = function (i) {
-        if (!this.loaded[i]) {
-            this.slides.eq(i).find('[data-lazysrc]').each(function () {
-                var $this = $(this);
-                $this.attr('src', $this.data('lazysrc'));
-            });
-            this.loaded[i] = true;
-        }
-        if (this.backgroundImages[i]) {
-            return this.backgroundImages[i].preLoad();
-        } else {
-            return true
-        }
-    };
-
     SmartSliderBackgroundImages.prototype.hack = function () {
-        for (var i = 0; i < this.backgroundImages.length; i++) {
-            if (this.backgroundImages[i]) {
-                this.backgroundImages[i].hack();
+        for (var i = 0; i < this.slider.realSlides.length; i++) {
+            if (this.slider.realSlides[i].backgroundImage) {
+                this.slider.realSlides[i].backgroundImage.hack();
             }
         }
     };
@@ -475,19 +156,21 @@ N2Require('SmartSliderBackgroundImages', [], [], function ($, scope, undefined) 
 N2Require('SmartSliderLoad', [], [], function ($, scope, undefined) {
 
     function SmartSliderLoad(smartSlider, parameters) {
-        this.smartSlider = smartSlider;
-        this.spinnerKey = 'fadePlaceholder';
-
-        this.id = smartSlider.sliderElement.attr('id');
 
         this.parameters = $.extend({
             fade: 1,
             scroll: 0
         }, parameters);
 
-        this.spinner = $('#' + this.id + '-spinner');
-
         this.deferred = $.Deferred();
+
+        this.smartSlider = smartSlider;
+        this.spinnerKey = 'fadePlaceholder';
+
+        this.id = smartSlider.sliderElement.attr('id');
+        this.$window = $(window);
+
+        this.spinner = $('#' + this.id + '-spinner');
     };
 
 
@@ -521,13 +204,12 @@ N2Require('SmartSliderLoad', [], [], function ($, scope, undefined) {
     };
 
     SmartSliderLoad.prototype.onScroll = function () {
-        var $window = $(window);
-        if (($window.scrollTop() + $window.height() > (this.smartSlider.sliderElement.offset().top + 100))) {
+        if ((this.$window.scrollTop() + this.$window.height() > (this.smartSlider.sliderElement.offset().top + 100))) {
             n2c.log('Fade on scroll - reached');
 
-            this.showSlider();
+            this.$window.off('scroll.' + this.id);
 
-            $window.off('scroll.' + this.id);
+            this.showSlider();
         }
     };
 
@@ -538,14 +220,14 @@ N2Require('SmartSliderLoad', [], [], function ($, scope, undefined) {
                 deferred.resolve();
             });
         return deferred;
-    }
+    };
 
     SmartSliderLoad.prototype.showSlider = function () {
 
         $.when(this.smartSlider.responsive.ready, this.smartSlider.backgroundImages.load, this.loadLayerImages()).always($.proxy(function () {
             this._showSlider();
         }, this));
-    }
+    };
 
     SmartSliderLoad.prototype._showSlider = function (cb) {
         n2c.log('Images loaded');
@@ -556,6 +238,11 @@ N2Require('SmartSliderLoad', [], [], function ($, scope, undefined) {
             n2c.log('Event: BeforeVisible');
             this.smartSlider.responsive.invalidateResponsiveState = true;
             this.smartSlider.responsive.doResize();
+
+            if (this.smartSlider.mainAnimation) this.smartSlider.mainAnimation.setToStarterSlide(this.smartSlider.starterSlide);
+
+            this.smartSlider.starterSlide.setStarterSlide();
+
             this.smartSlider.sliderElement.trigger('BeforeVisible');
 
             this.smartSlider.responsive.alignElement.addClass('n2-ss-slider-align-visible');
@@ -579,12 +266,12 @@ N2Require('SmartSliderLoad', [], [], function ($, scope, undefined) {
 
     SmartSliderLoad.prototype.loaded = function (fn) {
         this.deferred.done(fn);
-    },
+    };
 
-        SmartSliderLoad.prototype.showSpinner = function (spinnerKey) {
-            this.spinnerKey = spinnerKey;
-            this.spinner.appendTo(this.loadingArea).css('display', '');
-        };
+    SmartSliderLoad.prototype.showSpinner = function (spinnerKey) {
+        this.spinnerKey = spinnerKey;
+        this.spinner.appendTo(this.loadingArea).css('display', '');
+    };
 
     SmartSliderLoad.prototype.removeSpinner = function (spinnerKey) {
         if (this.spinnerKey == spinnerKey) {
@@ -672,74 +359,101 @@ N2Require('SmartSliderAbstract', [], [], function ($, scope, undefined) {
             return false;
         }
 
+        this.id = parseInt(id.replace('n2-ss-', ''));
+
         // Register our object to a global variable
         window[id] = this;
         this.readyDeferred = $.Deferred();
 
-        $(elementID).n2waitUntilExists(elementID, $.proxy(function () {
-            var sliderElement = $(elementID);
+        this.waitForExists(id, parameters);
+    }
 
-            // Store them as we might need to change them back
-            this.nextCarousel = this.next;
-            this.previousCarousel = this.previous;
+    SmartSliderAbstract.prototype.kill = function () {
+        this.killed = true;
+        $('#' + this.sliderElement.attr('id') + '-placeholder').remove();
+        this.sliderElement.closest('.n2-ss-align').remove();
+    };
 
-            if (sliderElement.prop('tagName') == 'SCRIPT') {
-                var dependency = sliderElement.data('dependency'),
-                    delay = sliderElement.data('delay'),
-                    rocketLoad = $.proxy(function () {
-                        var rocketSlider = $(sliderElement.html().replace(/<_s_c_r_i_p_t/g, '<script').replace(/<_\/_s_c_r_i_p_t/g, '</script'));
-                        sliderElement.replaceWith(rocketSlider);
-                        this.postInit(id, $(elementID), parameters);
-                        $(window).triggerHandler('n2Rocket', [this.sliderElement]);
-                    }, this);
-                if (dependency && $('#n2-ss-' + dependency).length) {
-                    n2ss.ready(dependency, $.proxy(function (slider) {
-                        slider.ready(rocketLoad);
-                    }, this));
-                } else if (delay) {
-                    setTimeout(rocketLoad, delay);
+    SmartSliderAbstract.prototype.waitForExists = function (id, parameters) {
+        var deferred = $.Deferred(),
+            existsCheck = function () {
+                var $el = $('#' + id);
+                if ($el.length) {
+                    deferred.resolve($el);
                 } else {
-                    rocketLoad();
+                    setTimeout(existsCheck, 500);
                 }
+            };
+        deferred.done($.proxy(this.onSliderExists, this, id, parameters));
+
+        existsCheck();
+    };
+
+    SmartSliderAbstract.prototype.onSliderExists = function (id, parameters, $sliderElement) {
+
+        if ($sliderElement.prop('tagName') == 'SCRIPT') {
+            var dependency = $sliderElement.data('dependency'),
+                delay = $sliderElement.data('delay'),
+                rocketLoad = $.proxy(function () {
+                    var rocketSlider = $($sliderElement.html().replace(/<_s_c_r_i_p_t/g, '<script').replace(/<_\/_s_c_r_i_p_t/g, '</script'));
+                    $sliderElement.replaceWith(rocketSlider);
+
+                    this.waitForDimension($('#' + id), parameters);
+
+                    $(window).triggerHandler('n2Rocket', [this.sliderElement]);
+                }, this);
+            if (dependency && $('#n2-ss-' + dependency).length) {
+                n2ss.ready(dependency, $.proxy(function (slider) {
+                    slider.ready(rocketLoad);
+                }, this));
+            } else if (delay) {
+                setTimeout(rocketLoad, delay);
             } else {
-                this.postInit(id, sliderElement, parameters);
+                rocketLoad();
             }
-        }, this), true);
-    };
-
-    SmartSliderAbstract.prototype.postInit = function (id, sliderElement, parameters) {
-        if (parameters.isDelayed) {
-            setTimeout($.proxy(this._postInit, this, id, sliderElement, parameters), 200);
         } else {
-            this._postInit(id, sliderElement, parameters);
+
+            this.waitForDimension($sliderElement, parameters);
         }
     };
 
-    SmartSliderAbstract.prototype._postInit = function (id, sliderElement, parameters) {
-        var hasDimension = sliderElement.is(':visible');
-        if (hasDimension) {
-            this.__postInit(id, sliderElement, parameters);
-        } else {
-            setTimeout($.proxy(this._postInit, this, id, sliderElement, parameters), 200);
-        }
+    SmartSliderAbstract.prototype.waitForDimension = function ($sliderElement, parameters) {
+        var deferred = $.Deferred(),
+            startDimensionCheck = function () {
+                var hasDimension = $sliderElement.is(':visible');
+                if (hasDimension) {
+                    deferred.resolve();
+                } else {
+                    setTimeout(startDimensionCheck, 200);
+                }
+            };
+        startDimensionCheck();
+        deferred
+            .done($.proxy(this.onSliderHasDimension, this, $sliderElement, parameters));
     };
 
-    SmartSliderAbstract.prototype.__postInit = function (id, sliderElement, parameters) {
+    SmartSliderAbstract.prototype.onSliderHasDimension = function ($sliderElement, parameters) {
         this.killed = false;
         this.isAdmin = false;
-        this.currentSlideIndex = 0;
-        this.responsive = false;
-        this.layerMode = true;
-        this._lastChangeTime = 0;
-        n2c.log('Slider init: ', id);
-        this.id = parseInt(id.replace('n2-ss-', ''));
 
-        this.sliderElement = sliderElement.data('ss', this);
+        this.responsive = false;
+        this.mainAnimationLastChangeTime = 0;
+
+        this.currentSlide = null;
+        this.currentRealSlide = null;
+        this.staticSlide = false;
+        this.isShuffled = false;
+
+        this.slides = [];
+
+        this.visibleSlides = 1;
+
+        this.sliderElement = $sliderElement.data('ss', this);
 
         this.parameters = $.extend({
             admin: false,
             playWhenVisible: 1,
-            isStaticEdited: false,
+            playWhenVisibleAt: 0.5,
             callbacks: '',
             autoplay: {},
             blockrightclick: false,
@@ -786,8 +500,11 @@ N2Require('SmartSliderAbstract', [], [], function ($, scope, undefined) {
             descriptions: [],
             'background.parallax.tablet': 0,
             'background.parallax.mobile': 0,
-            allowBGImageAttachmentFixed: 1
+            allowBGImageAttachmentFixed: 1,
+            particlejs: 0
         }, parameters);
+
+        this.firstSlideReady = $.Deferred();
 
         try {
             eval(this.parameters.callbacks);
@@ -810,16 +527,21 @@ N2Require('SmartSliderAbstract', [], [], function ($, scope, undefined) {
 
         this.load = new scope.SmartSliderLoad(this, this.parameters.load);
 
-        this.findSlides();
+        this.backgroundImages = new scope.SmartSliderBackgroundImages(this);
 
-        this.randomize();
+        this.__initSlides();
 
-        this.currentSlideIndex = this.__getActiveSlideIndex();
+        $.when(this.overrideFirstSlide()).done($.proxy(this.onFirstSlideInitialized, this));
 
-        var postInit2Deferred = false;
+        if (navigator.userAgent.match('UCBrowser')) {
+            $('html').addClass('n2-ucbrowser');
+        }
+    };
+
+    SmartSliderAbstract.prototype.overrideFirstSlide = function () {
         if (typeof window['ss' + this.id] !== 'undefined') {
             if (typeof window['ss' + this.id] == 'object') {
-                postInit2Deferred = window['ss' + this.id].done($.proxy(function (forceActiveSlideIndex) {
+                return window['ss' + this.id].done($.proxy(function (forceActiveSlideIndex) {
                     if (forceActiveSlideIndex !== null) {
                         this.changeActiveBeforeLoad(forceActiveSlideIndex);
                     }
@@ -830,35 +552,57 @@ N2Require('SmartSliderAbstract', [], [], function ($, scope, undefined) {
                     this.changeActiveBeforeLoad(forceActiveSlideIndex);
                 }
             }
-        }
-
-        if (!this.isAdmin && this.parameters.maintainSession && typeof sessionStorage !== 'undefined') {
-            var sessionIndex = parseInt(sessionStorage.getItem('ss-' + this.id));
-            if (forceActiveSlideIndex === null && sessionIndex !== null) {
-                this.changeActiveBeforeLoad(sessionIndex);
-            }
-            this.sliderElement.on('mainAnimationComplete', $.proxy(function (e, animation, previous, next) {
-                sessionStorage.setItem('ss-' + this.id, next);
-            }, this));
-        }
-
-        if (!postInit2Deferred) {
-            this.__postInit2();
         } else {
-            postInit2Deferred.done($.proxy(this.__postInit2, this));
+            if (!this.isAdmin && this.parameters.maintainSession && typeof sessionStorage !== 'undefined') {
+                var sessionIndex = sessionStorage.getItem('ss-' + this.id);
+                if (sessionIndex !== null) {
+                    this.changeActiveBeforeLoad(parseInt(sessionIndex));
+                }
+                this.sliderElement.on('mainAnimationComplete', $.proxy(function (e, animation, previous, next) {
+                    sessionStorage.setItem('ss-' + this.id, next);
+                }, this));
+            }
+        }
+
+        return true;
+    };
+
+    SmartSliderAbstract.prototype.changeActiveBeforeLoad = function (index) {
+        if (index > 0 && index < this.realSlides.length && this.starterSlide != this.realSlides[index]) {
+
+            this.unsetActiveSlide(this.starterSlide);
+
+            this.starterSlide = this.realSlides[index];
+
+            this.setActiveSlide(this.realSlides[index]);
         }
     };
 
-    SmartSliderAbstract.prototype.__postInit2 = function () {
-        this.backgroundImages = new scope.SmartSliderBackgroundImages(this);
+    SmartSliderAbstract.prototype.startCurrentSlideIndex = function () {
 
-        n2c.log('First slide index: ', this.currentSlideIndex);
+        this.currentRealSlide = this.currentSlide = this.starterSlide;
 
-        for (var i = 0; i < this.parameters.initCallbacks.length; i++) {
-            (new Function(this.parameters.initCallbacks[i]))(this);
+        this.setActiveSlide(this.currentSlide);
+
+        if (!parseInt(this.parameters.carousel)) {
+            this.initNotCarousel();
+        } else {
+            this.initCarousel();
+        }
+    };
+
+    SmartSliderAbstract.prototype.onFirstSlideInitialized = function () {
+        //Prepare linked list of slides
+        for (var i = 0; i < this.realSlides.length; i++) {
+            this.realSlides[i].setNext(this.realSlides[i + 1 > this.realSlides.length - 1 ? 0 : i + 1]);
         }
 
-        this.initSlides();
+        this.startCurrentSlideIndex();
+        this.firstSlideReady.resolve(this.currentSlide);
+
+        for (var j = 0; j < this.parameters.initCallbacks.length; j++) {
+            (new Function('$', this.parameters.initCallbacks[j])).call(this, $);
+        }
 
         this.widgets = new scope.SmartSliderWidgets(this);
 
@@ -877,10 +621,6 @@ N2Require('SmartSliderAbstract', [], [], function ($, scope, undefined) {
 
         this.controls = {};
 
-        if (this.layerMode) {
-            this.initMainAnimationWithLayerAnimation();
-        }
-
         if (this.parameters.blockrightclick) {
             this.sliderElement.bind("contextmenu", function (e) {
                 e.preventDefault();
@@ -892,6 +632,15 @@ N2Require('SmartSliderAbstract', [], [], function ($, scope, undefined) {
 
         if (this.killed) {
             return;
+        }
+
+        try {
+            var removeHoverClassCB = $.proxy(function () {
+                this.sliderElement.removeClass('n2-has-hover');
+                this.sliderElement[0].removeEventListener('touchstart', removeHoverClassCB, window.n2passiveEvents ? {passive: true} : false);
+            }, this);
+            this.sliderElement[0].addEventListener('touchstart', removeHoverClassCB, window.n2passiveEvents ? {passive: true} : false);
+        } catch (e) {
         }
 
         this.initControls();
@@ -954,35 +703,36 @@ N2Require('SmartSliderAbstract', [], [], function ($, scope, undefined) {
                 });
             });
 
-            var focusAllowed = false;
 
-            $(window).on({
-                keydown: function () {
-                    focusAllowed = true;
-                },
-                keyup: function () {
-                    focusAllowed = false;
-                }
-            });
+            if (window.n2FocusAllowed == undefined) {
+                window.n2FocusAllowed = false;
 
+                $(window).on({
+                    keydown: function () {
+                        window.n2FocusAllowed = true;
+                    },
+                    keyup: function () {
+                        window.n2FocusAllowed = false;
+                    }
+                });
+            }
 
-            this.slides.find('a').on({
+            this.sliderElement.find('a').on({
                 focus: $.proxy(function (e) {
-                    if (focusAllowed) {
-                        var slideIndex = this.findSlideIndexByElement(e.currentTarget);
-                        if (slideIndex != -1 && slideIndex != this.currentSlideIndex) {
-                            this.changeTo(slideIndex, false, false);
+                    if (n2FocusAllowed) {
+                        var slide = this.slider.findSlideByElement(e.currentTarget);
+                        if (slide && slide != this.currentRealSlide) {
+                            this.directionalChangeToReal(slide.index);
                         }
                     }
                 }, this)
             });
+
         }
 
         this.preReadyResolve();
 
-        this.initCarousel();
-
-        this.sliderElement.find('[role="button"], [tabindex]')
+        this.sliderElement.find('[role="button"], [tabindex]').not('input,select,textarea')
             .keypress(function (event) {
                 if (event.charCode === 32 || event.charCode === 13) {
                     event.preventDefault();
@@ -994,91 +744,88 @@ N2Require('SmartSliderAbstract', [], [], function ($, scope, undefined) {
             });
     };
 
-    SmartSliderAbstract.prototype.initSlides = function () {
-        if (this.layerMode) {
-        
-            for (var i = 0; i < this.slides.length; i++) {
-                new scope.FrontendComponentSlide(this, this.slides.eq(i), this.currentSlideIndex == i);
-            }
+    SmartSliderAbstract.prototype.__initSlides = function () {
 
-            var staticSlide = this.findStaticSlide();
-            if (staticSlide.length) {
-                new scope.FrontendComponentStaticSlide(this, staticSlide);
+        var $slides = this.sliderElement.find('.n2-ss-slide');
+        for (var i = 0; i < $slides.length; i++) {
+            this.slides.push(new scope.FrontendSliderSlide(this, $slides.eq(i), i));
+        }
+
+        this.starterSlide = this.slides[0];
+        for (var i = 0; i < this.slides.length; i++) {
+            this.slides[i].init();
+            if (this.slides[i].$element.data('first') == 1) {
+                this.starterSlide = this.slides[i];
             }
         }
+
+        this.realSlides = this.slides;
+
+        this.afterRawSlidesReady();
+
+        this.randomize(this.slides);
+
+        var staticSlide = this.sliderElement.find('.n2-ss-static-slide');
+        if (staticSlide.length) {
+            this.staticSlide = new scope.FrontendSliderStaticSlide(this, staticSlide);
+        }
+    };
+
+    SmartSliderAbstract.prototype.afterRawSlidesReady = function () {
+
+    };
+
+    SmartSliderAbstract.prototype.setVisibleSlides = function (visibleSlides) {
+        if (visibleSlides != this.visibleSlides) {
+            this.visibleSlides = visibleSlides;
+            this.sliderElement.triggerHandler('visibleSlidesChanged');
+        }
+    };
+
+    SmartSliderAbstract.prototype.getVisibleSlides = function (relativeSlide) {
+        if (arguments.length == 0) relativeSlide = this.currentSlide;
+        return [relativeSlide];
+    };
+
+    SmartSliderAbstract.prototype.findSlideBackground = function (slide) {
+        return slide.$element.find('.n2-ss-slide-background');
     };
 
     SmartSliderAbstract.prototype.getRealIndex = function (index) {
         return index;
     };
 
-    SmartSliderAbstract.prototype.changeActiveBeforeLoad = function (index) {
-        if (index > 0 && index < this.slides.length && this.currentSlideIndex != index) {
-            this.unsetActiveSlide(this.slides.eq(this.currentSlideIndex));
-            this.setActiveSlide(this.slides.eq(index));
-            this.currentSlideIndex = index;
-            this.ready($.proxy(function () {
-                this.sliderElement.trigger('sliderSwitchTo', [index, this.getRealIndex(index)]);
-            }, this));
-        }
-    };
-
-    SmartSliderAbstract.prototype.kill = function () {
-        this.killed = true;
-        $('#' + this.sliderElement.attr('id') + '-placeholder').remove();
-        this.sliderElement.closest('.n2-ss-align').remove();
-    };
-
-    SmartSliderAbstract.prototype.randomize = function () {
-        if (this.parameters.randomize.randomizeFirst) {
-            this.slides.filter('.n2-ss-slide-active').removeClass('n2-ss-slide-active');
-            this.slides.eq(Math.floor(Math.random() * this.slides.length)).addClass('n2-ss-slide-active');
-        }
+    SmartSliderAbstract.prototype.randomize = function (slides) {
+        this.randomizeFirst();
 
         if (this.parameters.randomize.randomize) {
-            this.shuffleSlides();
-        }
-    }
-
-    SmartSliderAbstract.prototype.shuffleSlides = function () {
-        this.slides.sort(function () {
-            return (Math.round(Math.random()) - 0.5);
-        });
-        this.slides.appendTo(this.slides.parent());
-
-        this.shuffled = [];
-        for (var i = 0; i < this.slides.length; i++) {
-            this.shuffled[i] = this.slides.eq(i).data('originalIndex');
-        }
-
-        if (this.parameters.postBackgroundAnimations && this.parameters.postBackgroundAnimations.slides) {
-            var shuffledPBG = [];
-            for (var i = 0; i < this.shuffled.length; i++) {
-                shuffledPBG.push(this.parameters.postBackgroundAnimations.slides[this.shuffled[i]]);
-            }
-            this.parameters.postBackgroundAnimations.slides = shuffledPBG;
-        }
-
-        if (this.parameters.bgAnimations && this.parameters.bgAnimations.slides) {
-            var shuffledBG = [];
-            for (var i = 0; i < this.shuffled.length; i++) {
-                shuffledBG.push(this.parameters.bgAnimations.slides[this.shuffled[i]]);
-            }
-            this.parameters.bgAnimations.slides = shuffledBG;
-        }
-
-    }
-
-    SmartSliderAbstract.prototype.findSlides = function () {
-
-        this.realSlides = this.slides = this.sliderElement.find('.n2-ss-slide');
-        for (var i = 0; i < this.realSlides.length; i++) {
-            this.realSlides.eq(i).data('originalIndex', i);
+            this.shuffleSlides(slides);
         }
     };
 
-    SmartSliderAbstract.prototype.findStaticSlide = function () {
-        return this.sliderElement.find('.n2-ss-static-slide');
+    SmartSliderAbstract.prototype.randomizeFirst = function () {
+        if (this.parameters.randomize.randomizeFirst) {
+            this.unsetActiveSlide(this.starterSlide);
+
+            this.starterSlide = this.realSlides[Math.floor(Math.random() * this.realSlides.length)];
+
+            this.setActiveSlide(this.starterSlide);
+            console.log('randomize first');
+        }
+    };
+
+    SmartSliderAbstract.prototype.shuffleSlides = function (slides) {
+
+        slides.sort(function () {
+            return 0.5 - Math.random();
+        });
+        var $container = slides[0].$element.parent();
+        for (var i = 0; i < slides.length; i++) {
+            slides[i].$element.appendTo($container);
+            slides[i].setIndex(i);
+        }
+
+        this.isShuffled = true;
     };
 
     SmartSliderAbstract.prototype.addWidget = function (e, deferred) {
@@ -1128,8 +875,11 @@ N2Require('SmartSliderAbstract', [], [], function ($, scope, undefined) {
     SmartSliderAbstract.prototype.checkIfVisible = function () {
         var windowOffsetTop = $(window).scrollTop(),
             windowHeight = $(window).height(),
-            middlePoint = this.sliderElement.offset().top + Math.min(this.sliderElement.height(), windowHeight) / 2;
-        if (windowOffsetTop <= middlePoint && windowOffsetTop >= middlePoint - windowHeight) {
+            sliderTop = this.sliderElement.offset().top,
+            middlePointTop = sliderTop + Math.min(this.sliderElement.height(), windowHeight) * this.parameters.playWhenVisibleAt,
+            middlePointBottom = sliderTop + Math.min(this.sliderElement.height(), windowHeight) * (1 - this.parameters.playWhenVisibleAt);
+
+        if (this.isAdmin || (middlePointTop >= windowOffsetTop && middlePointBottom <= windowOffsetTop + windowHeight)) {
             $(window).off('scroll.n2-ss-visible' + this.id + ' resize.n2-ss-visible' + this.id, $.proxy(this.checkIfVisible, this));
             this.visibleDeferred.resolve();
         }
@@ -1166,89 +916,121 @@ N2Require('SmartSliderAbstract', [], [], function ($, scope, undefined) {
         return deferred;
     };
 
-    SmartSliderAbstract.prototype.initCarousel = function () {
-        if (!parseInt(this.parameters.carousel)) {
-            // Replace the methods
-            this.next = this.nextNotCarousel;
-            this.previous = this.previousNotCarousel;
-
-            var slides = this.slides.length;
-            var previousArrowOpacity = 1,
-                previousArrow = this.sliderElement.find('.nextend-arrow-previous'),
-                previous = function (opacity) {
-                    if (opacity != previousArrowOpacity) {
-                        NextendTween.to(previousArrow, 0.4, {opacity: opacity}).play();
-                        previousArrowOpacity = opacity;
-                    }
-                };
-            var nextArrowOpacity = 1,
-                nextArrow = this.sliderElement.find('.nextend-arrow-next'),
-                next = function (opacity) {
-                    if (opacity != nextArrowOpacity) {
-                        NextendTween.to(nextArrow, 0.4, {opacity: opacity}).play();
-                        nextArrowOpacity = opacity;
-                    }
-                };
-
-            var process = function (i) {
-                if (i == 0) {
-                    previous(0);
-                } else {
-                    previous(1);
+    SmartSliderAbstract.prototype.initNotCarousel = function () {
+        this.next = function (isSystem, customAnimation) {
+            var nextIndex = this.currentSlide.index + 1;
+            if (nextIndex < this.slides.length) {
+                return this.changeTo(nextIndex, false, isSystem, customAnimation);
+            }
+            return false;
+        };
+        this.previous = function (isSystem, customAnimation) {
+            var nextIndex = this.currentSlide.index - 1;
+            if (nextIndex >= 0) {
+                return this.changeTo(nextIndex, true, isSystem, customAnimation);
+            }
+            return false;
+        };
+        this.isChangePossible = function (direction) {
+            var nextIndex = false;
+            if (direction == 'next') {
+                nextIndex = this.currentSlide.index + 1;
+                if (nextIndex >= this.slides.length) {
+                    nextIndex = false;
                 }
-                if (i == slides - 1) {
-                    next(0);
-                } else {
-                    next(1);
+            } else if (direction == 'previous') {
+                nextIndex = this.currentSlide.index - 1;
+                if (nextIndex < 0) {
+                    nextIndex = false;
+                }
+            }
+
+            if (nextIndex !== false && nextIndex != this.currentSlide.index) {
+                return true;
+            }
+            return false;
+        };
+
+        var slidesCount = this.slides.length,
+            previousArrowOpacity = 1,
+            previousArrow = this.sliderElement.find('.nextend-arrow-previous'),
+            changePreviousArrowOpacity = function (opacity) {
+                if (opacity != previousArrowOpacity) {
+                    NextendTween.to(previousArrow, 0.4, {opacity: opacity}).play();
+                    previousArrowOpacity = opacity;
+                }
+            };
+        var nextArrowOpacity = 1,
+            nextArrow = this.sliderElement.find('.nextend-arrow-next'),
+            changeNextArrowOpacity = function (opacity) {
+                if (opacity != nextArrowOpacity) {
+                    NextendTween.to(nextArrow, 0.4, {opacity: opacity}).play();
+                    nextArrowOpacity = opacity;
                 }
             };
 
-            process(this.__getActiveSlideIndex())
+        var hideOrShowArrows = function (i) {
+            changePreviousArrowOpacity(i == 0 ? 0 : 1);
+            changeNextArrowOpacity(i == slidesCount - 1 ? 0 : 1);
+        };
 
-            this.sliderElement.on('sliderSwitchTo', function (e, i) {
-                process(i);
-            });
-        }
+        hideOrShowArrows(this.currentSlide.index);
+
+        this.sliderElement.on('sliderSwitchTo', function (e, i) {
+            hideOrShowArrows(i);
+        });
     };
 
-    SmartSliderAbstract.prototype.next = function (isSystem, customAnimation) {
-        var nextIndex = this.currentSlideIndex + 1;
+    SmartSliderAbstract.prototype.isChangePossibleCarousel = function (direction) {
+        var nextIndex = false;
+        if (direction == 'next') {
+            nextIndex = this.currentSlide.index + 1;
+            if (nextIndex >= this.slides.length) {
+                nextIndex = 0;
+            }
+        } else if (direction == 'previous') {
+            nextIndex = this.currentSlide.index - 1;
+            if (nextIndex < 0) {
+                nextIndex = this.slides.length - 1;
+            }
+        }
+
+        if (nextIndex !== false && nextIndex != this.currentSlide.index) {
+            return true;
+        }
+        return false;
+    };
+
+    SmartSliderAbstract.prototype.initCarousel = function () {
+
+        this.next = this.nextCarousel;
+        this.previous = this.previousCarousel;
+        this.isChangePossible = this.isChangePossibleCarousel;
+    };
+
+    SmartSliderAbstract.prototype.nextCarousel = function (isSystem, customAnimation) {
+        var nextIndex = this.currentSlide.index + 1;
         if (nextIndex >= this.slides.length) {
             nextIndex = 0;
         }
         return this.changeTo(nextIndex, false, isSystem, customAnimation);
     };
 
-    SmartSliderAbstract.prototype.previous = function (isSystem, customAnimation) {
-        var nextIndex = this.currentSlideIndex - 1;
+    SmartSliderAbstract.prototype.previousCarousel = function (isSystem, customAnimation) {
+        var nextIndex = this.currentSlide.index - 1;
         if (nextIndex < 0) {
             nextIndex = this.slides.length - 1;
         }
         return this.changeTo(nextIndex, true, isSystem, customAnimation);
     };
 
-    SmartSliderAbstract.prototype.nextNotCarousel = function (isSystem, customAnimation) {
-        var nextIndex = this.currentSlideIndex + 1;
-        if (nextIndex < this.slides.length) {
-            return this.changeTo(nextIndex, false, isSystem, customAnimation);
-        }
-        return false;
-    };
-
-    SmartSliderAbstract.prototype.previousNotCarousel = function (isSystem, customAnimation) {
-        var nextIndex = this.currentSlideIndex - 1;
-        if (nextIndex >= 0) {
-            return this.changeTo(nextIndex, true, isSystem, customAnimation);
-        }
-        return false;
-    };
 
     SmartSliderAbstract.prototype.directionalChangeToReal = function (nextSlideIndex) {
         this.directionalChangeTo(nextSlideIndex);
     };
 
     SmartSliderAbstract.prototype.directionalChangeTo = function (nextSlideIndex) {
-        if (nextSlideIndex > this.currentSlideIndex) {
+        if (nextSlideIndex > this.currentSlide.index) {
             this.changeTo(nextSlideIndex, false);
         } else {
             this.changeTo(nextSlideIndex, true);
@@ -1258,14 +1040,14 @@ N2Require('SmartSliderAbstract', [], [], function ($, scope, undefined) {
     SmartSliderAbstract.prototype.changeTo = function (nextSlideIndex, reversed, isSystem, customAnimation) {
         nextSlideIndex = parseInt(nextSlideIndex);
 
-        if (nextSlideIndex != this.currentSlideIndex) {
+        if (nextSlideIndex != this.currentSlide.index) {
             n2c.log('Event: sliderSwitchTo: ', 'targetSlideIndex');
             this.sliderElement.trigger('sliderSwitchTo', [nextSlideIndex, this.getRealIndex(nextSlideIndex)]);
             var time = $.now();
-            $.when(this.backgroundImages.preLoad(nextSlideIndex), this.focus(isSystem)).done($.proxy(function () {
+            $.when(this.backgroundImages.preLoadSlides(this.getVisibleSlides(this.slides[nextSlideIndex])), this.focus(isSystem)).done($.proxy(function () {
 
-                if (this._lastChangeTime <= time) {
-                    this._lastChangeTime = time;
+                if (this.mainAnimationLastChangeTime <= time) {
+                    this.mainAnimationLastChangeTime = time;
                     // If the current main animation haven't finished yet or the prefered next slide is the same as our current slide we have nothing to do
                     var state = this.mainAnimation.getState();
                     if (state == 'ended') {
@@ -1281,10 +1063,10 @@ N2Require('SmartSliderAbstract', [], [], function ($, scope, undefined) {
 
                         this._changeTo(nextSlideIndex, reversed, isSystem, customAnimation);
 
-                        n2c.log('Change From:', this.currentSlideIndex, ' To: ', nextSlideIndex, ' Reversed: ', reversed, ' System: ', isSystem);
-                        animation.changeTo(this.currentSlideIndex, this.slides.eq(this.currentSlideIndex), nextSlideIndex, this.slides.eq(nextSlideIndex), reversed, isSystem);
+                        n2c.log('Change From:', this.currentSlide.index, ' To: ', nextSlideIndex, ' Reversed: ', reversed, ' System: ', isSystem);
+                        animation.changeTo(this.currentSlide, this.slides[nextSlideIndex], reversed, isSystem);
 
-                        this.currentSlideIndex = nextSlideIndex;
+                        this._changeCurrentSlide(nextSlideIndex);
 
                     } else if (state == 'playing') {
                         this.sliderElement.off('.fastChange').one('mainAnimationComplete.fastChange', $.proxy(function () {
@@ -1299,113 +1081,46 @@ N2Require('SmartSliderAbstract', [], [], function ($, scope, undefined) {
         return false;
     };
 
+    SmartSliderAbstract.prototype._changeCurrentSlide = function (index) {
+        this.currentRealSlide = this.currentSlide = this.slides[index];
+    };
+
     SmartSliderAbstract.prototype._changeTo = function (nextSlideIndex, reversed, isSystem, customAnimation) {
 
     };
 
     SmartSliderAbstract.prototype.revertTo = function (nextSlideIndex, originalNextSlideIndex) {
-        this.unsetActiveSlide(this.slides.eq(originalNextSlideIndex));
-        this.setActiveSlide(this.slides.eq(nextSlideIndex));
-        this.currentSlideIndex = nextSlideIndex;
-        this.sliderElement.trigger('sliderSwitchTo', [nextSlideIndex, this.getRealIndex(nextSlideIndex)]);
-    }
 
-    SmartSliderAbstract.prototype.__getActiveSlideIndex = function () {
-        var index = this.slides.index(this.slides.filter('.n2-ss-slide-active'));
-        if (index === -1) {
-            index = 0;
-        }
-        return index;
+        this.unsetActiveSlide(this.slides[originalNextSlideIndex]);
+        this.setActiveSlide(this.slides[nextSlideIndex]);
+
+        this._changeCurrentSlide(nextSlideIndex);
+
+        this.sliderElement.trigger('sliderSwitchTo', [nextSlideIndex, this.getRealIndex(nextSlideIndex)]);
     };
 
     SmartSliderAbstract.prototype.setActiveSlide = function (slide) {
-        slide.addClass('n2-ss-slide-active');
+        slide.$element.addClass('n2-ss-slide-active');
     };
 
     SmartSliderAbstract.prototype.unsetActiveSlide = function (slide) {
-        slide.removeClass('n2-ss-slide-active');
+        slide.$element.removeClass('n2-ss-slide-active');
     };
 
-    SmartSliderAbstract.prototype.initMainAnimationWithLayerAnimation = function () {
-
-        if (this.parameters.layerMode.mode == 'forced') {
-            this.sliderElement.on('preChangeToPlay', $.proxy(function (e, deferred, deferredHandled, currentSlide, nextSlide) {
-                deferredHandled.handled = true;
-                currentSlide.on('layerAnimationCompleteOut.layers', function () {
-                    currentSlide.off('layerAnimationCompleteOut.layers');
-                    deferred.resolve();
-                });
-                this.callOnSlide(currentSlide, 'playOut');
-            }, this));
+    SmartSliderAbstract.prototype.findSlideByElement = function (element) {
+        element = $(element);
+        for (var i = 0; i < this.realSlides.length; i++) {
+            if (this.realSlides[i].$element.has(element).length === 1) {
+                return this.realSlides[i];
+            }
         }
-
-
-        this.sliderElement.on('mainAnimationStart', $.proxy(this.onMainAnimationStartSyncLayers, this, this.parameters.layerMode))
-            .on('reverseModeEnabled', $.proxy(this.onMainAnimationStartSyncLayersReverse, this, this.parameters.layerMode));
-    };
-
-    SmartSliderAbstract.prototype.onMainAnimationStartSyncLayers = function (layerMode, e, animation, previousSlideIndex, currentSlideIndex) {
-        var inSlide = this.slides.eq(currentSlideIndex),
-            outSlide = this.slides.eq(previousSlideIndex);
-        if (layerMode.inAnimation == 'mainInStart') {
-            inSlide.one('mainAnimationStartIn.layers', $.proxy(function () {
-                inSlide.off('mainAnimationStartInCancel.layers');
-                this.callOnSlide(inSlide, 'playIn');
-            }, this));
-        } else if (layerMode.inAnimation == 'mainInEnd') {
-            inSlide.one('mainAnimationCompleteIn.layers', $.proxy(function () {
-                inSlide.off('mainAnimationStartInCancel.layers');
-                this.callOnSlide(inSlide, 'playIn');
-            }, this));
-        }
-
-        if (layerMode.mode == 'skippable') {
-            outSlide.on('mainAnimationCompleteOut.layers', $.proxy(function () {
-                outSlide.off('mainAnimationCompleteOut.layers');
-                if (layerMode.playOnce) {
-                    if (!this.parameters.foreverLayerAnimation) {
-                        this.callOnSlide(outSlide, 'pause');
-                    }
-                } else {
-                    this.callOnSlide(outSlide, 'reset');
-                }
-            }, this));
-        }
-
-        inSlide.one('mainAnimationStartInCancel.layers', function () {
-            inSlide.off('mainAnimationStartIn.layers');
-            inSlide.off('mainAnimationCompleteIn.layers');
-        });
-    };
-
-    SmartSliderAbstract.prototype.onMainAnimationStartSyncLayersReverse = function (layerMode, e, reverseSlideIndex) {
-        var reverseSlide = this.slides.eq(reverseSlideIndex);
-        if (layerMode.inAnimation == 'mainInStart') {
-            reverseSlide.one('mainAnimationStartIn.layers', $.proxy(function () {
-                this.callOnSlide(reverseSlide, 'playIn');
-            }, this));
-        } else if (layerMode.inAnimation == 'mainInEnd') {
-            reverseSlide.one('mainAnimationCompleteIn.layers', $.proxy(function () {
-                this.sliderElement.off('mainAnimationComplete.layers');
-                this.callOnSlide(reverseSlide, 'playIn');
-            }, this));
-        }
-
-        this.sliderElement.one('mainAnimationComplete.layers', function () {
-            reverseSlide.off('mainAnimationStartIn.layers');
-            reverseSlide.off('mainAnimationCompleteIn.layers');
-        });
-    };
-
-    SmartSliderAbstract.prototype.callOnSlide = function (slide, functionName) {
+        return false;
     };
 
     SmartSliderAbstract.prototype.findSlideIndexByElement = function (element) {
-        element = $(element);
-        for (var i = 0; i < this.slides.length; i++) {
-            if (this.slides.eq(i).has(element).length === 1) {
-                return i;
-            }
+        var slide = this.findSlideByElement(element);
+        if (slide) {
+            return slide;
         }
         return -1;
     };
@@ -1415,14 +1130,13 @@ N2Require('SmartSliderAbstract', [], [], function ($, scope, undefined) {
     };
 
     SmartSliderAbstract.prototype.initResponsiveMode = function () {
-        new this['responsiveClass'](this, this.parameters.responsive);
         this.dimensions = this.responsive.responsiveDimensions;
     };
 
     SmartSliderAbstract.prototype.initControls = function () {
 
         if (!this.parameters.admin) {
-            if (this.parameters.controls.touch != '0') {
+            if (this.parameters.controls.touch != '0' && this.slides.length > 1) {
                 new scope.SmartSliderControlTouch(this, this.parameters.controls.touch, {
                     fallbackToMouseEvents: this.parameters.controls.drag
                 });
@@ -1457,9 +1171,10 @@ N2Require('SmartSliderAbstract', [], [], function ($, scope, undefined) {
     };
 
     SmartSliderAbstract.prototype.slideToID = function (id, direction) {
-        var index = this.realSlides.index(this.realSlides.filter('[data-id="' + id + '"]'));
-        if (index != -1) {
-            return this.slide(this.getSlideIndex(index), direction);
+        for (var i = 0; i < this.realSlides.length; i++) {
+            if (this.realSlides[i].id == id) {
+                return this.slide(this.getSlideIndex(i), direction);
+            }
         }
 
         var slider = $('[data-id="' + id + '"]').closest('.n2-ss-slider');
@@ -1482,17 +1197,17 @@ N2Require('SmartSliderAbstract', [], [], function ($, scope, undefined) {
         if (index >= 0 && index < this.slides.length) {
             if (typeof direction == 'undefined') {
                 if (parseInt(this.parameters.carousel)) {
-                    if (this.currentSlideIndex == this.slides.length - 1 && index == 0) {
+                    if (this.currentSlide.index == this.slides.length - 1 && index == 0) {
                         return this.next();
                     } else {
-                        if (this.currentSlideIndex > index) {
+                        if (this.currentSlide.index > index) {
                             return this.changeTo(index, true);
                         } else {
                             return this.changeTo(index);
                         }
                     }
                 } else {
-                    if (this.currentSlideIndex > index) {
+                    if (this.currentSlide.index > index) {
                         return this.changeTo(index, true);
                     } else {
                         return this.changeTo(index);
@@ -1505,85 +1220,13 @@ N2Require('SmartSliderAbstract', [], [], function ($, scope, undefined) {
         return false;
     };
 
-    SmartSliderAbstract.prototype.adminGetCurrentSlideElement = function () {
-
-        if (this.parameters.isStaticEdited) {
-            return this.findStaticSlide();
-        }
-        return this.slides.eq(this.currentSlideIndex);
-    };
-
     SmartSliderAbstract.prototype.startAutoplay = function (e) {
         if (typeof this.controlAutoplay !== 'undefined') {
             this.controlAutoplay.pauseAutoplayExtraPlayingEnded(e, 'autoplayButton');
             return true;
         }
         return false;
-    }
-
-    (function () {
-
-        var intervals = {};
-        var removeListener = function (selector) {
-
-            if (intervals[selector]) {
-
-                window.clearInterval(intervals[selector]);
-                intervals[selector] = null;
-            }
-        };
-        var found = 'n2waitUntilExists.found';
-
-        /**
-         * @function
-         * @property {object} jQuery plugin which runs handler function once specified
-         *           element is inserted into the DOM
-         * @param {function|string} handler
-         *            A function to execute at the time when the element is inserted or
-         *            string "remove" to remove the listener from the given selector
-         * @param {bool} shouldRunHandlerOnce
-         *            Optional: if true, handler is unbound after its first invocation
-         * @example jQuery(selector).n2waitUntilExists(function);
-         */
-
-        $.fn.n2waitUntilExists = function (selector, handler, shouldRunHandlerOnce, isChild) {
-            var $this = $(selector);
-            var $elements = $this.not(function () {
-                return $(this).data(found);
-            });
-
-            if (handler === 'remove') {
-
-                // Hijack and remove interval immediately if the code requests
-                removeListener(selector);
-            }
-            else {
-
-                // Run the handler on all found elements and mark as found
-                $elements.each(handler).data(found, true);
-
-                if (shouldRunHandlerOnce && $this.length) {
-
-                    // Element was found, implying the handler already ran for all
-                    // matched elements
-                    removeListener(selector);
-                }
-                else if (!isChild) {
-
-                    // If this is a recurring search or if the target has not yet been
-                    // found, create an interval to continue searching for the target
-                    intervals[selector] = window.setInterval(function () {
-
-                        $this.n2waitUntilExists(selector, handler, shouldRunHandlerOnce, true);
-                    }, 500);
-                }
-            }
-
-            return $this;
-        };
-
-    }());
-
+    };
 
     return SmartSliderAbstract;
 });
@@ -1684,7 +1327,7 @@ N2Require('SmartSliderWidgets', [], [], function ($, scope, undefined) {
                     }
                 }
             }
-            hideOrShow(widget, excludedSlides, this.slider.currentSlideIndex);
+            hideOrShow(widget, excludedSlides, this.slider.currentRealSlide.index);
             this.slider.sliderElement
                 .on('sliderSwitchTo', function (e, targetSlideIndex) {
                     hideOrShow(widget, excludedSlides, targetSlideIndex);
@@ -2873,6 +2516,7 @@ N2Require('SmartSliderBackgroundAnimationFluxAbstract', ['SmartSliderBackgroundA
                     width: this.w,
                     height: this.h
                 });
+            this._clonedCurrent.find('.n2-ss-slide-background-video').remove();
         }
         return this._clonedCurrent;
     };
@@ -2885,6 +2529,7 @@ N2Require('SmartSliderBackgroundAnimationFluxAbstract', ['SmartSliderBackgroundA
                     width: this.w,
                     height: this.h
                 });
+            this._clonedNext.find('.n2-ss-slide-background-video').remove();
         }
         return this._clonedNext;
     };
@@ -2935,7 +2580,8 @@ N2Require('SmartSliderMainAnimationAbstract', [], [], function ($, scope, undefi
         this.isTouch = false;
         this.isReverseAllowed = true;
         this.isReverseEnabled = false;
-        this.reverseSlideIndex = -1;
+        this.reverseSlideIndex = null;
+        this.isNoAnimation = false;
 
         this.slider = slider;
 
@@ -2953,9 +2599,13 @@ N2Require('SmartSliderMainAnimationAbstract', [], [], function ($, scope, undefi
         });
 
         this.sliderElement.on('mainAnimationStart', $.proxy(function (e, animation, currentSlideIndex, nextSlideIndex) {
-            this.currentSlideIndex = currentSlideIndex;
-            this.nextSlideIndex = nextSlideIndex;
+            this._revertCurrentSlideIndex = currentSlideIndex;
+            this._revertNextSlideIndex = nextSlideIndex;
         }, this));
+    }
+
+    SmartSliderMainAnimationAbstract.prototype.setToStarterSlide = function (slide) {
+
     };
 
     SmartSliderMainAnimationAbstract.prototype.enableReverseMode = function () {
@@ -3027,7 +2677,7 @@ N2Require('SmartSliderMainAnimationAbstract', [], [], function ($, scope, undefi
             this.fixTouchDuration(this.timeline, 1 - progress, duration);
             this.timeline.reverse();
 
-            this.willRevertTo(this.currentSlideIndex, this.nextSlideIndex);
+            this.willRevertTo(this._revertCurrentSlideIndex, this._revertNextSlideIndex);
         }
     };
 
@@ -3037,7 +2687,7 @@ N2Require('SmartSliderMainAnimationAbstract', [], [], function ($, scope, undefi
                 this.fixTouchDuration(this.reverseTimeline, progress, duration);
                 this.reverseTimeline.play();
 
-                this.willRevertTo(this.reverseSlideIndex, this.nextSlideIndex);
+                this.willRevertTo(this.reverseSlideIndex, this._revertNextSlideIndex);
             } else {
 
                 this.willCleanSlideIndex(this.reverseSlideIndex);
@@ -3057,7 +2707,7 @@ N2Require('SmartSliderMainAnimationAbstract', [], [], function ($, scope, undefi
 
             this.willCleanSlideIndex(this.reverseSlideIndex);
 
-            this.willRevertTo(this.currentSlideIndex, this.nextSlideIndex);
+            this.willRevertTo(this._revertCurrentSlideIndex, this._revertNextSlideIndex);
         }
     };
 
@@ -3081,52 +2731,30 @@ N2Require('SmartSliderMainAnimationAbstract', [], [], function ($, scope, undefi
         return this.timeline.timeScale();
     };
 
-    SmartSliderMainAnimationAbstract.prototype.preChangeToPlay = function (deferred, currentSlide, nextSlide) {
-        var deferredHandled = {
-            handled: false
-        };
+    SmartSliderMainAnimationAbstract.prototype.changeTo = function (currentSlide, nextSlide, reversed, isSystem) {
 
-        this.sliderElement.trigger('preChangeToPlay', [deferred, deferredHandled, currentSlide, nextSlide]);
-
-        if (!deferredHandled.handled) {
-            deferred.resolve();
-        }
-    };
-
-    SmartSliderMainAnimationAbstract.prototype.changeTo = function (currentSlideIndex, currentSlide, nextSlideIndex, nextSlide, reversed, isSystem) {
-
-        this._initAnimation(currentSlideIndex, currentSlide, nextSlideIndex, nextSlide, reversed);
+        this._initAnimation(currentSlide, nextSlide, reversed);
 
         this.state = 'initAnimation';
 
         this.timeline.paused(true);
-        this.timeline.eventCallback('onStart', this.onChangeToStart, [currentSlideIndex, nextSlideIndex, isSystem], this);
-        this.timeline.eventCallback('onComplete', this.onChangeToComplete, [currentSlideIndex, nextSlideIndex, isSystem], this);
+        this.timeline.eventCallback('onStart', this.onChangeToStart, [currentSlide, nextSlide, isSystem], this);
+        this.timeline.eventCallback('onComplete', this.onChangeToComplete, [currentSlide, nextSlide, isSystem], this);
         this.timeline.eventCallback('onReverseComplete', null);
 
         this.revertCB = $.proxy(function (timeline) {
-            timeline.eventCallback('onReverseComplete', this.onReverseChangeToComplete, [nextSlideIndex, currentSlideIndex, isSystem], this);
+            timeline.eventCallback('onReverseComplete', this.onReverseChangeToComplete, [nextSlide, currentSlide, isSystem], this);
         }, this);
 
         if (this.slider.parameters.dynamicHeight) {
             var tl = new NextendTimeline();
-            this.slider.responsive.doResize(false, tl, nextSlideIndex, 0.6);
+            this.slider.responsive.doResize(null, false, tl, nextSlide, 0.6);
             this.timeline.add(tl);
         }
-
-
-        // If the animation is in touch mode, we do not need to play the timeline as the touch will set the actual progress and also play later...
         if (!this.isTouch) {
-            var deferred = $.Deferred();
-
-            deferred.done($.proxy(function () {
-                this.play();
-            }, this.timeline));
-
-            this.preChangeToPlay(deferred, currentSlide, nextSlide);
-        } else {
-            this.slider.callOnSlide(currentSlide, 'onOutAnimationsPlayed');
+            this.timeline.play();
         }
+    
     };
 
 
@@ -3142,7 +2770,7 @@ N2Require('SmartSliderMainAnimationAbstract', [], [], function ($, scope, undefi
         this.slider.revertTo(slideIndex, originalNextSlideIndex);
 
         // Cancel the pre-initialized layer animations on the original next slide.
-        this.slider.slides.eq(originalNextSlideIndex).triggerHandler('mainAnimationStartInCancel');
+        this.slider.slides[originalNextSlideIndex].triggerHandler('mainAnimationStartInCancel');
     };
 
 
@@ -3157,39 +2785,37 @@ N2Require('SmartSliderMainAnimationAbstract', [], [], function ($, scope, undefi
 
     /**
      * @abstract
-     * @param currentSlideIndex
      * @param currentSlide
-     * @param nextSlideIndex
      * @param nextSlide
      * @param reversed
      * @private
      */
-    SmartSliderMainAnimationAbstract.prototype._initAnimation = function (currentSlideIndex, currentSlide, nextSlideIndex, nextSlide, reversed) {
+    SmartSliderMainAnimationAbstract.prototype._initAnimation = function (currentSlide, nextSlide, reversed) {
 
     };
 
-    SmartSliderMainAnimationAbstract.prototype.onChangeToStart = function (previousSlideIndex, currentSlideIndex, isSystem) {
+    SmartSliderMainAnimationAbstract.prototype.onChangeToStart = function (previousSlide, currentSlide, isSystem) {
 
         this.state = 'playing';
 
-        var parameters = [this, previousSlideIndex, currentSlideIndex, isSystem];
+        var parameters = [this, previousSlide.index, currentSlide.index, isSystem];
 
         n2c.log('Event: mainAnimationStart: ', parameters, '{NextendSmartSliderMainAnimationAbstract}, previousSlideIndex, currentSlideIndex, isSystem');
         this.sliderElement.trigger('mainAnimationStart', parameters);
 
-        this.slider.slides.eq(previousSlideIndex).trigger('mainAnimationStartOut', parameters);
-        this.slider.slides.eq(currentSlideIndex).trigger('mainAnimationStartIn', parameters);
+        this.slider.slides[previousSlide.index].trigger('mainAnimationStartOut', parameters);
+        this.slider.slides[currentSlide.index].trigger('mainAnimationStartIn', parameters);
     };
 
-    SmartSliderMainAnimationAbstract.prototype.onChangeToComplete = function (previousSlideIndex, currentSlideIndex, isSystem) {
-        var parameters = [this, previousSlideIndex, currentSlideIndex, isSystem];
+    SmartSliderMainAnimationAbstract.prototype.onChangeToComplete = function (previousSlide, currentSlide, isSystem) {
+        var parameters = [this, previousSlide.index, currentSlide.index, isSystem];
 
         this.clearTimelines();
 
         this.disableReverseMode();
 
-        this.slider.slides.eq(previousSlideIndex).trigger('mainAnimationCompleteOut', parameters);
-        this.slider.slides.eq(currentSlideIndex).trigger('mainAnimationCompleteIn', parameters);
+        this.slider.slides[previousSlide.index].trigger('mainAnimationCompleteOut', parameters);
+        this.slider.slides[currentSlide.index].trigger('mainAnimationCompleteIn', parameters);
 
         this.state = 'ended';
 
@@ -3197,7 +2823,7 @@ N2Require('SmartSliderMainAnimationAbstract', [], [], function ($, scope, undefi
         this.sliderElement.trigger('mainAnimationComplete', parameters);
     };
 
-    SmartSliderMainAnimationAbstract.prototype.onReverseChangeToComplete = function (previousSlideIndex, currentSlideIndex, isSystem) {
+    SmartSliderMainAnimationAbstract.prototype.onReverseChangeToComplete = function (previousSlide, currentSlide, isSystem) {
         SmartSliderMainAnimationAbstract.prototype.onChangeToComplete.apply(this, arguments);
     };
 
@@ -3207,10 +2833,8 @@ N2Require('SmartSliderMainAnimationAbstract', [], [], function ($, scope, undefi
         };
         this.timeline.clear();
         this.timeline.timeScale(1);
-        //this.reverseTimeline.clear();
-        //this.reverseTimeline.timeScale(1);
 
-    }
+    };
 
     SmartSliderMainAnimationAbstract.prototype.getEase = function () {
         if (this.isTouch) {
@@ -3286,7 +2910,7 @@ N2Require('SmartSliderControlAutoplay', [], [], function ($, scope, undefined) {
         var obj = {
             _progress: 0
         };
-        this.timeline = NextendTween.to(obj, this.getSlideDuration(this.slider.currentSlideIndex), {
+        this.timeline = NextendTween.to(obj, this.getSlideDuration(this.slider.currentSlide.index), {
             _progress: 1,
             paused: true,
             onComplete: $.proxy(this.next, this)
@@ -3398,7 +3022,7 @@ N2Require('SmartSliderControlAutoplay', [], [], function ($, scope, undefined) {
 
     SmartSliderControlAutoplay.prototype.onMainAnimationComplete = function (e, animation, previousSlideIndex, currentSlideIndex) {
 
-        if (this.parameters.autoplayToSlideIndex >= 0 && this.parameters.autoplayToSlideIndex == this.slider.currentSlideIndex + 1) {
+        if (this.parameters.autoplayToSlideIndex >= 0 && this.parameters.autoplayToSlideIndex == this.slider.currentRealSlide.index + 1) {
             this.limitAutoplay();
         }
 
@@ -3410,7 +3034,7 @@ N2Require('SmartSliderControlAutoplay', [], [], function ($, scope, undefined) {
     };
 
     SmartSliderControlAutoplay.prototype.getSlideDuration = function (index) {
-        var slide = this.slider.realSlides.eq(this.slider.getRealIndex(index)).data('slide'),
+        var slide = this.slider.realSlides[this.slider.getRealIndex(index)],
             duration = slide.minimumSlideDuration;
 
         if (duration < 0.3 && duration < this.parameters.duration) {
@@ -3575,7 +3199,7 @@ N2Require('SmartSliderControlAutoplay', [], [], function ($, scope, undefined) {
         /**
          * We have reached the maximum slides in the autoplay so disable it completely
          */
-        if (this.parameters.autoplayToSlide > 0 && this._currentCount >= this.parameters.autoplayToSlide || this.parameters.autoplayToSlideIndex >= 0 && this.parameters.autoplayToSlideIndex == this.slider.currentSlideIndex + 2) {
+        if (this.parameters.autoplayToSlide > 0 && this._currentCount >= this.parameters.autoplayToSlide || this.parameters.autoplayToSlideIndex >= 0 && this.parameters.autoplayToSlideIndex == this.slider.currentRealSlide.index + 2) {
             this.limitAutoplay();
         }
 
@@ -3612,8 +3236,8 @@ N2Require('SmartSliderControlFullscreen', [], [], function ($, scope, undefined)
         this.forceFullpage = this._type == 'auto' || this._type == 'fullwidth' || this._type == 'fullpage';
         if (this.forceFullpage) {
             this._upscale = this.responsive.parameters.upscale;
-            this._minimumHeightRatio = this.responsive.parameters.minimumHeightRatio;
-            this._maximumHeightRatio = this.responsive.parameters.maximumHeightRatio;
+            this._minimumHeightRatio = $.extend({}, this.responsive.parameters.minimumHeightRatio);
+            this._maximumHeightRatio = $.extend({}, this.responsive.parameters.maximumHeightRatio);
         }
 
         this.isFullScreen = false;
@@ -3777,9 +3401,9 @@ N2Require('SmartSliderControlFullscreen', [], [], function ($, scope, undefined)
                 this.responsive.parameters.maximumHeightRatio = this._maximumHeightRatio;
                 this.responsive.containerElement.css(nextend.rtl.marginLeft, this._marginLeft);
                 this.fullParent.css({
-                    width: null,
-                    height: null,
-                    backgroundColor: null
+                    width: '',
+                    height: '',
+                    backgroundColor: ''
                 }).removeClass("n2-ss-in-fullscreen");
                 $('html').removeClass('n2-in-fullscreen');
                 $(window).trigger('resize');
@@ -3876,14 +3500,15 @@ N2Require('SmartSliderControlScroll', [], [], function ($, scope, undefined) {
 
     function SmartSliderControlScroll(slider) {
 
-        this.preventScroll = false
+        this.preventScroll = false;
+        this._preventScrollTimeout = null;
 
         this.slider = slider;
 
         slider.sliderElement.on('DOMMouseScroll mousewheel', $.proxy(this.onMouseWheel, this));
 
         slider.controls.scroll = this;
-    };
+    }
 
     SmartSliderControlScroll.prototype.onMouseWheel = function (e) {
         if (!this.preventScroll) {
@@ -3897,23 +3522,28 @@ N2Require('SmartSliderControlScroll', [], [], function ($, scope, undefined) {
 
             if (up) {
                 if (this.slider.previous()) {
-                    this.preventScroll = true;
-                    // Stops the browser normal scroll
-                    e.preventDefault();
+                    this.preventScrollTimeout(e);
                 }
             } else {
                 if (this.slider.next()) {
-                    this.preventScroll = true;
-                    // Stops the browser normal scroll
-                    e.preventDefault();
+                    this.preventScrollTimeout(e);
                 }
             }
-            setTimeout($.proxy(function () {
-                this.preventScroll = false;
-            }, this), 1000);
         } else {
-            e.preventDefault();
+            this.preventScrollTimeout(e);
         }
+    };
+
+    SmartSliderControlScroll.prototype.preventScrollTimeout = function (e) {
+        if (this._preventScrollTimeout !== null) {
+            clearTimeout(this._preventScrollTimeout);
+        }
+        this.preventScroll = true;
+        e.preventDefault();
+        this._preventScrollTimeout = setTimeout($.proxy(function () {
+            this.preventScroll = false;
+            this._preventScrollTimeout = null;
+        }, this), 400);
     };
 
     return SmartSliderControlScroll;
@@ -4008,7 +3638,7 @@ N2Require('SmartSliderControlTouch', [], [], function ($, scope, undefined) {
             fallbackToMouseEvents: true
         }, parameters);
 
-        this.swipeElement = this.slider.sliderElement.find('> div').eq(0);
+        this.swipeElement = this.slider.sliderElement.find('> .n2-ss-swipe-element');
 
         if (_direction == 'vertical') {
             this.setVertical();
@@ -4018,72 +3648,132 @@ N2Require('SmartSliderControlTouch', [], [], function ($, scope, undefined) {
 
         var initTouch = $.proxy(function () {
             var that = this;
-            N2EventBurrito(this.swipeElement.get(0), {
-                mouse: this.parameters.fallbackToMouseEvents,
-                axis: _direction == 'horizontal' ? 'x' : 'y',
-                start: function (event, start) {
-                    hadDirection = false;
-                },
-                move: function (event, start, diff, speed, isRealScrolling) {
-                    var direction = that._direction.measure(diff);
-                    if (!isRealScrolling && direction != 'unknown' && that.currentAnimation === null) {
-                        if (that._animation.state != 'ended') {
-                            // skip the event as the current animation is still playing
-                            return false;
+            if (this._animation.isNoAnimation) {
+                N2EventBurrito(this.swipeElement.get(0), {
+                    mouse: this.parameters.fallbackToMouseEvents,
+                    axis: _direction == 'horizontal' ? 'x' : 'y',
+                    start: function () {
+                        hadDirection = false;
+                    },
+                    move: function (event, start, diff, speed, isRealScrolling) {
+                        var direction = that._direction.measure(diff);
+                        if (!isRealScrolling && direction != 'unknown' && that.currentAnimation === null) {
+
+                            if (that._animation.state != 'ended') {
+                                // skip the event as the current animation is still playing
+                                return false;
+                            }
+                            that.distance = [0];
+                            that.swipeElement.addClass('n2-grabbing');
+
+                            that.currentAnimation = {
+                                direction: direction
+                            };
+                            var isChangePossible = that.slider.isChangePossible(that._direction[direction]);
+                            if (!isChangePossible) {
+                                that.currentAnimation = null;
+                                return false;
+                            }
                         }
-                        that.distance = [0];
-                        that.swipeElement.addClass('n2-grabbing');
 
-                        // Force the main animation into touch mode horizontal/vertical
-                        that._animation.setTouch(that._direction.axis);
+                        if (that.currentAnimation) {
+                            var realDistance = that._direction.get(diff, that.currentAnimation.direction);
+                            that.logDistance(realDistance);
+                            if ((hadDirection || Math.abs(realDistance) > that._direction.minDistance) && event.cancelable) {
+                                hadDirection = true;
+                                return true;
+                            }
+                        }
+                        return false;
+                    },
+                    end: function (event, start, diff, speed, isRealScrolling) {
+                        if (that.currentAnimation !== null) {
+                            var targetDirection = isRealScrolling ? 0 : that.measureRealDirection();
+                            if (targetDirection) {
+                                that.slider[that._direction[that.currentAnimation.direction]]();
+                            }
 
-                        that.currentAnimation = {
-                            direction: direction,
-                            percent: 0
-                        };
-                        var isChangePossible = that.slider[that._direction[direction]](false);
-                        if (!isChangePossible) {
+                            that.swipeElement.removeClass('n2-grabbing');
                             that.currentAnimation = null;
-                            return false;
                         }
-                    }
 
-                    if (that.currentAnimation) {
-                        var realDistance = that._direction.get(diff, that.currentAnimation.direction);
-                        that.logDistance(realDistance);
-                        if (that.currentAnimation.percent < 1) {
-                            var percent = Math.max(-0.99999, Math.min(0.99999, realDistance / that.slider.dimensions.slider[that._property]));
-                            that.currentAnimation.percent = percent;
-                            that._animation.setTouchProgress(percent);
-                        }
-                        if ((hadDirection || Math.abs(realDistance) > that._direction.minDistance) && event.cancelable) {
-                            hadDirection = true;
-                            return true;
+                        if (Math.abs(diff.x) < 10 && Math.abs(diff.y) < 10) {
+                            that.onTap(event);
+                        } else {
+                            nextend.preventClick();
                         }
                     }
-                    return false;
-                },
-                end: function (event, start, diff, speed, isRealScrolling) {
-                    if (that.currentAnimation !== null) {
-                        var targetDirection = isRealScrolling ? 0 : that.measureRealDirection();
-                        var progress = that._animation.timeline.progress();
-                        if (progress != 1) {
-                            that._animation.setTouchEnd(targetDirection, that.currentAnimation.percent, diff.time);
-                        }
-                        that.swipeElement.removeClass('n2-grabbing');
+                });
+            } else {
+                N2EventBurrito(this.swipeElement.get(0), {
+                    mouse: this.parameters.fallbackToMouseEvents,
+                    axis: _direction == 'horizontal' ? 'x' : 'y',
+                    start: function (event, start) {
+                        hadDirection = false;
+                    },
+                    move: function (event, start, diff, speed, isRealScrolling) {
+                        var direction = that._direction.measure(diff);
+                        if (!isRealScrolling && direction != 'unknown' && that.currentAnimation === null) {
 
-                        // Switch back the animation into the original mode when our touch is ended
-                        that._animation.setTouch(false);
-                        that.currentAnimation = null;
-                    }
+                            if (that._animation.state != 'ended') {
+                                // skip the event as the current animation is still playing
+                                return false;
+                            }
+                            that.distance = [0];
+                            that.swipeElement.addClass('n2-grabbing');
 
-                    if (Math.abs(diff.x) < 10 && Math.abs(diff.y) < 10) {
-                        that.onTap(event);
-                    } else {
-                        nextend.preventClick();
+                            // Force the main animation into touch mode horizontal/vertical
+                            that._animation.setTouch(that._direction.axis);
+
+                            that.currentAnimation = {
+                                direction: direction,
+                                percent: 0
+                            };
+                            var isChangePossible = that.slider[that._direction[direction]](false);
+                            if (!isChangePossible) {
+                                that._animation.setTouch(false);
+                                that.currentAnimation = null;
+                                return false;
+                            }
+                        }
+
+                        if (that.currentAnimation) {
+                            var realDistance = that._direction.get(diff, that.currentAnimation.direction);
+                            that.logDistance(realDistance);
+                            if (that.currentAnimation.percent < 1) {
+                                var percent = Math.max(-0.99999, Math.min(0.99999, realDistance / that.slider.dimensions.slider[that._property]));
+                                that.currentAnimation.percent = percent;
+                                that._animation.setTouchProgress(percent);
+                            }
+                            if ((hadDirection || Math.abs(realDistance) > that._direction.minDistance) && event.cancelable) {
+                                hadDirection = true;
+                                return true;
+                            }
+                        }
+                        return false;
+                    },
+                    end: function (event, start, diff, speed, isRealScrolling) {
+                        if (that.currentAnimation !== null) {
+                            var targetDirection = isRealScrolling ? 0 : that.measureRealDirection();
+                            var progress = that._animation.timeline.progress();
+                            if (progress != 1) {
+                                that._animation.setTouchEnd(targetDirection, that.currentAnimation.percent, diff.time);
+                            }
+                            that.swipeElement.removeClass('n2-grabbing');
+
+                            // Switch back the animation into the original mode when our touch is ended
+                            that._animation.setTouch(false);
+                            that.currentAnimation = null;
+                        }
+
+                        if (Math.abs(diff.x) < 10 && Math.abs(diff.y) < 10) {
+                            that.onTap(event);
+                        } else {
+                            nextend.preventClick();
+                        }
                     }
-                }
-            });
+                });
+            }
         }, this);
 
         if (navigator.userAgent.toLowerCase().indexOf("android") > -1) {
@@ -4195,7 +3885,184 @@ N2Require('SmartSliderControlTouch', [], [], function ($, scope, undefined) {
 
     return SmartSliderControlTouch;
 });
+N2Require('SmartSliderBackgroundImage', [], [], function ($, scope, undefined) {
+
+    function SmartSliderBackgroundImage(slide, element, manager) {
+        this.loadStarted = false;
+
+        this.loadAllowed = false;
+
+        this.width = 0;
+        this.height = 0;
+
+        this.slide = slide;
+
+        this.element = element;
+        this.$mask = this.element.find('.n2-ss-slide-background-mask');
+        this.manager = manager;
+        this.loadDeferred = $.Deferred();
+
+        this.currentSrc = '';
+        this.mode = element.data('mode');
+        this.opacity = element.data('opacity');
+        this.blur = element.data('blur');
+        this.x = element.data('x');
+        this.y = element.data('y');
+
+
+        this.hasImage = false;
+        this.$image = this.$mask.find('img');
+
+        if (!this.$image.length) {
+            this.startColorMode();
+        } else {
+            this.hasImage = true;
+            this.startImageMode();
+        }
+
+    }
+
+    SmartSliderBackgroundImage.prototype.startColorMode = function () {
+        this.loadDeferred.resolve();
+    };
+
+    SmartSliderBackgroundImage.prototype.startImageMode = function () {
+        if (this.mode == 'fixed' && ((n2const.isPhone && !this.slide.slider.parameters['background.parallax.mobile']) || (n2const.isTablet && !this.slide.slider.parameters['background.parallax.tablet']))) {
+            this.mode = 'fill';
+        }
+        this.$image.css('display', 'none');
+        this.$background = $('<div class="n2-ss-background-image"/>')
+            .css({
+                opacity: this.opacity,
+                backgroundPosition: this.x + '% ' + this.y + '%'
+            })
+            .appendTo(this.$mask);
+
+        if (window.n2FilterProperty) {
+            if (this.blur > 0) {
+                this.$background.css({
+                    margin: '-' + (this.blur * 2) + 'px',
+                    padding: (this.blur * 2) + 'px'
+                }).css(window.n2FilterProperty, 'blur(' + this.blur + 'px)');
+            } else {
+                this.$background.css({
+                    margin: '',
+                    padding: ''
+                }).css(window.n2FilterProperty, '');
+            }
+        }
+
+        if (this.mode == 'fixed') {
+            this.startFixed();
+        }
+
+        this.desktopSrc = this.element.data('desktop') || '';
+        this.tabletSrc = this.element.data('tablet') || '';
+        this.mobileSrc = this.element.data('mobile') || '';
+
+        if (nextend.isRetina) {
+            var retina = this.element.data('desktop-retina');
+            if (retina) {
+                this.desktopSrc = retina;
+            }
+            retina = this.element.data('tablet-retina');
+            if (retina) {
+                this.tabletSrc = retina;
+            }
+            retina = this.element.data('mobile-retina');
+            if (retina) {
+                this.mobileSrc = retina;
+            }
+        }
+    }
+
+    SmartSliderBackgroundImage.prototype.preLoad = function () {
+        if (!this.loadStarted) {
+            this.slide.$element.find('[data-lazysrc]').each(function () {
+                var $this = $(this);
+                $this.attr('src', $this.data('lazysrc'));
+            });
+            this.loadStarted = true;
+        }
+
+        if (this.loadDeferred.state() == 'pending') {
+            this.loadAllowed = true;
+            this.manager.deviceDeferred.done($.proxy(function () {
+                this.updateBackgroundToDevice(this.manager.device);
+                this.$background.n2imagesLoaded({background: true}, $.proxy(function (e) {
+                    var img = e.images[0].img;
+                    this.width = img.naturalWidth;
+                    this.height = img.naturalHeight;
+
+                    this.isLoaded = true;
+                    this.loadDeferred.resolve(this.element);
+                }, this));
+            }, this));
+        }
+        return this.loadDeferred;
+    };
+
+    SmartSliderBackgroundImage.prototype.updateBackgroundToDevice = function (device) {
+        var newSrc = this.desktopSrc;
+        if (device.device == 'mobile') {
+            if (this.mobileSrc) {
+                newSrc = this.mobileSrc;
+            } else if (this.tabletSrc) {
+                newSrc = this.tabletSrc;
+            }
+        } else if (device.device == 'tablet') {
+            if (this.tabletSrc) {
+                newSrc = this.tabletSrc;
+            }
+        }
+        if (newSrc) {
+            this.setSrc(newSrc);
+        } else {
+            this.setSrc('');
+        }
+    };
+
+    SmartSliderBackgroundImage.prototype.setSrc = function (src) {
+        if (this.loadAllowed) {
+            if (src != this.currentSrc) {
+                if (src === '') {
+                    this.$background.css('background-image', '');
+                } else {
+                    this.$background.css('background-image', 'url("' + src + '")');
+                }
+                this.currentSrc = src;
+            }
+        }
+    }
+
+    SmartSliderBackgroundImage.prototype.startFixed = function () {
+        if (!n2const.isEdge) {
+            if (this.slide.slider.parameters.allowBGImageAttachmentFixed && !n2const.isIOS) {
+                this.$background.css('background-repeat', 'repeat');
+                this.$background.css('position', 'static');
+                this.$background.css('background-attachment', 'fixed');
+            } else if (!n2const.isIE) {
+                this.slide.slider.startedDeferred.done($.proxy(function () {
+                    fixedBackground.addElement(this.$background, this.element);
+                }, this));
+            }
+        }
+    }
+
+    SmartSliderBackgroundImage.prototype.hack = function () {
+        NextendTween.set(this.element, {
+            rotation: 0.0001
+        });
+    };
+
+    return SmartSliderBackgroundImage;
+});
 N2Require('FrontendComponent', [], [], function ($, scope, undefined) {
+
+    /**
+     * @constructor
+     * @memberof scope
+     */
     function FrontendComponent(slide, parent, $layer, $children) {
         this.wraps = {};
         this.isVisible = true;
@@ -4404,6 +4271,210 @@ N2Require('FrontendPlacement', [], [], function ($, scope, undefined) {
 
     return FrontendPlacement;
 });
+N2Require('FrontendSliderSlide', ['FrontendComponentSlideAbstract'], [], function ($, scope, undefined) {
+
+    /**
+     * @constructor
+     * @augments FrontendComponentSlideAbstract
+     * @memberof scope
+     */
+    function FrontendSliderSlide(slider, $element, index) {
+        this.isStaticSlide = false;
+        this.originalIndex = index;
+        this.index = index;
+        this.localIndex = index;
+        this.$element = $element.data('slide', this);
+        this.id = this.$element.data('id');
+
+        this.backgroundImage = false;
+        this.backgroundVideo = false;
+
+        this.slides = [this];
+
+        if (!slider.parameters.admin) {
+            this.minimumSlideDuration = $element.data('slide-duration');
+            if (!$.isNumeric(this.minimumSlideDuration)) {
+                this.minimumSlideDuration = 0;
+            }
+        } else {
+            this.minimumSlideDuration = 0;
+        }
+
+        var $container = $element.find('.n2-ss-layers-container');
+
+        scope.FrontendComponentSlideAbstract.prototype.constructor.call(this, slider, $container);
+    }
+
+    FrontendSliderSlide.prototype = Object.create(scope.FrontendComponentSlideAbstract.prototype);
+    FrontendSliderSlide.prototype.constructor = FrontendSliderSlide;
+
+    FrontendSliderSlide.prototype.init = function () {
+        scope.FrontendComponentSlideAbstract.prototype.init.call(this);
+        var $image = this.slider.findSlideBackground(this);
+        if ($image.length > 0) {
+            if (this.slider.isAdmin) {
+                this.backgroundImage = new scope.SmartSliderBackgroundImageAdmin(this, $image, this.slider.backgroundImages);
+            } else {
+                this.backgroundImage = new scope.SmartSliderBackgroundImage(this, $image, this.slider.backgroundImages);
+            }
+        }
+
+        this.$element.data('slideBackground', this.backgroundImage);
+
+        var $video = this.backgroundImage.element.find('.n2-ss-slide-background-video');
+        if ($video.length > 0) {
+            this.backgroundVideo = new scope.SmartSliderBackgroundVideo(this, $video);
+        }
+    };
+
+    FrontendSliderSlide.prototype.setStarterSlide = function () {
+        scope.FrontendComponentSlideAbstract.prototype.setStarterSlide.call(this);
+    };
+
+    FrontendSliderSlide.prototype.setIndex = function (index) {
+        this.localIndex = this.index = index;
+    };
+
+    FrontendSliderSlide.prototype.preLoad = function () {
+        if (this.backgroundImage) {
+            return this.backgroundImage.preLoad();
+        }
+
+        return true;
+    };
+
+    /**
+     * Linked list
+     * @param previousSlide
+     */
+    FrontendSliderSlide.prototype.setPrevious = function (previousSlide) {
+        this.previousSlide = previousSlide;
+    };
+
+    /**
+     * Linked list
+     * @param nextSlide
+     */
+    FrontendSliderSlide.prototype.setNext = function (nextSlide) {
+        this.nextSlide = nextSlide;
+        nextSlide.setPrevious(this);
+    };
+
+    FrontendSliderSlide.prototype.hasBackgroundVideo = function () {
+        return this.backgroundVideo;
+    };
+
+    return FrontendSliderSlide;
+});
+N2Require('FrontendComponentSlideAbstract', ['FrontendComponent'], [], function ($, scope, undefined) {
+
+    var SlideStatus = {
+        NOT_INITIALIZED: -1,
+        INITIALIZED: 0,
+        READY_TO_START: 1,
+        PLAYING: 2,
+        ENDED: 3
+    };
+
+    /**
+     * @constructor
+     * @augments FrontendComponent
+     * @memberof scope
+     */
+    function FrontendComponentSlideAbstract(slider, $el) {
+        this.baseSize = 16;
+        this.slider = slider;
+
+        if (!this.isCurrentlyEdited()) {
+
+            this.status = SlideStatus.NOT_INITIALIZED;
+
+            scope.FrontendComponent.prototype.constructor.call(this, this, this, $el, $el.find('> .n2-ss-section-outer > .n2-ss-layer, > .n2-ss-layer, > .n2-ss-layer-group'));
+
+            this.slider.sliderElement.on({
+                SliderDeviceOrientation: $.proxy(function (e, modes) {
+                    this.onDeviceChange(modes.device + modes.orientation.toLowerCase());
+                }, this),
+                SliderResize: $.proxy(function (e, ratios, responsive) {
+                    this.onResize(ratios, responsive.responsiveDimensions);
+                }, this)
+            });
+
+            scope.FrontendComponent.prototype.start.call(this);
+        }
+    }
+
+    FrontendComponentSlideAbstract.prototype = Object.create(scope.FrontendComponent.prototype);
+    FrontendComponentSlideAbstract.prototype.constructor = FrontendComponentSlideAbstract;
+
+    FrontendComponentSlideAbstract.prototype.isCurrentlyEdited = function () {
+        return this.slider.parameters.admin && this.$element.hasClass('n2-ss-currently-edited-slide');
+    };
+
+    FrontendComponentSlideAbstract.prototype.trigger = function () {
+        this.$element.trigger.apply(this.$element, [].slice.call(arguments));
+    };
+
+    FrontendComponentSlideAbstract.prototype.triggerHandler = function () {
+        return this.$element.triggerHandler.apply(this.$element, [].slice.call(arguments));
+    };
+
+    FrontendComponentSlideAbstract.prototype.init = function () {
+
+        if (!this.isCurrentlyEdited()) {
+        }
+    };
+
+    FrontendComponentSlideAbstract.prototype.refreshBaseSize = function (fontSize) {
+
+    };
+
+    FrontendComponentSlideAbstract.prototype.onResize = function (ratios, dimensions) {
+        for (var i = 0; i < this.children.length; i++) {
+            this.children[i].onResize(ratios, dimensions, this.isStaticSlide)
+        }
+    };
+
+
+    FrontendComponentSlideAbstract.prototype.hasLayers = function () {
+        return this.children.length > 0;
+    };
+
+    FrontendComponentSlideAbstract.prototype.onDeviceChange = function (device) {
+        this.device = device;
+
+        for (var i = 0; i < this.children.length; i++) {
+            this.children[i].onDeviceChange(device)
+        }
+        this.placement.onDeviceChange(device);
+
+    };
+
+    FrontendComponentSlideAbstract.prototype.setStarterSlide = function () {
+    };
+
+    return FrontendComponentSlideAbstract;
+});
+N2Require('FrontendSliderStaticSlide', ['FrontendComponentSlideAbstract'], [], function ($, scope, undefined) {
+
+    /**
+     * @constructor
+     * @augments FrontendComponentSlideAbstract
+     * @memberof scope
+     */
+    function FrontendSliderStaticSlide(slider, $element) {
+        this.isStaticSlide = true;
+        this.$element = $element.data('slide', this);
+        scope.FrontendComponentSlideAbstract.prototype.constructor.call(this, slider, $element);
+
+        this.init();
+    }
+
+    FrontendSliderStaticSlide.prototype = Object.create(scope.FrontendComponentSlideAbstract.prototype);
+    FrontendSliderStaticSlide.prototype.constructor = FrontendSliderStaticSlide;
+
+    return FrontendSliderStaticSlide;
+});
 N2Require('FrontendPlacementAbsolute', ['FrontendPlacement'], [], function ($, scope, undefined) {
 
     if (/(MSIE\ [0-7]\.\d+)/.test(navigator.userAgent)) {
@@ -4559,6 +4630,7 @@ N2Require('FrontendPlacementAbsolute', ['FrontendPlacement'], [], function ($, s
                         break;
                 }
             }
+
             $layer.css(positionCSS);
 
             for (var i = 0; i < this.linked.length; i++) {
@@ -4902,6 +4974,10 @@ N2Require('FrontendComponentRow', ['FrontendComponent'], [], function ($, scope,
             length = columns.length,
             isWrapped = false;
 
+        if (length == 0) {
+            return false;
+        }
+
         if (wrapAfter > 0 && wrapAfter < length) {
             isWrapped = true;
         }
@@ -4940,114 +5016,6 @@ N2Require('FrontendComponentRow', ['FrontendComponent'], [], function ($, scope,
 
     return FrontendComponentRow;
 });
-N2Require('FrontendComponentSlide', ['FrontendComponentSlideAbstract'], [], function ($, scope, undefined) {
-
-    function FrontendComponentSlide(slider, $slideElement, isFirst) {
-        this.isStaticSlide = false;
-        this.isFirstSlide = isFirst;
-        this.$slideElement = $slideElement.data('slide', this);
-
-
-        if (!slider.parameters.admin) {
-            this.minimumSlideDuration = $slideElement.data('slide-duration');
-            if (!$.isNumeric(this.minimumSlideDuration)) {
-                this.minimumSlideDuration = 0;
-            }
-        } else {
-            this.minimumSlideDuration = 0;
-        }
-
-        var $container = $slideElement.find('.n2-ss-layers-container');
-        scope.FrontendComponentSlideAbstract.prototype.constructor.call(this, slider, $container);
-    }
-
-    FrontendComponentSlide.prototype = Object.create(scope.FrontendComponentSlideAbstract.prototype);
-    FrontendComponentSlide.prototype.constructor = FrontendComponentSlide;
-
-    FrontendComponentSlide.prototype.isActive = function () {
-        return this.$slideElement.hasClass('n2-ss-slide-active');
-    }
-
-    return FrontendComponentSlide;
-});
-N2Require('FrontendComponentSlideAbstract', ['FrontendComponent'], [], function ($, scope, undefined) {
-
-    var SlideStatus = {
-        NOT_INITIALIZED: -1,
-        INITIALIZED: 0,
-        READY_TO_START: 1,
-        PLAYING: 2,
-        ENDED: 3
-    };
-
-    function FrontendComponentSlideAbstract(slider, $el) {
-
-        this.baseSize = 16;
-
-        if (!slider.parameters.admin || !this.$slideElement.is(slider.adminGetCurrentSlideElement())) {
-
-            this.slider = slider;
-            this.status = SlideStatus.NOT_INITIALIZED;
-
-            scope.FrontendComponent.prototype.constructor.call(this, this, this, $el, $el.find('> .n2-ss-section-outer > .n2-ss-layer, > .n2-ss-layer, > .n2-ss-layer-group'));
-
-            this.slider.sliderElement.on({
-                SliderDeviceOrientation: $.proxy(function (e, modes) {
-                    this.onDeviceChange(modes.device + modes.orientation.toLowerCase());
-                }, this),
-                SliderResize: $.proxy(function (e, ratios, responsive) {
-                    this.onResize(ratios, responsive.responsiveDimensions);
-                }, this)
-            });
-
-            this.start();
-        }
-    }
-
-    FrontendComponentSlideAbstract.prototype = Object.create(scope.FrontendComponent.prototype);
-    FrontendComponentSlideAbstract.prototype.constructor = FrontendComponentSlideAbstract;
-
-
-    FrontendComponentSlideAbstract.prototype.refreshBaseSize = function (fontSize) {
-
-    }
-
-    FrontendComponentSlideAbstract.prototype.onResize = function (ratios, dimensions) {
-        for (var i = 0; i < this.children.length; i++) {
-            this.children[i].onResize(ratios, dimensions, this.isStaticSlide)
-        }
-    }
-
-
-    FrontendComponentSlideAbstract.prototype.hasLayers = function () {
-        return this.children.length > 0;
-    }
-
-    FrontendComponentSlideAbstract.prototype.onDeviceChange = function (device) {
-        this.device = device;
-
-        for (var i = 0; i < this.children.length; i++) {
-            this.children[i].onDeviceChange(device)
-        }
-        this.placement.onDeviceChange(device);
-
-    }
-
-    return FrontendComponentSlideAbstract;
-});
-N2Require('FrontendComponentStaticSlide', ['FrontendComponentSlideAbstract'], [], function ($, scope, undefined) {
-
-    function FrontendComponentStaticSlide(slider, $slideElement) {
-        this.isStaticSlide = true;
-        this.$slideElement = $slideElement.data('slide', this);
-        scope.FrontendComponentSlideAbstract.prototype.constructor.call(this, slider, $slideElement);
-    }
-
-    FrontendComponentStaticSlide.prototype = Object.create(scope.FrontendComponentSlideAbstract.prototype);
-    FrontendComponentStaticSlide.prototype.constructor = FrontendComponentStaticSlide;
-
-    return FrontendComponentStaticSlide;
-});
 N2Require('SmartSliderResponsive', [], [], function ($, scope, undefined) {
 
     var isTablet = null,
@@ -5061,70 +5029,6 @@ N2Require('SmartSliderResponsive', [], [], function ($, scope, undefined) {
 
         this.invalidateResponsiveState = true;
 
-        if (slider.isAdmin) {
-            this.doResize = NextendThrottle(this.doResize, 50);
-        }
-
-        this.loadDeferred = $.Deferred();
-
-        if (nextend.fontsDeferred == undefined) {
-            nextend.loadDeferred.always($.proxy(function () {
-                this.loadDeferred.resolve();
-            }, this));
-        } else {
-            nextend.fontsDeferred.always($.proxy(function () {
-                this.loadDeferred.resolve();
-            }, this));
-        }
-
-
-        this.fixedEditRatio = 1;
-        this.normalizeTimeout = null;
-        this.delayedResizeAdded = false;
-
-        this.deviceMode = SmartSliderResponsive.DeviceMode.UNKNOWN;
-        this.orientationMode = SmartSliderResponsive.OrientationMode.SCREEN;
-        this.orientation = SmartSliderResponsive.DeviceOrientation.UNKNOWN;
-        this.lastRatios = {
-            ratio: -1
-        };
-        this.lastRawRatios = {
-            ratio: -1
-        };
-        this.normalizedMode = 'unknownUnknown';
-
-        slider.responsive = this;
-
-        this.widgetMargins = {
-            Top: [],
-            Right: [],
-            Bottom: [],
-            Left: []
-        };
-        this.staticSizes = {
-            paddingTop: 0,
-            paddingRight: 0,
-            paddingBottom: 0,
-            paddingLeft: 0
-        };
-        this.enabledWidgetMargins = [];
-
-        this.slider = slider;
-        this.sliderElement = slider.sliderElement;
-
-
-        this.alignElement = this.slider.sliderElement.closest('.n2-ss-align');
-
-        var ready = this.ready = $.Deferred();
-
-        this.sliderElement.triggerHandler('SliderResponsiveStarted');
-
-        this.sliderElement.one('SliderResize', function () {
-            ready.resolve();
-        });
-
-        this.containerElementPadding = this.sliderElement.parent();
-        this.containerElement = this.containerElementPadding.parent();
         this.parameters = $.extend({
             desktop: 1,
             tablet: 1,
@@ -5220,6 +5124,100 @@ N2Require('SmartSliderResponsive', [], [], function ($, scope, undefined) {
             overflowHiddenPage: 0
         }, parameters);
 
+        if (slider.isAdmin) {
+            this.doResize = NextendThrottle(this.doResize, 50);
+        }
+
+        this.loadDeferred = $.Deferred();
+
+        this.slider = slider;
+        this.sliderElement = slider.sliderElement;
+    }
+
+    SmartSliderResponsive.OrientationMode = {
+        SCREEN: 0,
+        ADMIN_LANDSCAPE: 1,
+        ADMIN_PORTRAIT: 2,
+        SCREEN_WIDTH_ONLY: 3
+    };
+    SmartSliderResponsive.DeviceOrientation = {
+        UNKNOWN: 0,
+        LANDSCAPE: 1,
+        PORTRAIT: 2
+    };
+    SmartSliderResponsive._DeviceOrientation = {
+        0: 'Unknown',
+        1: 'Landscape',
+        2: 'Portrait'
+    };
+    SmartSliderResponsive.DeviceMode = {
+        UNKNOWN: 0,
+        DESKTOP: 1,
+        TABLET: 2,
+        MOBILE: 3
+    };
+    SmartSliderResponsive._DeviceMode = {
+        0: 'unknown',
+        1: 'desktop',
+        2: 'tablet',
+        3: 'mobile'
+    };
+
+    SmartSliderResponsive.prototype.start = function () {
+
+        if (nextend.fontsDeferred == undefined) {
+            nextend.loadDeferred.always($.proxy(function () {
+                this.loadDeferred.resolve();
+            }, this));
+        } else {
+            nextend.fontsDeferred.always($.proxy(function () {
+                this.loadDeferred.resolve();
+            }, this));
+        }
+
+
+        this.normalizeTimeout = null;
+        this.delayedResizeAdded = false;
+
+        this.deviceMode = SmartSliderResponsive.DeviceMode.UNKNOWN;
+        this.orientationMode = SmartSliderResponsive.OrientationMode.SCREEN;
+        this.orientation = SmartSliderResponsive.DeviceOrientation.UNKNOWN;
+        this.lastRatios = {
+            ratio: -1
+        };
+        this.lastRawRatios = {
+            ratio: -1
+        };
+        this.normalizedMode = 'unknownUnknown';
+
+        this.widgetMargins = {
+            Top: [],
+            Right: [],
+            Bottom: [],
+            Left: []
+        };
+        this.staticSizes = {
+            paddingTop: 0,
+            paddingRight: 0,
+            paddingBottom: 0,
+            paddingLeft: 0
+        };
+        this.enabledWidgetMargins = [];
+
+
+        this.alignElement = this.slider.sliderElement.closest('.n2-ss-align');
+
+        var ready = this.ready = $.Deferred();
+
+        this.sliderElement.triggerHandler('SliderResponsiveStarted');
+
+        this.sliderElement.one('SliderResize', function () {
+            ready.resolve();
+        });
+
+        this.containerElementPadding = this.sliderElement.parent();
+        this.containerElement = this.containerElementPadding.parent();
+
 
         if (!this.slider.isAdmin && this.parameters.overflowHiddenPage) {
             $('html, body').css('overflow', 'hidden');
@@ -5229,7 +5227,7 @@ N2Require('SmartSliderResponsive', [], [], function ($, scope, undefined) {
             this.orientationMode = SmartSliderResponsive.OrientationMode.SCREEN_WIDTH_ONLY;
         }
 
-        nextend.smallestZoom = Math.min(Math.max(parameters.sliderWidthToDevice.mobilePortrait, 120), 320);
+        nextend.smallestZoom = Math.min(Math.max(this.parameters.sliderWidthToDevice.mobilePortrait, 120), 320);
 
         switch (this.parameters.basedOn) {
             case 'screen':
@@ -5274,7 +5272,6 @@ N2Require('SmartSliderResponsive', [], [], function ($, scope, undefined) {
             this.parameters.maximumHeightRatio.mobilePortrait = this.parameters.maximumHeightRatio.desktopPortrait;
             this.parameters.maximumHeightRatio.mobileLandscape = this.parameters.maximumHeightRatio.desktopPortrait;
         }
-
         if (this.parameters.maximumSlideWidth > 0) {
             this.parameters.maximumSlideWidthRatio = {
                 desktopPortrait: this.parameters.maximumSlideWidth / this.responsiveDimensions.startSlideWidth,
@@ -5283,7 +5280,7 @@ N2Require('SmartSliderResponsive', [], [], function ($, scope, undefined) {
                 tabletLandscape: this.parameters.maximumSlideWidthTabletLandscape / this.responsiveDimensions.startSlideWidth,
                 mobilePortrait: this.parameters.maximumSlideWidthMobile / this.responsiveDimensions.startSlideWidth,
                 mobileLandscape: this.parameters.maximumSlideWidthMobileLandscape / this.responsiveDimensions.startSlideWidth
-            }
+            };
 
             if (this.parameters.maximumSlideWidthConstrainHeight) {
                 this.parameters.maximumHeightRatio = $.extend({}, this.parameters.maximumSlideWidthRatio);
@@ -5300,8 +5297,10 @@ N2Require('SmartSliderResponsive', [], [], function ($, scope, undefined) {
 
         this.onResize();
         if (this.parameters.onResizeEnabled || this.parameters.type == 'adaptive') {
-            $(window).on('resize', $.proxy(this.onResize, this));
-
+            $(window).on({
+                resize: $.proxy(this.onResize, this),
+                orientationchange: $.proxy(this.onResize, this)
+            });
 
             this.sliderElement.on('SliderInternalResize', $.proxy(this.onResize, this));
 
@@ -5320,38 +5319,8 @@ N2Require('SmartSliderResponsive', [], [], function ($, scope, undefined) {
         }
     };
 
-    SmartSliderResponsive.OrientationMode = {
-        SCREEN: 0,
-        ADMIN_LANDSCAPE: 1,
-        ADMIN_PORTRAIT: 2,
-        SCREEN_WIDTH_ONLY: 3
-    };
-    SmartSliderResponsive.DeviceOrientation = {
-        UNKNOWN: 0,
-        LANDSCAPE: 1,
-        PORTRAIT: 2
-    };
-    SmartSliderResponsive._DeviceOrientation = {
-        0: 'Unknown',
-        1: 'Landscape',
-        2: 'Portrait'
-    };
-    SmartSliderResponsive.DeviceMode = {
-        UNKNOWN: 0,
-        DESKTOP: 1,
-        TABLET: 2,
-        MOBILE: 3
-    };
-    SmartSliderResponsive._DeviceMode = {
-        0: 'unknown',
-        1: 'desktop',
-        2: 'tablet',
-        3: 'mobile'
-    };
-
     SmartSliderResponsive.prototype.getOuterWidth = function () {
-        var rd = this.responsiveDimensions;
-        return rd.startSliderWidth + rd.startSliderMarginLeft + rd.startSliderMarginRight;
+        return this.responsiveDimensions.startSliderWidth + this.responsiveDimensions.startSliderMarginLeft + this.responsiveDimensions.startSliderMarginRight;
     };
 
     SmartSliderResponsive.prototype.storeDefaults = function () {
@@ -5376,7 +5345,7 @@ N2Require('SmartSliderResponsive', [], [], function ($, scope, undefined) {
             bottom: this.responsiveDimensions.startSliderMarginBottom,
             left: this.responsiveDimensions.startSliderMarginLeft
         }
-    }
+    };
 
     SmartSliderResponsive.prototype.addHorizontalElement = function (element, cssproperties, ratioName, name) {
         ratioName = ratioName || 'ratio';
@@ -5384,7 +5353,7 @@ N2Require('SmartSliderResponsive', [], [], function ($, scope, undefined) {
         var responsiveElement = new scope.SmartSliderResponsiveElement(this, ratioName, element, cssproperties, name);
         this.horizontalElements.push(responsiveElement);
         return responsiveElement;
-    }
+    };
 
     SmartSliderResponsive.prototype.addVerticalElement = function (element, cssproperties, ratioName, name) {
         ratioName = ratioName || 'ratio';
@@ -5392,7 +5361,7 @@ N2Require('SmartSliderResponsive', [], [], function ($, scope, undefined) {
         var responsiveElement = new scope.SmartSliderResponsiveElement(this, ratioName, element, cssproperties, name);
         this.verticalElements.push(responsiveElement);
         return responsiveElement;
-    }
+    };
 
     SmartSliderResponsive.prototype.resizeHorizontalElements = function (ratios) {
         for (var i = 0; i < this.horizontalElements.length; i++) {
@@ -5402,12 +5371,12 @@ N2Require('SmartSliderResponsive', [], [], function ($, scope, undefined) {
             }
             responsiveElement.resize(this.responsiveDimensions, ratios[responsiveElement.ratioName], false, 0);
         }
-    }
+    };
 
     SmartSliderResponsive.prototype.updateVerticalRatios = function (ratios) {
 
         return ratios;
-    }
+    };
 
     SmartSliderResponsive.prototype._updateVerticalRatios = function (ratios) {
 
@@ -5428,7 +5397,7 @@ N2Require('SmartSliderResponsive', [], [], function ($, scope, undefined) {
         }
 
         return ratios;
-    }
+    };
 
     SmartSliderResponsive.prototype.resizeVerticalElements = function (ratios, timeline, duration) {
 
@@ -5439,7 +5408,7 @@ N2Require('SmartSliderResponsive', [], [], function ($, scope, undefined) {
             }
             responsiveElement.resize(this.responsiveDimensions, ratios[responsiveElement.ratioName], timeline, duration);
         }
-    }
+    };
 
     SmartSliderResponsive.prototype.getDeviceMode = function () {
         return SmartSliderResponsive._DeviceMode[this.deviceMode];
@@ -5449,9 +5418,9 @@ N2Require('SmartSliderResponsive', [], [], function ($, scope, undefined) {
         return SmartSliderResponsive._DeviceMode[this.deviceMode] + SmartSliderResponsive._DeviceOrientation[this.orientation];
     };
 
-    SmartSliderResponsive.prototype.onResize = function () {
+    SmartSliderResponsive.prototype.onResize = function (e) {
         if (!this.slider.mainAnimation || this.slider.mainAnimation.getState() == 'ended') {
-            this.doResize();
+            this.doResize(e);
         } else if (!this.delayedResizeAdded) {
             this.delayedResizeAdded = true;
             this.sliderElement.on('mainAnimationComplete.responsive', $.proxy(this._doDelayedResize, this));
@@ -5567,8 +5536,7 @@ N2Require('SmartSliderResponsive', [], [], function ($, scope, undefined) {
         });
     };
 
-    SmartSliderResponsive.prototype.doResize = function (fixedMode, timeline, nextSlideIndex, duration) {
-
+    SmartSliderResponsive.prototype.doResize = function (e, fixedMode, timeline, nextSlide, duration) {
         if (!this.disableTransitions) {
             this.disableTransitions = true;
             this.sliderElement.addClass('n2notransition');
@@ -5608,11 +5576,14 @@ N2Require('SmartSliderResponsive', [], [], function ($, scope, undefined) {
 
                 var windowWidth = customWidth > 0 ? customWidth : (document.body.clientWidth || document.documentElement.clientWidth),
                     outerEl = this.containerElement.parent(),
-                    outerElOffset = outerEl.offset();
-                if (nextend.isRTL) {
-                    outerElOffset.right = windowWidth - (outerElOffset.left + outerEl.outerWidth());
+                    outerElBoundingRect = outerEl[0].getBoundingClientRect(),
+                    outerElOffset;
+                if (nextend.rtl.isRtl) {
+                    outerElOffset = windowWidth - (outerElBoundingRect.left + outerEl.outerWidth());
+                } else {
+                    outerElOffset = outerElBoundingRect.left;
                 }
-                this.containerElement.css(nextend.rtl.marginLeft, -outerElOffset[nextend.rtl.left] - parseInt(outerEl.css('paddingLeft')) - parseInt(outerEl.css('borderLeftWidth')) + adjustLeftOffset)
+                this.containerElement.css(nextend.rtl.marginLeft, -outerElOffset - parseInt(outerEl.css('paddingLeft')) - parseInt(outerEl.css('borderLeftWidth')) + adjustLeftOffset)
                     .width(windowWidth);
             }
         }
@@ -5670,22 +5641,35 @@ N2Require('SmartSliderResponsive', [], [], function ($, scope, undefined) {
         if (!this.slider.isAdmin) {
             if (this.parameters.type == 'fullpage') {
                 var clientHeight = 0;
-                if ((/Android|iPhone|iPad|iPod|BlackBerry/i).test(navigator.userAgent || navigator.vendor || window.opera)) {
-                    var isOrientationChanged = false;
-                    if (Math.abs(window.orientation) == 90) {
+                if (window.matchMedia && (/Android|iPhone|iPad|iPod|BlackBerry/i).test(navigator.userAgent || navigator.vendor || window.opera)) {
+                    var innerHeight,
+                        isOrientationChanged = false;
+
+                    if (e && e.type == 'orientationchange') {
+                        isOrientationChanged = true;
+                    }
+
+                    if (n2const.isIOS) {
+                        innerHeight = document.documentElement.clientHeight;
+                    } else {
+                        innerHeight = window.innerHeight;
+                    }
+
+                    if (window.matchMedia("(orientation: landscape)").matches) {
                         // landscape
-                        clientHeight = Math.min(screen.width, window.innerHeight);
+                        clientHeight = Math.min(screen.width, innerHeight);
                         if (this.lastOrientation != 90) {
                             isOrientationChanged = true;
                             this.lastOrientation = 90;
                         }
                     } else {
-                        clientHeight = Math.min(screen.height, window.innerHeight);
+                        clientHeight = Math.min(screen.height, innerHeight);
                         if (this.lastOrientation != 0) {
                             isOrientationChanged = true;
                             this.lastOrientation = 0;
                         }
                     }
+
                     if (!isOrientationChanged && Math.abs(clientHeight - this.lastClientHeight) < 100) {
                         clientHeight = this.lastClientHeight;
                     } else {
@@ -5725,7 +5709,7 @@ N2Require('SmartSliderResponsive', [], [], function ($, scope, undefined) {
         } else if (!this.parameters.upscale && ratio > zeroRatio) {
             ratio = zeroRatio;
         }
-        this._doResize(ratio, timeline, nextSlideIndex, duration);
+        this._doResize(ratio, timeline, nextSlide, duration);
 
         if (this.slider.parameters.align == 'center') {
             this.alignElement.css('maxWidth', this.responsiveDimensions.slider.width);
@@ -5749,7 +5733,7 @@ N2Require('SmartSliderResponsive', [], [], function ($, scope, undefined) {
         return this.parameters.deviceModes[device + orientation];
     };
 
-    SmartSliderResponsive.prototype._doResize = function (ratio, timeline, nextSlideIndex, duration) {
+    SmartSliderResponsive.prototype._doResize = function (ratio, timeline, nextSlide, duration) {
         var ratios = {
             ratio: ratio,
             w: ratio,
@@ -5759,13 +5743,8 @@ N2Require('SmartSliderResponsive', [], [], function ($, scope, undefined) {
             fontRatio: 1
         };
 
-        this._buildRatios(ratios, this.slider.parameters.dynamicHeight, nextSlideIndex);
-        /*
-         if (this.fixedEditRatio && this.slider.isAdmin) {
-         ratios.w = ratios.slideW;
-         ratios.h = ratios.slideH;
-         }
-         */
+        this._buildRatios(ratios, this.slider.parameters.dynamicHeight, nextSlide);
+
         ratios.fontRatio = ratios.slideW;
 
 
@@ -5822,7 +5801,7 @@ N2Require('SmartSliderResponsive', [], [], function ($, scope, undefined) {
             this.triggerResize(ratios, false);
         }
 
-    }
+    };
 
     /**
      * Admin only
@@ -5841,30 +5820,29 @@ N2Require('SmartSliderResponsive', [], [], function ($, scope, undefined) {
         if (isChanged) {
             this.finishVerticalResize(ratios);
         }
-    }
+    };
 
     SmartSliderResponsive.prototype.finishVerticalResize = function (ratios) {
         this.loadDeferred.done($.proxy(function () {
             this.finishVerticalResize = this._finishVerticalResize;
             this.finishVerticalResize(ratios);
         }, this));
-    }
+    };
 
     SmartSliderResponsive.prototype._finishVerticalResize = function (ratios) {
         this.resizeVerticalElements(ratios, false, 0);
 
         this.lastRatios = ratios;
-
         this.triggerResize(ratios, false);
 
-    }
+    };
 
     SmartSliderResponsive.prototype.triggerResize = function (ratios, timeline) {
         n2c.log('Event: SliderResize', ratios);
         this.sliderElement.trigger('SliderResize', [ratios, this, timeline]);
     };
 
-    SmartSliderResponsive.prototype._buildRatios = function (ratios, dynamicHeight, nextSlideIndex) {
+    SmartSliderResponsive.prototype._buildRatios = function (ratios, dynamicHeight, nextSlide) {
 
         var deviceModeOrientation = this.getDeviceModeOrientation();
 
@@ -5874,9 +5852,9 @@ N2Require('SmartSliderResponsive', [], [], function ($, scope, undefined) {
 
         ratios.slideW = ratios.slideH = Math.min(ratios.slideW, ratios.slideH);
 
-
         var verticalRatioModifier = this.parameters.verticalRatioModifiers[deviceModeOrientation];
         ratios.slideH *= verticalRatioModifier;
+
         if (this.parameters.type == 'fullpage') {
             ratios.h *= verticalRatioModifier;
 
@@ -5929,13 +5907,11 @@ N2Require('SmartSliderResponsive', [], [], function ($, scope, undefined) {
 
             if (dynamicHeight) {
 
-                var slideIndex = this.slider.currentSlideIndex;
-                if (typeof nextSlideIndex !== 'undefined') {
-                    slideIndex = nextSlideIndex;
-                }
-
                 /** @type {SmartSliderBackgroundImage} */
-                var backgroundImage = this.slider.backgroundImages.backgroundImages[slideIndex];
+                var backgroundImage = this.slider.currentSlide.backgroundImage;
+                if (typeof nextSlide !== 'undefined') {
+                    backgroundImage = nextSlide.backgroundImage;
+                }
 
                 if (backgroundImage.width > 0 && backgroundImage.height > 0) {
                     var backgroundRatioModifier = (this.responsiveDimensions.startSlideWidth / backgroundImage.width) * ( backgroundImage.height / this.responsiveDimensions.startSlideHeight);
@@ -6005,6 +5981,8 @@ N2Require('SmartSliderResponsive', [], [], function ($, scope, undefined) {
     };
 
     SmartSliderResponsive.prototype.addStaticMargin = function (side, widget) {
+        if (side == 'Bottom' || side == 'Top') return;
+
         if (!this.widgetStaticMargins) {
             this.widgetStaticMargins = {
                 Top: [],
@@ -6061,7 +6039,7 @@ N2Require('SmartSliderResponsive', [], [], function ($, scope, undefined) {
             }
             this.staticSizes = staticSizes;
         }
-    }
+    };
 
     SmartSliderResponsive.prototype._addMarginSize = function (side, size) {
         var axis = null;
@@ -6226,10 +6204,14 @@ N2Require('SmartSliderResponsiveElement', [], [], function ($, scope, undefined)
             this.element.css(to);
 
             if (this.helper.centered) {
+                var verticalMargin = this.getVerticalMargin(parseInt((this.helper.parent.height() - this.element.height()) / 2)),
+                    horizontalMargin = this.getHorizontalMargin(parseInt((this.helper.parent.width() - this.element.width()) / 2));
                 this.element.css({
-                    marginTop: this.getVerticalMargin(parseInt((this.helper.parent.height() - this.element.height()) / 2))
+                    marginLeft: horizontalMargin,
+                    marginRight: horizontalMargin,
+                    marginTop: verticalMargin,
+                    marginBottom: verticalMargin
                 });
-                this.element.css(nextend.rtl.marginLeft, this.getHorizontalMargin(parseInt((this.helper.parent.width() - this.element.width()) / 2)));
             }
         }
         this._lastRatio = ratio;
@@ -6374,7 +6356,7 @@ N2Require('FrontendItemVimeo', [], [], function ($, scope, undefined) {
             this.setVolume(volume);
         }
 
-        this.slideIndex = this.slider.findSlideIndexByElement(this.playerElement);
+        this.slide = this.slider.findSlideByElement(this.playerElement);
 
         if (this.parameters.center == 1) {
             this.onResize();
@@ -6404,7 +6386,7 @@ N2Require('FrontendItemVimeo', [], [], function ($, scope, undefined) {
         if (!this.isStatic) {
             //pause video when slide changed
             this.slider.sliderElement.on("mainAnimationStart", $.proxy(function (e, mainAnimation, previousSlideIndex, currentSlideIndex, isSystem) {
-                if (currentSlideIndex != this.slideIndex) {
+                if ($.inArray(this.slide, this.slider.getVisibleSlides(this.slider.slides[currentSlideIndex])) == -1) {
                     if (parseInt(this.parameters.reset)) {
                         this.reset();
                     } else {
@@ -6447,12 +6429,12 @@ N2Require('FrontendItemVimeo', [], [], function ($, scope, undefined) {
         if (!this.isStatic) {
             //change slide
             this.slider.sliderElement.on("mainAnimationComplete", $.proxy(function (e, mainAnimation, previousSlideIndex, currentSlideIndex, isSystem) {
-                if (currentSlideIndex == this.slideIndex) {
+                if ($.inArray(this.slide, this.slider.getVisibleSlides(this.slider.slides[currentSlideIndex])) >= 0) {
                     this.play();
                 }
             }, this));
 
-            if (this.slider.currentSlideIndex == this.slideIndex) {
+            if ($.inArray(this.slide, this.slider.getVisibleSlides()) >= 0) {
                 this.play();
             }
         } else {
@@ -6511,10 +6493,10 @@ N2Require('FrontendItemYouTube', [], [], function ($, scope, undefined) {
             showinfo: 1,
             modestbranding: 1,
             reset: 0,
-            query: [],
+            query: []
         }, parameters);
 
-        if (navigator.userAgent.toLowerCase().indexOf("android") > -1) {
+        if (navigator.userAgent.toLowerCase().indexOf("android") > -1 || n2const.isIOS) {
             this.parameters.autoplay = 0;
         }
 
@@ -6605,7 +6587,6 @@ N2Require('FrontendItemYouTube', [], [], function ($, scope, undefined) {
                 vars[k] = this.parameters.query[k];
             }
         }
-        ;
 
         this.player = new YT.Player(this.playerId, {
             videoId: this.parameters.youtubecode,
@@ -6643,7 +6624,7 @@ N2Require('FrontendItemYouTube', [], [], function ($, scope, undefined) {
 
         this.playerElement = $("#" + this.playerId);
 
-        this.slideIndex = this.slider.findSlideIndexByElement(this.playerElement);
+        this.slide = this.slider.findSlideByElement(this.playerElement);
         if (this.parameters.center == 1) {
             this.playerElement.parent().css('overflow', 'hidden');
 
@@ -6654,7 +6635,7 @@ N2Require('FrontendItemYouTube', [], [], function ($, scope, undefined) {
 
     };
 
-    FrontendItemYouTube.prototype.onReady = function (state) {
+    FrontendItemYouTube.prototype.onReady = function () {
 
         var volume = parseFloat(this.parameters.volume);
         if (volume >= 0) {
@@ -6667,14 +6648,14 @@ N2Require('FrontendItemYouTube', [], [], function ($, scope, undefined) {
 
         if (!this.isStatic) {
             //pause video when slide changed
-            this.slider.sliderElement.on("mainAnimationStart", $.proxy(function (e, mainAnimation, previousSlideIndex, currentSlideIndex, isSystem) {
-                if (currentSlideIndex != this.slideIndex) {
+            this.slider.sliderElement.on("mainAnimationStart", $.proxy(function (e, mainAnimation, previousSlideIndex, currentSlideIndex) {
+                if ($.inArray(this.slide, this.slider.getVisibleSlides(this.slider.slides[currentSlideIndex])) == -1) {
                     this.pause();
                 }
             }, this));
             if (parseInt(this.parameters.reset)) {
-                this.slider.sliderElement.on("mainAnimationComplete", $.proxy(function (e, mainAnimation, previousSlideIndex, currentSlideIndex, isSystem) {
-                    if (currentSlideIndex != this.slideIndex) {
+                this.slider.sliderElement.on("mainAnimationComplete", $.proxy(function (e, mainAnimation, previousSlideIndex, currentSlideIndex) {
+                    if ($.inArray(this.slide, this.slider.getVisibleSlides(this.slider.slides[currentSlideIndex])) == -1) {
                         this.player.seekTo(0);
                     }
                 }, this));
@@ -6709,13 +6690,13 @@ N2Require('FrontendItemYouTube', [], [], function ($, scope, undefined) {
 
         if (!this.isStatic) {
             //change slide
-            this.slider.sliderElement.on("mainAnimationComplete", $.proxy(function (e, mainAnimation, previousSlideIndex, currentSlideIndex, isSystem) {
-                if (currentSlideIndex == this.slideIndex) {
+            this.slider.sliderElement.on("mainAnimationComplete", $.proxy(function (e, mainAnimation, previousSlideIndex, currentSlideIndex) {
+                if ($.inArray(this.slide, this.slider.getVisibleSlides(this.slider.slides[currentSlideIndex])) >= 0) {
                     this.play();
                 }
             }, this));
 
-            if (this.slider.currentSlideIndex == this.slideIndex) {
+            if ($.inArray(this.slide, this.slider.getVisibleSlides()) >= 0) {
                 this.play();
             }
         } else {

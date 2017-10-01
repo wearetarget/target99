@@ -263,10 +263,10 @@ N2Require('Zoom', [], [], function ($, scope, undefined) {
             for (var i = 0; i < this.responsives.length; i++) {
                 switch (mode) {
                     case 'sync':
-                        this.responsives[i].doResize();
+                        this.responsives[i].doResize(event);
                         break;
                     default:
-                        this.responsives[i].doResize(true);
+                        this.responsives[i].doResize(event, true);
                         break;
                 }
             }
@@ -341,12 +341,12 @@ N2Require('CreateSlider', [], [], function ($, scope, undefined) {
                 name: n2_('Thumbnail - horizontal'),
                 image: '$ss$/admin/images/sliderpresets/thumbnailhorizontal.png'
             });
+            var size = [550, 390 + 130];
+        
+
             this.createSliderModal = new NextendModal({
                 zero: {
-                    size: [
-                        N2SSPRO ? 750 : 550,
-                        N2SSPRO ? 630 : 390 + 130
-                    ],
+                    size: size,
                     title: n2_('Create Slider'),
                     back: false,
                     close: true,
@@ -378,9 +378,10 @@ N2Require('CreateSlider', [], [], function ($, scope, undefined) {
                             sliderHeight.parent().addClass('n2-form-element-autocomplete ui-front');
 
                             this.createHeading(n2_('Preset')).appendTo(this.content);
-
+                            var imageRadioHeight = 100
+                        
                             var imageRadio = this.createImageRadio(presets)
-                                    .css('height', N2SSPRO ? 360 : 100)
+                                    .css('height', imageRadioHeight)
                                     .appendTo(this.content),
                                 sliderPreset = imageRadio.find('input');
                             imageRadio.css('overflow', 'hidden');
@@ -593,16 +594,6 @@ N2Require('ManageSliders', [], [], function ($, scope, undefined) {
         this.menu = $('#n2-ss-slider-menu').detach().addClass('n2-inited');
 
         this.menuActions = {
-            addToGroup: this.menu.find('.n2-ss-add-to-group').on('click', $.proxy(function (e) {
-                e.stopPropagation();
-                e.preventDefault();
-                this.addToGroup([this.slider.getId()]);
-            }, this)),
-            removeFromGroup: this.menu.find('.n2-ss-remove-from-group').on('click', $.proxy(function (e) {
-                e.stopPropagation();
-                e.preventDefault();
-                this.removeFromGroup([this.slider.getId()]);
-            }, this)),
             duplicate: this.menu.find('.n2-ss-duplicate').on('click', $.proxy(function (e) {
                 this.slider.duplicate(e);
             }, this)),
@@ -611,8 +602,8 @@ N2Require('ManageSliders', [], [], function ($, scope, undefined) {
             }, this)),
             preview: this.menu.find('.n2-ss-preview').on('click', $.proxy(function (e) {
                 this.slider.preview(e);
-            }, this)),
-        }
+            }, this))
+        };
 
         this.menu.find('.n2-button').on('click', $.proxy(function (e) {
             e.preventDefault();
@@ -625,20 +616,20 @@ N2Require('ManageSliders', [], [], function ($, scope, undefined) {
                 });
             }
         }, this));
-    }
+    };
 
 
     ManageSliders.prototype.showMenu = function (slider) {
         this.slider = slider;
         this.menu.appendTo(slider.box);
-    }
+    };
 
     ManageSliders.prototype.hideMenu = function () {
         if (this.menu.hasClass('n2-active')) {
             this.menu.removeClass('n2-active').off('mouseleave');
         }
         this.menu.detach();
-    }
+    };
 
     ManageSliders.prototype.deleteSliders = function (ids, sliders) {
         this.hideMenu();
@@ -735,14 +726,14 @@ N2Require('ManageSliders', [], [], function ($, scope, undefined) {
             this.enterBulk();
         }
         this.selection.push(slider);
-    }
+    };
 
     ManageSliders.prototype.removeSelection = function (slider) {
         this.selection.splice($.inArray(slider, this.selection), 1);
         if (this.selection.length == 0) {
             this.leaveBulk();
         }
-    }
+    };
 
     ManageSliders.prototype.bulkSelect = function (cb) {
         for (var i = 0; i < this.sliders.length; i++) {
@@ -794,151 +785,6 @@ N2Require('ManageSliders', [], [], function ($, scope, undefined) {
             this.selection = [];
             this.isBulkSelection = false;
         }
-    };
-
-    ManageSliders.prototype.removeFromGroup = function (sliders) {
-        return NextendAjaxHelper.ajax({
-            type: "POST",
-            url: NextendAjaxHelper.makeAjaxUrl(this.ajaxUrl, {
-                nextendaction: 'removeFromGroup'
-            }),
-            data: {
-                currentGroupID: this.groupID,
-                sliders: sliders
-            },
-            dataType: 'json'
-        }).done($.proxy(function (response) {
-            for (var i = 0; i < sliders.length; i++) {
-                $('[data-sliderid="' + sliders[i] + '"]').data('slider').deleted();
-            }
-            this.initSliders();
-        }, this));
-    }
-
-    ManageSliders.prototype._addToGroup = function (action, groupID, sliders) {
-        return NextendAjaxHelper.ajax({
-            type: "POST",
-            url: NextendAjaxHelper.makeAjaxUrl(this.ajaxUrl, {
-                nextendaction: 'addToGroup'
-            }),
-            data: {
-                currentGroupID: this.groupID,
-                groupID: groupID,
-                action: action,
-                sliders: sliders
-            },
-            dataType: 'json'
-        }).done($.proxy(function (response) {
-
-            if (action == 'move') {
-                for (var i = 0; i < sliders.length; i++) {
-                    $('[data-sliderid="' + sliders[i] + '"]').data('slider').deleted();
-                }
-
-                this.initSliders();
-            }
-
-            var groupCounter = $('[data-sliderid="' + groupID + '"] .n2-box-placeholder-buttons .n2-button-grey');
-            groupCounter.html(parseInt(groupCounter.html()) + sliders.length);
-        }, this));
-    };
-
-    ManageSliders.prototype.addToGroup = function (sliders) {
-        var groups = null;
-        var that = this;
-        var ajaxUrl = this.ajaxUrl;
-
-        var addToGroupModal = new NextendModal({
-            zero: {
-                size: [
-                    350,
-                    220
-                ],
-                title: n2_('Add to group'),
-                back: false,
-                close: true,
-                content: '<form class="n2-form"></form>',
-                controls: [
-                    '<div class="n2-button n2-button-with-actions n2-button-l n2-button-green n2-radius-s n2-h4"><a class="n2-button-inner" href="#" data-action="move">' + n2_('Move') + '</a>' +
-                    '<div class="n2-button-menu-open"><i class="n2-i n2-i-buttonarrow"></i><div class="n2-button-menu"><div class="n2-button-menu-inner n2-border-radius">' +
-                    '<a class="n2-h4" href="#" data-action="copy">' + n2_('Copy') + '</a>' +
-                    '<a class="n2-h4" href="#" data-action="link">' + n2_('Link') + '</a>' +
-                    '</div></div></div></div>',
-                ],
-                fn: {
-                    show: function () {
-
-                        this.controls.find(".n2-button-menu-open").n2opener();
-
-                        var button = this.controls.find('a'),
-                            form = this.content.find('.n2-form').on('submit', function (e) {
-                                e.preventDefault();
-                                button.eq(0).trigger('click');
-                            });
-
-                        form.append(this.createSelect(n2_('Group'), 'choosegroup', groups, 'width:300px;'));
-
-                        var choosegroup = $('#choosegroup');
-
-                        button.on('click', $.proxy(function (e) {
-
-                            e.preventDefault();
-
-                            that._addToGroup($(e.currentTarget).data('action'), choosegroup.val(), sliders)
-                                .done($.proxy(function () {
-                                    this.hide(e);
-                                }, this));
-
-                        }, this));
-                    }
-                }
-            }
-        });
-
-
-        NextendAjaxHelper.ajax({
-            type: "POST",
-            url: NextendAjaxHelper.makeAjaxUrl(this.ajaxUrl, {
-                nextendcontroller: 'sliders',
-                nextendaction: 'listGroups'
-            }),
-            dataType: 'json'
-        }).done($.proxy(function (response) {
-            groups = response.data;
-            if (typeof groups[this.groupID] !== 'undefined') {
-                delete groups[this.groupID];
-            }
-            if ($.isEmptyObject(groups)) {
-                $('body').on({
-                    'groupAdded.addToGroup': $.proxy(function () {
-                        $('body').off('.addToGroup');
-                        NextendAjaxHelper.ajax({
-                            type: "POST",
-                            url: NextendAjaxHelper.makeAjaxUrl(this.ajaxUrl, {
-                                nextendcontroller: 'sliders',
-                                nextendaction: 'listGroups'
-                            }),
-                            dataType: 'json'
-                        }).done($.proxy(function (response) {
-                            groups = response.data;
-                            if (typeof groups[this.groupID] !== 'undefined') {
-                                delete groups[this.groupID];
-                            }
-                            addToGroupModal.show();
-                        }, this));
-
-                    }, this),
-                    'groupAddCanceled.addToGroup': $.proxy(function () {
-                        $('body').off('.addToGroup');
-                    }, this)
-                });
-
-                this.createGroup.showModal();
-
-            } else {
-                addToGroupModal.show();
-            }
-        }, this));
     };
 
     return ManageSliders;
@@ -1067,7 +913,7 @@ N2Require('FormElementAnimationManager', ['FormElement'], [], function ($, scope
         this.updateName(this.element.val());
 
         scope.FormElement.prototype.constructor.apply(this, arguments);
-    };
+    }
 
 
     FormElementAnimationManager.prototype = Object.create(scope.FormElement.prototype);
@@ -2137,283 +1983,6 @@ N2Require('FormElementColumns', ['FormElement'], [], function ($, scope, undefin
     root['Fraction'] = Fraction;
 
 })(this);
-N2Require('FormElementLayerPicker', ['FormElement'], [], function ($, scope, undefined) {
-
-    var STATUS = {
-            INITIALIZED: 0,
-            PICK_PARENT: 1,
-            PICK_CHILD: 2,
-            PICK_PARENT_ALIGN: 3,
-            PICK_CHILD_ALIGN: 4
-        },
-        OVERLAYS = '<div class="n2-ss-picker-overlay-tile" data-align="left" data-valign="top" />' +
-            '<div class="n2-ss-picker-overlay-tile" data-align="center" data-valign="top" style="left:33%;top:0;" />' +
-            '<div class="n2-ss-picker-overlay-tile" data-align="right" data-valign="top" style="left:66%;top:0;width:34%;" />' +
-            '<div class="n2-ss-picker-overlay-tile" data-align="left" data-valign="middle" style="left:0;top:33%;" />' +
-            '<div class="n2-ss-picker-overlay-tile" data-align="center" data-valign="middle" style="left:33%;top:33%; " />' +
-            '<div class="n2-ss-picker-overlay-tile" data-align="right" data-valign="middle" style="left:66%;top:33%;width:34%;" />' +
-            '<div class="n2-ss-picker-overlay-tile" data-align="left" data-valign="bottom" style="left:0;top:66%;height:34%;" />' +
-            '<div class="n2-ss-picker-overlay-tile" data-align="center" data-valign="bottom" style="left:33%;top:66%;height:34%;" />' +
-            '<div class="n2-ss-picker-overlay-tile" data-align="right" data-valign="bottom" style="left:66%;top:66%;width:34%;height:34%;" />';
-
-    function FormElementLayerPicker(id) {
-        this.status = 0;
-        this.element = $('#' + id);
-        this.$container = $('.n2-ss-parent-picker');
-        this.overlays = null;
-
-        this.aligns = this.element.parent().parent().siblings();
-
-        this.picker = this.element.siblings('.n2-ss-layer-picker')
-            .on({
-                click: $.proxy(function () {
-                    this.change('');
-                }, this)
-            });
-
-
-        scope.FormElement.prototype.constructor.apply(this, arguments);
-    };
-
-
-    FormElementLayerPicker.prototype = Object.create(scope.FormElement.prototype);
-    FormElementLayerPicker.prototype.constructor = FormElementLayerPicker;
-
-    FormElementLayerPicker.prototype.click = function (e) {
-        if (!$('#n2-admin').hasClass('n2-ss-mode-desktopPortrait')) {
-            nextend.notificationCenter.notice(n2_('To chain layers together, please switch to desktop portrait mode!'));
-            return;
-        }
-        if (this.status == STATUS.INITIALIZED) {
-            this.data = {
-                parent: null,
-                parentVAlign: null,
-                parentHAlign: null,
-                child: null,
-                childVAlign: null,
-                childHAlign: null,
-            };
-
-            $('body').on('mousedown.n2-ss-parent-linker', $.proxy(function (e) {
-                var $el = $(e.target);
-                if (!$el.hasClass('n2-ss-picker-overlay') && !$el.hasClass('n2-ss-picker-overlay-tile')) {
-                    this.destroy();
-                }
-            }, this));
-
-            NextendEsc.add($.proxy(function () {
-                this.destroy();
-                return false;
-            }, this));
-
-            this.pickParent(e);
-        } else {
-            this.data = null;
-            this.change('');
-            this.destroy();
-        }
-    }
-
-    FormElementLayerPicker.prototype.getAbsoluteLayers = function (container) {
-        var layers = [],
-            _layers = container.getSortedLayers();
-        for (var i = 0; i < _layers.length; i++) {
-            switch (_layers[i].placement.getType()) {
-                case 'absolute':
-                    layers.push(_layers[i].layer[0]);
-                    break;
-                case 'group':
-                    layers.push.apply(layers, this.getAbsoluteLayers(_layers[i].container));
-                    break;
-            }
-        }
-
-        return layers;
-    }
-
-    FormElementLayerPicker.prototype.pickParent = function (e) {
-        var canvasManager = nextend.smartSlider.canvasManager,
-            layers = $(this.getAbsoluteLayers(canvasManager.mainContainer.container));
-        this.tempLayers = layers;
-        if (layers.length == 0) {
-            this.destroy();
-        } else {
-
-            this.status = STATUS.PICK_PARENT;
-            nextend.tooltipMouse.show(n2_('Pick the parent layer!'), e);
-
-            var overlays = $('<div class="n2-ss-picker-overlay"></div>').appendTo(layers)
-                .on('click', $.proxy(function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    var $layer = $(e.currentTarget).parent(),
-                        layer = $layer.data('layerObject');
-
-                    this.data.parent = $layer;
-
-                    this._destroy();
-                    this.pickParentAlign(e);
-
-                }, this));
-        }
-    }
-
-    FormElementLayerPicker.prototype.pickParentAlign = function (e) {
-        this.status = STATUS.PICK_PARENT_ALIGN;
-        nextend.tooltipMouse.show(n2_('Pick the align point of the parent layer!'), e);
-
-        var overlays = $(OVERLAYS).appendTo(this.data.parent)
-            .on('click', $.proxy(function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-
-                var $currentTarget = $(e.currentTarget);
-                this.data.parentHAlign = $currentTarget.data('align');
-                this.data.parentVAlign = $currentTarget.data('valign');
-                $currentTarget.off('click').addClass('n2-active');
-
-                overlays.not($currentTarget).remove();
-                this.pickChild(e);
-            }, this));
-    }
-
-    FormElementLayerPicker.prototype.pickChild = function (e) {
-        this.status = STATUS.PICK_CHILD;
-        nextend.tooltipMouse.show(n2_('Pick the child layer!'), e);
-
-        var layers = this.tempLayers.not(this.data.parent);
-        delete this.tempLayers;
-
-        /**
-         * Parent layers can not be child of one of their child layers.
-         * @param layer
-         */
-        var recursiveRemoveParents = function (layer) {
-            var pID = layer.data('layerObject').getProperty('parentid');
-            if (pID && pID != '') {
-                recursiveRemoveParents($('#' + pID));
-            }
-            layers = layers.not(layer);
-        };
-
-        // Possible parent layers of the selected parent layer can't be the child of the selected parent :)
-        recursiveRemoveParents(this.data.parent);
-
-        if (!layers.length) {
-            nextend.notificationCenter.error(n2_('There is not any layer available to be child of the selected layer!'));
-            this.destroy();
-            return;
-        }
-
-        var overlays = $('<div class="n2-ss-picker-overlay"></div>').appendTo(layers)
-            .on('click', $.proxy(function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                var $layer = $(e.currentTarget).parent(),
-                    layer = $layer.data('layerObject');
-
-                this.data.child = $layer;
-
-                overlays.remove();
-                this.pickChildAlign(e);
-
-            }, this));
-    }
-
-    FormElementLayerPicker.prototype.pickChildAlign = function (e) {
-        this.status = STATUS.PICK_CHILD_ALIGN;
-
-        nextend.tooltipMouse.show(n2_('Pick the align point of the child layer!'), e);
-
-        var overlays = $(OVERLAYS).appendTo(this.data.child)
-            .on('click', $.proxy(function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-
-                var $currentTarget = $(e.currentTarget);
-                this.data.childHAlign = $currentTarget.data('align');
-                this.data.childVAlign = $currentTarget.data('valign');
-
-                this.done();
-
-            }, this));
-    }
-
-    FormElementLayerPicker.prototype._destroy = function () {
-        $('.n2-ss-picker-overlay').remove();
-        $('.n2-ss-picker-overlay-tile').remove();
-    }
-
-    FormElementLayerPicker.prototype.destroy = function () {
-        nextend.tooltipMouse.hide();
-        this._destroy();
-        $('body').off('.n2-ss-parent-linker');
-        NextendEsc.pop();
-
-        this.status = STATUS.INITIALIZED;
-    }
-
-    FormElementLayerPicker.prototype.done = function () {
-
-        this.data.child.data('layerObject').placement.current
-            .parentPicked(this.data.parent.data('layerObject'), this.data.parentHAlign, this.data.parentVAlign, this.data.childHAlign, this.data.childVAlign);
-        this.destroy();
-    }
-
-    FormElementLayerPicker.prototype.change = function (value) {
-        this.element.val(value).trigger('change');
-        this._setValue(value);
-        this.triggerOutsideChange();
-    };
-
-    FormElementLayerPicker.prototype.insideChange = function (value) {
-        this.element.val(value);
-        this._setValue(value);
-
-        this.triggerInsideChange();
-    };
-
-    FormElementLayerPicker.prototype._setValue = function (value) {
-        if (value && value != '') {
-            this.$container.css('display', '');
-        } else {
-            this.$container.css('display', 'none');
-        }
-    };
-
-    return FormElementLayerPicker;
-});
-N2Require('FormElementPostAnimationManager', ['FormElementAnimationManager'], [], function ($, scope, undefined) {
-
-    function FormElementPostAnimationManager() {
-        scope.FormElementAnimationManager.prototype.constructor.apply(this, arguments);
-    };
-
-    FormElementPostAnimationManager.prototype = Object.create(scope.FormElementAnimationManager.prototype);
-    FormElementPostAnimationManager.prototype.constructor = FormElementPostAnimationManager;
-
-    FormElementPostAnimationManager.prototype.clear = function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        var data = this.element.val().split('|*|');
-        data[2] = '';
-        this.val(data.join('|*|'));
-    };
-    FormElementPostAnimationManager.prototype.updateName = function (value) {
-        var data = value.split('|*|');
-        value = data[2];
-        if (value == '') {
-            value = n2_('Disabled');
-        } else if (value.split('||').length > 1) {
-            value = n2_('Multiple animations');
-        } else {
-            value = n2_('Single animation');
-        }
-        this.name.val(value);
-    };
-
-    return FormElementPostAnimationManager;
-});
 N2Require('FormElementSliderType', [], [], function ($, scope, undefined) {
 
     function FormElementSliderType(id) {
@@ -3576,6 +3145,122 @@ N2Require('SlideAdmin', [], [], function ($, scope, undefined) {
 
     return SlideAdmin;
 })
+N2Require('SmartSliderBackgroundImageAdmin', ['SmartSliderBackgroundImage'], [], function ($, scope, undefined) {
+
+
+    function SmartSliderBackgroundImageAdmin(slide, element, manager) {
+        this.allowVisualLoad = true;
+
+        this.hash = element.data('hash');
+
+        scope.SmartSliderBackgroundImage.prototype.constructor.call(this, slide, element, manager);
+        this.loadAllowed = true;
+
+        this.listenImageManager();
+    }
+
+    SmartSliderBackgroundImageAdmin.prototype = Object.create(scope.SmartSliderBackgroundImage.prototype);
+    SmartSliderBackgroundImageAdmin.prototype.constructor = SmartSliderBackgroundImageAdmin;
+
+
+    SmartSliderBackgroundImageAdmin.prototype.startColorMode = function () {
+
+        // Create an empty div for the background image in the editor
+        this.$background = $('<div class="n2-ss-background-image"/>')
+            .appendTo(this.$mask);
+        this.loadDeferred.resolve();
+    };
+
+    SmartSliderBackgroundImageAdmin.prototype.setVisualLoad = function (state) {
+        this.allowVisualLoad = state;
+    };
+
+    SmartSliderBackgroundImageAdmin.prototype.listenImageManager = function () {
+        if (this.hash != '') {
+            $(window).on(this.hash, $.proxy(this.onImageManagerChanged, this));
+        }
+    };
+
+    SmartSliderBackgroundImageAdmin.prototype.notListenImageManager = function () {
+        if (this.hash != '') {
+            $(window).off(this.hash, null, $.proxy(this.onImageManagerChanged, this));
+        }
+    };
+
+    SmartSliderBackgroundImageAdmin.prototype.onImageManagerChanged = function (e, imageData) {
+        this.tabletSrc = imageData.tablet.image;
+        this.mobileSrc = imageData.mobile.image;
+
+        this.updateBackgroundToDevice(this.manager.device);
+    };
+
+    SmartSliderBackgroundImageAdmin.prototype.setDesktopSrc = function (src) {
+        this.notListenImageManager();
+        this.desktopSrc = src;
+        this.hash = md5(src);
+
+        if (src != '' && this.allowVisualLoad) {
+            var img = new Image();
+            img.addEventListener("load", $.proxy(function () {
+                $.when(nextend.imageManager.getVisual(src))
+                    .done($.proxy(function (visual) {
+                        this.onImageManagerChanged(null, visual.value);
+                        this.listenImageManager();
+                    }, this));
+            }, this), false);
+            img.src = nextend.imageHelper.fixed(src);
+        } else {
+            this.tabletSrc = '';
+            this.mobileSrc = '';
+
+            this.setSrc(nextend.imageHelper.fixed(src));
+        }
+    };
+
+    SmartSliderBackgroundImageAdmin.prototype.setSrc = function (src) {
+        scope.SmartSliderBackgroundImage.prototype.setSrc.call(this, nextend.imageHelper.fixed(src));
+    };
+
+    SmartSliderBackgroundImageAdmin.prototype.startFixed = function () {
+
+    };
+
+    SmartSliderBackgroundImageAdmin.prototype.setMode = function (newMode) {
+        if (newMode == 'default') {
+            newMode = nextend.smartSlider.slideBackgroundMode;
+        }
+        this.element.attr('data-mode', newMode);
+        this.mode = newMode;
+    };
+
+    SmartSliderBackgroundImageAdmin.prototype.setFocus = function (x, y) {
+        this.$background.css('background-position', x + '% ' + y + '%');
+    };
+
+    SmartSliderBackgroundImageAdmin.prototype.setOpacity = function (opacity) {
+        this.opacity = opacity;
+        this.$background.css('opacity', opacity);
+    };
+
+    SmartSliderBackgroundImageAdmin.prototype.setBlur = function (blur) {
+        if (window.n2FilterProperty) {
+            if (blur > 0) {
+                this.$background.css({
+                    margin: '-' + (blur * 2) + 'px',
+                    padding: (blur * 2) + 'px'
+                }).css(window.n2FilterProperty, 'blur(' + blur + 'px)');
+            } else {
+                this.$background.css({
+                    margin: '',
+                    padding: ''
+                }).css(window.n2FilterProperty, '');
+            }
+        }
+        this.blur = blur;
+    };
+
+    return SmartSliderBackgroundImageAdmin;
+});
 N2Require('SlideEditManager', ['SlideAdmin'], ['smartSlider'], function ($, scope, smartSlider, undefined) {
     "use strict";
 
@@ -3586,7 +3271,8 @@ N2Require('SlideEditManager', ['SlideAdmin'], ['smartSlider'], function ($, scop
             slideAsFile: 0,
             isUploadDisabled: true,
             uploadUrl: '',
-            uploadDir: ''
+            uploadDir: '',
+            isAddSample: false,
         }, options);
 
 
@@ -3596,11 +3282,8 @@ N2Require('SlideEditManager', ['SlideAdmin'], ['smartSlider'], function ($, scop
         this.slideStartValue = this.$slideContentElement.val();
 
 
-        window[sliderElementID].started($.proxy(this.sliderStarted, this));
-        if (options.isAddSample) {
-            this.startSampleSlides();
-        }
-    };
+        window[sliderElementID].visible($.proxy(this.sliderStarted, this));
+    }
 
     SlideEditManager.prototype.startSampleSlides = function () {
         var sampleSlidesUrl = 'https://smartslider3.com/slides/' + window.N2SS3VERSION + '/free/';
@@ -3777,7 +3460,7 @@ N2Require('SlideEditManager', ['SlideAdmin'], ['smartSlider'], function ($, scop
                 }
             }
         }, false);
-    }
+    };
 
     SlideEditManager.prototype.sliderStarted = function () {
 
@@ -3803,17 +3486,14 @@ N2Require('SlideEditManager', ['SlideAdmin'], ['smartSlider'], function ($, scop
             });
         });
 
-        smartSlider.$currentSlideElement = smartSlider.frontend.adminGetCurrentSlideElement();
+        smartSlider.$currentSlideElement = smartSlider.frontend.sliderElement.find('.n2-ss-currently-edited-slide');
+        var isStatic = smartSlider.$currentSlideElement.hasClass('n2-ss-static-slide');
 
         new scope.Generator();
 
-        smartSlider.$currentSlideElement.addClass('n2-ss-currently-edited-slide');
+        this.settings = new scope.SlideSettings(isStatic);
 
-        var staticSlide = smartSlider.frontend.parameters.isStaticEdited;
-
-        this.settings = new scope.SlideSettings(staticSlide);
-
-        this.canvasManager = new scope.CanvasManager(this, staticSlide, this.options);
+        this.canvasManager = new scope.CanvasManager(this, isStatic, this.options);
 
         this.readyDeferred.resolve();
 
@@ -3821,6 +3501,10 @@ N2Require('SlideEditManager', ['SlideAdmin'], ['smartSlider'], function ($, scop
             checkChanged: $.proxy(this.prepareFormForCheck, this),
             submit: $.proxy(this.onSlideSubmit, this)
         });
+
+        if (this.options.isAddSample) {
+            this.startSampleSlides();
+        }
     }
 
     SlideEditManager.prototype.ready = function (fn) {
@@ -4885,16 +4569,16 @@ N2Require('SlideSettings', ['SlideEditManager'], ['smartSlider'], function ($, s
             fields[name] = $field.on('nextendChange', $.proxy(this.onChange, this, name));
         }, this));
 
+        /**
+         * @type {object}
+         */
         this.fields = fields;
 
         this.slideBackground = smartSlider.$currentSlideElement.data('slideBackground');
 
         if (!isStatic) {
 
-            this.backgroundImageElement = smartSlider.$currentSlideElement.find('.nextend-slide-bg');
-            this.canvas = smartSlider.$currentSlideElement.find('.n2-ss-slide-background');
-
-            this.currentBackgroundType = this.fields['background-type'].val();
+            this.$slideMask = this.slideBackground.$mask;
 
             // Auto fill thumbnail if empty
             var thumbnail = $('#slidethumbnail');
@@ -4937,15 +4621,15 @@ N2Require('SlideSettings', ['SlideEditManager'], ['smartSlider'], function ($, s
                 this.values[id] = newValue;
             }, this));
         }, this));
-    }
+    };
 
     SlideSettings.prototype.getSelf = function () {
         return this;
-    }
+    };
 
     SlideSettings.prototype.historyUpdateSlideValue = function (value, field) {
         field.insideChange(value);
-    }
+    };
 
     SlideSettings.prototype.getAllData = function () {
 
@@ -4956,7 +4640,7 @@ N2Require('SlideSettings', ['SlideEditManager'], ['smartSlider'], function ($, s
         }
 
         return data;
-    }
+    };
 
     var backgroundFields = ['thumbnail', 'background-type', 'backgroundColor', 'backgroundGradient', 'backgroundColorEnd', 'backgroundImage', 'backgroundImageOpacity', 'backgroundImageBlur', 'backgroundFocusX', 'backgroundFocusY', 'backgroundMode'];
 
@@ -4969,7 +4653,7 @@ N2Require('SlideSettings', ['SlideEditManager'], ['smartSlider'], function ($, s
         }
 
         return data;
-    }
+    };
 
     SlideSettings.prototype.setData = function (data, disableVisualLoad) {
 
@@ -4984,30 +4668,30 @@ N2Require('SlideSettings', ['SlideEditManager'], ['smartSlider'], function ($, s
         if (disableVisualLoad) {
             this.slideBackground.setVisualLoad(false);
         }
-    }
+    };
 
     SlideSettings.prototype.onChange = function (name, e) {
         if (typeof this['sync_' + name] === 'function') {
             this['sync_' + name].call(this);
         }
-    }
+    };
 
     SlideSettings.prototype.sync_backgroundColor =
         SlideSettings.prototype.sync_backgroundGradient =
             SlideSettings.prototype.sync_backgroundColorEnd = function () {
                 this.updateBackgroundColor();
-            }
+            };
 
     SlideSettings.prototype.updateBackgroundColor = function () {
         var backgroundColor = this.fields.backgroundColor.val(),
             gradient = this.fields.backgroundGradient.val();
         if (gradient != 'off') {
             var backgroundColorEnd = this.fields.backgroundColorEnd.val(),
-                canvas = this.canvas.css({background: '', filter: ''});
+                $slideMask = this.$slideMask.css({background: '', filter: ''});
 
             switch (gradient) {
                 case 'horizontal':
-                    canvas
+                    $slideMask
                         .css('background', '#' + backgroundColor.substr(0, 6))
                         .css('background', '-moz-linear-gradient(left, ' + N2Color.hex2rgbaCSS(backgroundColor) + ' 0%,' + N2Color.hex2rgbaCSS(backgroundColorEnd) + ' 100%)')
                         .css('background', ' -webkit-linear-gradient(left, ' + N2Color.hex2rgbaCSS(backgroundColor) + ' 0%,' + N2Color.hex2rgbaCSS(backgroundColorEnd) + ' 100%)')
@@ -5015,7 +4699,7 @@ N2Require('SlideSettings', ['SlideEditManager'], ['smartSlider'], function ($, s
                         .css('background', 'filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=\'#' + backgroundColor.substr(0, 6) + '\', endColorstr=\'#' + backgroundColorEnd.substr(0, 6) + '\',GradientType=1)');
                     break;
                 case 'vertical':
-                    canvas
+                    $slideMask
                         .css('background', '#' + backgroundColor.substr(0, 6))
                         .css('background', '-moz-linear-gradient(top, ' + N2Color.hex2rgbaCSS(backgroundColor) + ' 0%,' + N2Color.hex2rgbaCSS(backgroundColorEnd) + ' 100%)')
                         .css('background', ' -webkit-linear-gradient(top, ' + N2Color.hex2rgbaCSS(backgroundColor) + ' 0%,' + N2Color.hex2rgbaCSS(backgroundColorEnd) + ' 100%)')
@@ -5023,7 +4707,7 @@ N2Require('SlideSettings', ['SlideEditManager'], ['smartSlider'], function ($, s
                         .css('background', 'filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=\'#' + backgroundColor.substr(0, 6) + '\', endColorstr=\'#' + backgroundColorEnd.substr(0, 6) + '\',GradientType=0)');
                     break;
                 case 'diagonal1':
-                    canvas
+                    $slideMask
                         .css('background', '#' + backgroundColor.substr(0, 6))
                         .css('background', '-moz-linear-gradient(45deg, ' + N2Color.hex2rgbaCSS(backgroundColor) + ' 0%,' + N2Color.hex2rgbaCSS(backgroundColorEnd) + ' 100%)')
                         .css('background', ' -webkit-linear-gradient(45deg, ' + N2Color.hex2rgbaCSS(backgroundColor) + ' 0%,' + N2Color.hex2rgbaCSS(backgroundColorEnd) + ' 100%)')
@@ -5031,7 +4715,7 @@ N2Require('SlideSettings', ['SlideEditManager'], ['smartSlider'], function ($, s
                         .css('background', 'filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=\'#' + backgroundColor.substr(0, 6) + '\', endColorstr=\'#' + backgroundColorEnd.substr(0, 6) + '\',GradientType=1)');
                     break;
                 case 'diagonal2':
-                    canvas
+                    $slideMask
                         .css('background', '#' + backgroundColor.substr(0, 6))
                         .css('background', '-moz-linear-gradient(-45deg, ' + N2Color.hex2rgbaCSS(backgroundColor) + ' 0%,' + N2Color.hex2rgbaCSS(backgroundColorEnd) + ' 100%)')
                         .css('background', ' -webkit-linear-gradient(-45deg, ' + N2Color.hex2rgbaCSS(backgroundColor) + ' 0%,' + N2Color.hex2rgbaCSS(backgroundColorEnd) + ' 100%)')
@@ -5043,9 +4727,9 @@ N2Require('SlideSettings', ['SlideEditManager'], ['smartSlider'], function ($, s
 
         } else {
             if (backgroundColor.substr(6, 8) == '00') {
-                this.canvas.css('background', '');
+                this.$slideMask.css('background', '');
             } else {
-                this.canvas.css('background', '#' + backgroundColor.substr(0, 6))
+                this.$slideMask.css('background', '#' + backgroundColor.substr(0, 6))
                     .css('background', N2Color.hex2rgbaCSS(backgroundColor));
             }
         }
@@ -5053,7 +4737,7 @@ N2Require('SlideSettings', ['SlideEditManager'], ['smartSlider'], function ($, s
 
     SlideSettings.prototype.sync_backgroundImage = function () {
         this['sync_background-type']();
-    }
+    };
 
     SlideSettings.prototype['sync_background-type'] = function () {
         var type = this.fields['background-type'].val();
@@ -5062,19 +4746,19 @@ N2Require('SlideSettings', ['SlideEditManager'], ['smartSlider'], function ($, s
         } else {
             this.slideBackground.setDesktopSrc(smartSlider.generator.fill(this.fields.backgroundImage.val()));
         }
-    }
+    };
 
     SlideSettings.prototype.sync_backgroundMode = function () {
         this.slideBackground.setMode(this.fields.backgroundMode.val());
-    }
+    };
 
     SlideSettings.prototype.sync_backgroundFocusY = function () {
         this.slideBackground.setFocus(this.fields.backgroundFocusX.val(), this.fields.backgroundFocusY.val());
-    }
+    };
 
     SlideSettings.prototype.sync_backgroundFocusX = function () {
         this.slideBackground.setFocus(this.fields.backgroundFocusX.val(), this.fields.backgroundFocusY.val());
-    }
+    };
 
     SlideSettings.prototype.sync_backgroundImageOpacity = function () {
         this.slideBackground.setOpacity(this.fields.backgroundImageOpacity.val() / 100);
@@ -5103,7 +4787,7 @@ N2Require('LayerContainer', [], ['smartSlider'], function ($, scope, smartSlider
 
     LayerContainer.prototype.setLayerContainerElement = function ($layerContainerElement) {
         this.layerContainerElement = $layerContainerElement;
-    }
+    };
 
     LayerContainer.prototype.startWithExistingNodes = function () {
         var nodes = this.layerContainerElement.find(this.childrenSelector);
@@ -5111,19 +4795,41 @@ N2Require('LayerContainer', [], ['smartSlider'], function ($, scope, smartSlider
             this._loadNode(nodes.eq(i), false);
         }
         this.component.onChildCountChange();
-    }
+    };
 
     LayerContainer.prototype.isChildAllowed = function (type) {
         return $.inArray(type, this.allowedChildren) !== -1;
-    }
+    };
 
     LayerContainer.prototype._loadNode = function ($el, needSync) {
         var type = $el.data('type');
         if (this.isChildAllowed(type)) {
+            var lastPlacement = $el.data('lastplacement'),
+                removedPlacementData = {};
+            if (lastPlacement !== undefined && lastPlacement != this.allowedPlacementMode) {
+                switch (lastPlacement) {
+                    case 'absolute':
+                        removedPlacementData = scope.PlacementAbsolute.cleanLayer($el);
+                        break;
+                    case 'normal':
+                        removedPlacementData = scope.PlacementNormal.cleanLayer($el);
+                        break;
+                }
+            }
+            /** @type {ComponentAbstract} */
             var component;
             switch (type) {
                 case 'layer':
                     component = new scope.Layer(this.component.canvasManager, this.component);
+
+                    var itemClass = component.itemEditor.getItemClass($el.find('.n2-ss-item').data('item'));
+                    if (itemClass && scope[itemClass].needSize) {
+                        if (removedPlacementData.desktopportraitheight !== undefined) {
+                            // If absolute layer pasted into normal position then we should force the absolute height
+                            // when the item has needSize property true.
+                            $el.data('desktopportraitheight', removedPlacementData.desktopportraitheight);
+                        }
+                    }
                     break;
                 case 'content':
                     component = new scope.Content(this.component.canvasManager, this.component);
@@ -5149,15 +4855,15 @@ N2Require('LayerContainer', [], ['smartSlider'], function ($, scope, smartSlider
             console.error(type + ' is not allowed in ' + this.component.label);
         }
         return false;
-    }
+    };
 
     LayerContainer.prototype.getLayerCount = function () {
         return this.layerContainerElement.find(this.childrenSelector).length;
-    }
+    };
 
     LayerContainer.prototype.getLayerIndex = function ($layer) {
         return this.layerContainerElement.find(this.childrenSelector).index($layer);
-    }
+    };
 
     LayerContainer.prototype.getSortedLayers = function () {
         var layers = [];
@@ -5168,14 +4874,14 @@ N2Require('LayerContainer', [], ['smartSlider'], function ($, scope, smartSlider
             }
         });
         return layers;
-    }
+    };
 
     LayerContainer.prototype.append = function ($layer) {
         $layer.appendTo(this.layerContainerElement);
         var layer = this._loadNode($layer, true);
         this.component.onChildCountChange();
         return layer;
-    }
+    };
 
     LayerContainer.prototype.insertAt = function ($layer, index) {
 
@@ -5189,11 +4895,11 @@ N2Require('LayerContainer', [], ['smartSlider'], function ($, scope, smartSlider
         var layer = this._loadNode($layer, true);
         this.component.onChildCountChange();
         return layer;
-    }
+    };
 
     LayerContainer.prototype.insert = function (layer) {
         layer.getRootElement().appendTo(this.layerContainerElement);
-    }
+    };
 
     LayerContainer.prototype.insertLayerAt = function (layer, index) {
 
@@ -5212,7 +4918,7 @@ N2Require('LayerContainer', [], ['smartSlider'], function ($, scope, smartSlider
         }
 
         this.syncLayerRow(layer);
-    }
+    };
 
     LayerContainer.prototype.syncLayerRow = function (layer) {
         var relatedLayer,
@@ -5232,7 +4938,7 @@ N2Require('LayerContainer', [], ['smartSlider'], function ($, scope, smartSlider
         if (layer.animations) {
             layer.animations.syncRow(relatedLayer, isReversed);
         }
-    }
+    };
 
     LayerContainer.prototype.getChildLayersRecursive = function (nodeOnly) {
         var _layers = this.getSortedLayers();
@@ -5248,11 +4954,11 @@ N2Require('LayerContainer', [], ['smartSlider'], function ($, scope, smartSlider
             }
         }
         return layers;
-    }
+    };
 
     LayerContainer.prototype.moveLayerToGroup = function (layer, newLocalIndex) {
         this.moveLayersToGroup([layer], [newLocalIndex]);
-    }
+    };
 
     LayerContainer.prototype.moveLayersToGroup = function (layers, newLocalIndexs) {
         newLocalIndexs = newLocalIndexs || [];
@@ -5280,14 +4986,14 @@ N2Require('LayerContainer', [], ['smartSlider'], function ($, scope, smartSlider
         for (var i = 0; i < originalGroups.length; i++) {
             originalGroups[i].update();
         }
-    }
+    };
 
     LayerContainer.prototype.activateFirst = function () {
         var layers = this.getSortedLayers();
         if (layers.length > 0) {
             layers[layers.length - 1].activate(); //Do not show editor on load!
         }
-    }
+    };
 
     LayerContainer.prototype.resetModes = function (mode) {
         var layers = this.getSortedLayers();
@@ -5297,7 +5003,7 @@ N2Require('LayerContainer', [], ['smartSlider'], function ($, scope, smartSlider
                 layers[i].container.resetModes(mode);
             }
         }
-    }
+    };
 
     LayerContainer.prototype.copyModes = function (mode, currentMode) {
         var layers = this.getSortedLayers();
@@ -5307,7 +5013,7 @@ N2Require('LayerContainer', [], ['smartSlider'], function ($, scope, smartSlider
                 layers[i].container.copyModes(mode, currentMode);
             }
         }
-    }
+    };
 
     LayerContainer.prototype.changeEditorModes = function (mode) {
         var layers = this.getSortedLayers();
@@ -5317,7 +5023,7 @@ N2Require('LayerContainer', [], ['smartSlider'], function ($, scope, smartSlider
                 layers[i].container.changeEditorModes(mode);
             }
         }
-    }
+    };
 
     LayerContainer.prototype.renderModeProperties = function () {
         var layers = this.getSortedLayers();
@@ -5327,7 +5033,7 @@ N2Require('LayerContainer', [], ['smartSlider'], function ($, scope, smartSlider
                 layers[i].container.renderModeProperties();
             }
         }
-    }
+    };
 
     LayerContainer.prototype.getAllLayers = function (layers) {
         layers = layers || [];
@@ -5339,7 +5045,7 @@ N2Require('LayerContainer', [], ['smartSlider'], function ($, scope, smartSlider
             }
         }
         return layers;
-    }
+    };
 
     LayerContainer.prototype.getData = function (params) {
         params = $.extend({
@@ -5360,7 +5066,7 @@ N2Require('LayerContainer', [], ['smartSlider'], function ($, scope, smartSlider
         }
 
         return layers;
-    }
+    };
 
     LayerContainer.prototype.getHTML = function (base64) {
         var layers = this.getSortedLayers(),
@@ -5369,7 +5075,7 @@ N2Require('LayerContainer', [], ['smartSlider'], function ($, scope, smartSlider
             nodes.push(layers[i].getHTML(base64));
         }
         return nodes;
-    }
+    };
 
     /**
      * Used for layer editor
@@ -5393,7 +5099,7 @@ N2Require('LayerContainer', [], ['smartSlider'], function ($, scope, smartSlider
         }
 
         return droppables;
-    }
+    };
 
     /**
      * Used for Layer List
@@ -5416,7 +5122,7 @@ N2Require('LayerContainer', [], ['smartSlider'], function ($, scope, smartSlider
         }
 
         return droppables;
-    }
+    };
 
     return LayerContainer;
 });
@@ -6142,7 +5848,11 @@ N2Require('CanvasManager', [], ['smartSlider'], function ($, scope, smartSlider,
             } else {
                 var activeLayer = this.mainContainer.getSelectedLayer();
                 if (activeLayer) {
-                    requestedLayers = [activeLayer];
+                    if (this.isCol(activeLayer) || this.isContent(activeLayer)) {
+                        requestedLayers = activeLayer.container.getSortedLayers()
+                    } else {
+                        requestedLayers = [activeLayer];
+                    }
                 }
             }
         } else {
@@ -7893,11 +7603,12 @@ N2Require('PlacementAbsolute', ['PlacementAbstract'], ['smartSlider'], function 
 
     /**
      *
-     * @alias scope.PlacementAbsolute
      * @param placement
      * @param layer
      * @param canvasManager
      * @constructor
+     * @augments PlacementAbstract
+     * @memberof scope
      */
     function PlacementAbsolute(placement, layer, canvasManager) {
         this.type = 'absolute';
@@ -7978,7 +7689,48 @@ N2Require('PlacementAbsolute', ['PlacementAbstract'], ['smartSlider'], function 
 
         this.___makeLayerAlign();
         this.___makeLayerResizeable();
-    }
+    };
+
+    PlacementAbsolute.cleanLayer = function ($layer) {
+        var devices = [
+            'desktopPortrait',
+            'desktopLandscape',
+            'tabletPortrait',
+            'tabletLandscape',
+            'mobilePortrait',
+            'mobileLandscape'
+        ];
+
+        $layer
+            .removeAttr('data-align')
+            .removeAttr('data-valign')
+            .css({
+                left: '',
+                top: '',
+                right: '',
+                bottom: '',
+                width: '',
+                height: '',
+                'text-align': ''
+            });
+        var properties = ['parentid', 'responsiveposition', 'responsivesize', 'parentalign', 'parentvalign',
+            'align', 'valign', 'left', 'top', 'width', 'height'];
+
+        var data = {};
+        for (var i = 0; i < properties.length; i++) {
+            var prop = properties[i].toLowerCase();
+            data[prop] = $layer.data(prop);
+            $layer.removeAttr(prop);
+            $layer.removeData(prop);
+            for (var j = 0; j < devices.length; j++) {
+                var device = devices[j].toLowerCase();
+                data[device + prop] = $layer.data(device + prop);
+                $layer.removeAttr(device + prop);
+                $layer.removeData(device + prop);
+            }
+        }
+        return data;
+    };
 
     PlacementAbsolute.prototype.deActivated = function (newMode) {
 
@@ -8002,9 +7754,8 @@ N2Require('PlacementAbsolute', ['PlacementAbstract'], ['smartSlider'], function 
         this.$layer.triggerHandler('LayerUnavailable');
 
         var properties = ['parentid', 'responsiveposition', 'responsivesize', 'parentalign', 'parentvalign',
-            'align', 'valign', 'left', 'top', 'width', 'height'];
-
-        var historicalData = this.layer.getPropertiesData(properties);
+                'align', 'valign', 'left', 'top', 'width', 'height'],
+            historicalData = this.layer.getPropertiesData(properties);
 
         this.layer.removeProperties(properties);
 
@@ -8865,47 +8616,53 @@ N2Require('PlacementAbsolute', ['PlacementAbstract'], ['smartSlider'], function 
 
     PlacementAbsolute.prototype.subscribeParent = function () {
         var that = this;
-        this.subscribeParentCallbacks = {
-            LayerResized: function () {
-                that.resizeParent.apply(that, arguments);
-            },
-            LayerParent: function () {
-                that.$layer.addClass('n2-ss-layer-parent');
-                that.$layer.triggerHandler('LayerParent');
-            },
-            LayerUnParent: function () {
-                that.$layer.removeClass('n2-ss-layer-parent');
-                that.$layer.triggerHandler('LayerUnParent');
-            },
-            LayerDeleted: function (e) {
+        var $newParent = $('#' + this.layer.property.parentid);
+        if (this.parent && !$newParent.is(this.parent)) {
+            this.parent.off(this.subscribeParentCallbacks);
+            this.parent = false;
+        }
+        if (!this.parent) {
+            this.subscribeParentCallbacks = {
+                LayerResized: function () {
+                    that.resizeParent.apply(that, arguments);
+                },
+                LayerParent: function () {
+                    that.$layer.addClass('n2-ss-layer-parent');
+                    that.$layer.triggerHandler('LayerParent');
+                },
+                LayerUnParent: function () {
+                    that.$layer.removeClass('n2-ss-layer-parent');
+                    that.$layer.triggerHandler('LayerUnParent');
+                },
+                LayerDeleted: function (e) {
 
-                that.layer.setProperty('parentid', '', 'layer');
-            },
-            LayerUnavailable: function (e) {
+                    that.layer.setProperty('parentid', '', 'layer');
+                },
+                LayerUnavailable: function (e) {
 
-                that.layer.setProperty('parentid', '', 'layer');
-                that.layer.setProperty('left', 0, 'layer');
-                that.layer.setProperty('top', 0, 'layer');
-            },
-            LayerShowChange: function (e, mode, value) {
-                if (that.layer.getMode() == mode) {
-                    that.parentIsVisible = value;
+                    that.layer.setProperty('parentid', '', 'layer');
+                    that.layer.setProperty('left', 0, 'layer');
+                    that.layer.setProperty('top', 0, 'layer');
+                },
+                LayerShowChange: function (e, mode, value) {
+                    if (that.layer.getMode() == mode) {
+                        that.parentIsVisible = value;
+                    }
+                },
+                'n2-ss-activate': function () {
+                    that.$layerRow.addClass('n2-parent-active');
+                },
+                'n2-ss-deactivate': function () {
+                    that.$layerRow.removeClass('n2-parent-active');
+                },
+                'LayerGetDataWithChildren': function (e, layersData, layers) {
+                    that.layer.getDataWithChildren(layersData, layers);
                 }
-            },
-            'n2-ss-activate': function () {
-                that.$layerRow.addClass('n2-parent-active');
-            },
-            'n2-ss-deactivate': function () {
-                that.$layerRow.removeClass('n2-parent-active');
-            },
-            'LayerGetDataWithChildren': function (e, layers) {
-                that.layer.getDataWithChildren(layers);
-            }
-        };
-        this.parent = $('#' + this.layer.property.parentid).on(this.subscribeParentCallbacks);
-        this.parent.data('layerObject').placement.current.addChild(this);
-        this.$layer.addClass('n2-ss-layer-has-parent');
-
+            };
+            this.parent = $newParent.on(this.subscribeParentCallbacks);
+            this.parent.data('layerObject').placement.current.addChild(this);
+            this.$layer.addClass('n2-ss-layer-has-parent');
+        }
     };
 
     PlacementAbsolute.prototype.unSubscribeParent = function (context) {
@@ -8913,12 +8670,12 @@ N2Require('PlacementAbsolute', ['PlacementAbstract'], ['smartSlider'], function 
         this.$layer.removeClass('n2-ss-layer-has-parent');
         if (this.parent) {
             this.parent.off(this.subscribeParentCallbacks);
-        }
-        this.parent = false;
-        this.subscribeParentCallbacks = {};
-        if (context != 'delete') {
-            var position = this.$layer.position();
-            this._setPosition(null, null, position.left, position.top, null, null, true);
+            this.parent = false;
+            this.subscribeParentCallbacks = {};
+            if (context != 'delete') {
+                var position = this.$layer.position();
+                this._setPosition(null, null, position.left, position.top, null, null, true);
+            }
         }
 
     };
@@ -8962,6 +8719,7 @@ N2Require('PlacementAbsolute', ['PlacementAbstract'], ['smartSlider'], function 
             this.$layer.removeAttr('data-parentid');
             this.unSubscribeParent();
         } else {
+            //setTimeout($.proxy(function () {
             if ($('#' + value).length == 0) {
                 this.layer.setProperty('parentid', '', 'layer');
             } else {
@@ -8970,6 +8728,7 @@ N2Require('PlacementAbsolute', ['PlacementAbstract'], ['smartSlider'], function 
                 var position = this.$layer.position();
                 this._setPosition(null, null, position.left, position.top, null, null, true);
             }
+            //}, this), 50);
         }
     };
 
@@ -9170,11 +8929,12 @@ N2Require('PlacementNormal', ['PlacementAbstract'], ['smartSlider'], function ($
 
     /**
      *
-     * @alias scope.PlacementNormal
      * @param placement
      * @param layer
      * @param canvasManager
      * @constructor
+     * @augments PlacementAbstract
+     * @memberof scope
      */
     function PlacementNormal(placement, layer, canvasManager) {
         this.type = 'normal';
@@ -9189,7 +8949,7 @@ N2Require('PlacementNormal', ['PlacementAbstract'], ['smartSlider'], function ($
 
     PlacementNormal.prototype.start = function () {
         this.$layer = this.layer.layer;
-    }
+    };
 
     PlacementNormal.prototype.preActivation = function (lastPlacement) {
         if (lastPlacement.type == 'absolute' && this.layer.item && this.layer.item.needSize) {
@@ -9200,7 +8960,7 @@ N2Require('PlacementNormal', ['PlacementAbstract'], ['smartSlider'], function ($
                 this.transferredProperties.height = height;
             }
         }
-    }
+    };
 
     PlacementNormal.prototype.activated = function (properties) {
         this.loadProperties($.extend(properties, this.transferredProperties));
@@ -9218,14 +8978,52 @@ N2Require('PlacementNormal', ['PlacementAbstract'], ['smartSlider'], function ($
                 e.stopPropagation();
             })
         });
-    }
+    };
 
     PlacementNormal.prototype.loadProperties = function (options) {
         this.layer.createDeviceProperty('margin', {desktopPortrait: '0|*|0|*|0|*|0|*|px+'}, this.layer.layer, this);
         this.layer.createDeviceProperty('height', {desktopPortrait: (options.height || 0)}, this.layer.layer, this);
         this.layer.createDeviceProperty('maxwidth', {desktopPortrait: 0}, this.layer.layer, this);
         this.layer.createDeviceProperty('selfalign', {desktopPortrait: 'inherit'}, this.layer.layer, this);
-    }
+    };
+
+    PlacementNormal.cleanLayer = function ($layer) {
+        var devices = [
+            'desktopPortrait',
+            'desktopLandscape',
+            'tabletPortrait',
+            'tabletLandscape',
+            'mobilePortrait',
+            'mobileLandscape'
+        ];
+
+        $layer
+            .removeClass('n2-ss-has-maxwidth')
+            .removeAttr('data-cssselfalign')
+            .css({
+                position: '',
+                margin: '',
+                height: '',
+                maxWidth: ''
+            });
+
+        var properties = ['margin', 'height', 'maxwidth', 'selfalign'];
+
+        var data = {};
+        for (var i = 0; i < properties.length; i++) {
+            var prop = properties[i].toLowerCase();
+            data[prop] = $layer.data(prop);
+            $layer.removeAttr(prop);
+            $layer.removeData(prop);
+            for (var j = 0; j < devices.length; j++) {
+                var device = devices[j].toLowerCase();
+                data[prop] = $layer.data(device + prop);
+                $layer.removeAttr(device + prop);
+                $layer.removeData(device + prop);
+            }
+        }
+        return data;
+    };
 
     PlacementNormal.prototype.deActivated = function (newMode) {
         this.layer.$.off('.placementnormal');
@@ -9235,11 +9033,9 @@ N2Require('PlacementNormal', ['PlacementAbstract'], ['smartSlider'], function ($
         this.layer.layer.removeClass('n2-ss-has-maxwidth');
         this.layer.layer.removeAttr('data-cssselfalign');
 
-        var historicalData = this.layer.getPropertiesData(['margin', 'height']);
-        this.layer.removeProperty('margin');
-        this.layer.removeProperty('height');
-        this.layer.removeProperty('maxwidth');
-        this.layer.removeProperty('selfalign');
+        var properties = ['margin', 'height', 'maxwidth', 'selfalign'],
+            historicalData = this.layer.getPropertiesData(properties);
+        this.layer.removeProperties(properties);
 
 
         this.layer.layer.css({
@@ -9249,7 +9045,7 @@ N2Require('PlacementNormal', ['PlacementAbstract'], ['smartSlider'], function ($
             maxWidth: ''
         });
         return historicalData;
-    }
+    };
 
     PlacementNormal.prototype._renderModeProperties = function (isReset) {
 
@@ -9257,7 +9053,7 @@ N2Require('PlacementNormal', ['PlacementAbstract'], ['smartSlider'], function ($
         this._syncheight();
         this._syncmaxwidth();
         this._syncselfalign();
-    }
+    };
 
     PlacementNormal.prototype._syncmargin = function () {
         var margin = this.layer.getProperty('margin').split('|*|'),
@@ -9625,14 +9421,17 @@ N2Require('PlacementAbstract', ['Placement'], [], function ($, scope, undefined)
 N2Require('Item', [], ['smartSlider'], function ($, scope, smartSlider, undefined) {
     "use strict";
 
-
+    /**
+     * @constructor
+     * @memberof scope
+     */
     function Item($item, layer, itemEditor) {
 
         if (this.type === undefined) {
             this.type = $item.data('item');
         }
 
-        this.needSize = this.needSize || false;
+        this.needSize = this.constructor.needSize;
 
         this.self = this;
         this.$item = $item;
@@ -9677,21 +9476,23 @@ N2Require('Item', [], ['smartSlider'], function ($, scope, smartSlider, undefine
 
 
         $(window).trigger('ItemCreated');
-    };
+    }
+
+    Item.needSize = false;
 
     Item.prototype.setSelf = function (self) {
         if (this.self != this) {
             this.self.setSelf(self);
         }
         this.self = self;
-    }
+    };
 
     Item.prototype.getSelf = function () {
         if (this.self != this) {
             this.self = this.self.getSelf();
         }
         return this.self;
-    }
+    };
 
     Item.prototype.changeValue = function (property, value) {
         if (this == this.itemEditor.activeItem) {
@@ -9857,7 +9658,7 @@ N2Require('Item', [], ['smartSlider'], function ($, scope, smartSlider, undefine
         var layer = this.layer;
         $("<img/>")
             .attr("src", image)
-            .load(function () {
+            .on('load', function () {
                 var slideSize = smartSlider.frontend.dimensions.slide;
                 var width = this.width,
                     height = this.height,
@@ -9993,7 +9794,7 @@ N2Require('ItemManager', [], ['smartSlider'], function ($, scope, smartSlider, u
         } else {
             this.activeForm.fields.eq(0).data('field').focus(typeof context !== 'undefined' && context);
         }
-    }
+    };
 
     ItemManager.prototype.startItems = function () {
 
@@ -10443,6 +10244,11 @@ N2Require('PluginShowOn', [], ['smartSlider'], function ($, scope, smartSlider, 
 N2Require('Col', ['ContentAbstract'], ['smartSlider'], function ($, scope, smartSlider, undefined) {
     "use strict";
 
+    /**
+     * @constructor
+     * @augments ComponentAbstract
+     * @memberof scope
+     */
     function Col(canvasManager, group, properties) {
         this.label = 'Col';
         this.type = 'col';
@@ -10460,13 +10266,14 @@ N2Require('Col', ['ContentAbstract'], ['smartSlider'], function ($, scope, smart
     Col.prototype._createLayer = function () {
         return $('<div class="n2-ss-layer"><div class="n2-ss-layer-content n2-ss-layer-col"></div></div>')
             .attr('data-type', this.type);
-    }
+    };
 
     Col.prototype.addProperties = function ($layer) {
 
         scope.ContentAbstract.prototype.addProperties.call(this, $layer);
 
         this.createProperty('colwidth', '1', $layer);
+        this.createProperty('link', '#|*|_self', $layer);
         this.createProperty('borderradius', 0, $layer);
         this.createProperty('boxshadow', '0|*|0|*|0|*|0|*|00000080', $layer);
 
@@ -10475,7 +10282,7 @@ N2Require('Col', ['ContentAbstract'], ['smartSlider'], function ($, scope, smart
         this.createProperty('bordercolor', 'ffffffff', $layer);
 
         this.createDeviceProperty('order', {desktopPortrait: 0}, $layer);
-    }
+    };
 
     Col.prototype.create = function () {
         scope.ContentAbstract.prototype.create.call(this);
@@ -10488,7 +10295,7 @@ N2Require('Col', ['ContentAbstract'], ['smartSlider'], function ($, scope, smart
         this._syncboxshadow();
 
         this._onReady();
-    }
+    };
 
     Col.prototype.load = function ($layer) {
 
@@ -10512,7 +10319,7 @@ N2Require('Col', ['ContentAbstract'], ['smartSlider'], function ($, scope, smart
                 this.group.setColsWidth(widths);
             }
         }
-    }
+    };
 
     Col.prototype.createRow = function () {
         this.$content = this.layer.find('.n2-ss-layer-content:first');
@@ -10537,7 +10344,7 @@ N2Require('Col', ['ContentAbstract'], ['smartSlider'], function ($, scope, smart
         this.container.$ul.appendTo(this.layerRow);
 
         this.readyDeferred.done($.proxy(this._syncopened, this));
-    }
+    };
 
     Col.prototype._start = function (isCreate) {
 
@@ -10546,7 +10353,7 @@ N2Require('Col', ['ContentAbstract'], ['smartSlider'], function ($, scope, smart
         if (isCreate) {
             this.highlight(2000);
         }
-    }
+    };
 
     Col.prototype.getRealOrder = function () {
         var order = this.getProperty('order');
@@ -10554,7 +10361,7 @@ N2Require('Col', ['ContentAbstract'], ['smartSlider'], function ($, scope, smart
             return 10;
         }
         return order;
-    }
+    };
 
     Col.prototype._syncorder = function () {
         var order = this.getProperty('order');
@@ -10566,22 +10373,25 @@ N2Require('Col', ['ContentAbstract'], ['smartSlider'], function ($, scope, smart
         }
 
         this.group.refreshUI();
-    }
+    };
 
     Col.prototype._synccolwidth = function () {
         this.layer.css('width', ((new Fraction(this.getProperty('colwidth'))).valueOf() * 100) + '%');
         this.group.refreshUI();
-    }
+    };
+
+    Col.prototype._synclink = function () {
+    };
 
     Col.prototype._syncborderradius = function () {
         this.$content.css('border-radius', this.getProperty('borderradius') + 'px');
-    }
+    };
 
     Col.prototype._syncborderwidth =
         Col.prototype._syncbordercolor =
             Col.prototype._syncborderstyle = function () {
                 this._syncborder();
-            }
+            };
 
     Col.prototype._syncborder = function () {
         var borderstyle = this.getProperty('borderstyle');
@@ -10597,7 +10407,7 @@ N2Require('Col', ['ContentAbstract'], ['smartSlider'], function ($, scope, smart
         }
 
         this.update();
-    }
+    };
 
     Col.prototype._syncboxshadow = function () {
         var boxShadow = this.getProperty('boxshadow').split('|*|');
@@ -10606,7 +10416,7 @@ N2Require('Col', ['ContentAbstract'], ['smartSlider'], function ($, scope, smart
         } else {
             this.$content.css('box-shadow', '');
         }
-    }
+    };
 
     Col.prototype.delete = function () {
         if (this.group.container.getLayerCount() > 1) {
@@ -10614,26 +10424,26 @@ N2Require('Col', ['ContentAbstract'], ['smartSlider'], function ($, scope, smart
         } else {
             this.group.delete();
         }
-    }
+    };
 
     Col.prototype.getHTML = function (base64) {
         var layer = scope.ComponentAbstract.prototype.getHTML.call(this, base64);
 
         layer.attr('data-rowcolumns', this.group.getColumns());
         return layer;
-    }
+    };
 
     Col.prototype.renderModeProperties = function (isReset) {
         this._syncorder();
 
         scope.ContentAbstract.prototype.renderModeProperties.call(this, isReset);
-    }
+    };
 
     Col.prototype.update = function () {
 
         this.group._syncwrapafter();
         scope.ComponentAbstract.prototype.update.call(this);
-    }
+    };
 
     return Col;
 });
@@ -11228,7 +11038,8 @@ N2Require('ComponentAbstract', dependencies, ['smartSlider'], function ($, scope
 
     ComponentAbstract.prototype.getData = function (params) {
         var data = {
-            type: this.type
+            type: this.type,
+            lastplacement: this.placement.getType()
         };
 
         if (this.status > scope.ComponentAbstract.STATUS.NORMAL) {
@@ -11274,15 +11085,24 @@ N2Require('ComponentAbstract', dependencies, ['smartSlider'], function ($, scope
 
     ComponentAbstract.prototype.onChildCountChange = function () {
 
-    }
+    };
 
-    ComponentAbstract.prototype.getDataWithChildren = function (layers) {
-        layers.push(this.getData({
-            layersIncluded: true,
-            itemsIncluded: true
-        }));
-        this.layer.triggerHandler('LayerGetDataWithChildren', [layers]);
-        return layers;
+    /**
+     *
+     * @param array layersData Contains
+     * @param array layers Contains layer objects to be able to track layers in the current copy process to prevent same layer inserted into the clipboard twice when parent picker used.
+     * @returns array layersData
+     */
+    ComponentAbstract.prototype.getDataWithChildren = function (layersData, layers) {
+        if ($.inArray(this, layers) == -1) {
+            layers.push(this);
+            layersData.push(this.getData({
+                layersIncluded: true,
+                itemsIncluded: true
+            }));
+            this.layer.triggerHandler('LayerGetDataWithChildren', [layersData, layers]);
+        }
+        return layersData;
     };
 
     ComponentAbstract.prototype.markOver = function (e) {
@@ -11683,6 +11503,11 @@ N2Require('ComponentAbstract', dependencies, ['smartSlider'], function ($, scope
 N2Require('Content', ['ContentAbstract'], ['smartSlider'], function ($, scope, smartSlider, undefined) {
     "use strict";
 
+    /**
+     * @constructor
+     * @augments ComponentAbstract
+     * @memberof scope
+     */
     function Content(canvasManager, group, properties) {
         this.label = n2_('Content');
         this.type = 'content';
@@ -12192,6 +12017,11 @@ N2Require('ContentAbstract', ['LayerContainer', 'ComponentAbstract'], ['smartSli
 N2Require('Layer', ['ComponentAbstract'], ['smartSlider'], function ($, scope, smartSlider, undefined) {
     "use strict";
 
+    /**
+     * @constructor
+     * @augments ComponentAbstract
+     * @memberof scope
+     */
     function Layer(canvasManager, group, properties) {
         this.label = n2_('Layer');
         this.type = 'layer';
@@ -12256,9 +12086,11 @@ N2Require('Layer', ['ComponentAbstract'], ['smartSlider'], function ($, scope, s
                 }
             }, this),
             dblclick: $.proxy(function (e) {
-                e.stopPropagation();
-                $('[data-tab="item"]').trigger('click');
-                this.item.itemEditor.focusFirst('dblclick');
+                if (!nextend.context.isPreventDblClick) {
+                    e.stopPropagation();
+                    $('[data-tab="item"]').trigger('click');
+                    this.item.itemEditor.focusFirst('dblclick');
+                }
             }, this)
         });
     }
@@ -12455,7 +12287,7 @@ N2Require('MainContainer', ['LayerContainer'], ['smartSlider'], function ($, sco
 
 
         smartSlider.frontend.sliderElement.on('SliderResize', $.proxy(this.onResize, this));
-    }
+    };
 
     MainContainer.prototype.onResize = function (e, ratios) {
 
@@ -12498,11 +12330,11 @@ N2Require('MainContainer', ['LayerContainer'], ['smartSlider'], function ($, sco
 
     MainContainer.prototype.blurActiveGroup = function () {
         this.isActiveGroupBlurred = true;
-    }
+    };
 
     MainContainer.prototype.unBlurActiveGroup = function () {
         this.isActiveGroupBlurred = false;
-    }
+    };
 
     MainContainer.prototype.getActiveGroup = function () {
         if (this.isActiveGroupBlurred) {
@@ -12530,8 +12362,12 @@ N2Require('MainContainer', ['LayerContainer'], ['smartSlider'], function ($, sco
 
             return group;
         }
+        switch (this.canvasManager.currentEditorMode) {
+            case  'content':
+                return this.canvasManager.mainContent;
+        }
         return this;
-    }
+    };
 
     MainContainer.prototype.getSelectedLayer = function () {
         if (this.activeLayer == null) {
@@ -12544,13 +12380,13 @@ N2Require('MainContainer', ['LayerContainer'], ['smartSlider'], function ($, sco
         if (requestedLayers === undefined) {
             return [];
         }
-        var layers = [];
+        var layersData = [],
+            layers = [];
 
         for (var i = 0; i < requestedLayers.length; i++) {
-            requestedLayers[i].getDataWithChildren(layers);
+            requestedLayers[i].getDataWithChildren(layersData, layers);
         }
-
-        return layers;
+        return layersData;
     };
 
     MainContainer.prototype.layerDeleted = function (layer) {
@@ -12577,31 +12413,31 @@ N2Require('MainContainer', ['LayerContainer'], ['smartSlider'], function ($, sco
     MainContainer.prototype.refreshHasLayers = function () {
         $('body').toggleClass('n2-ss-has-layers', this.container.getLayerCount() > 0);
         nextend.triggerResize();
-    }
+    };
 
     MainContainer.prototype.getName = function () {
         return 'Slide';
-    }
+    };
 
     MainContainer.prototype.update = function () {
 
-    }
+    };
 
     MainContainer.prototype.onChildCountChange = function () {
 
-    }
+    };
 
     MainContainer.prototype.markEnter = function (e) {
 
-    }
+    };
 
     MainContainer.prototype.markLeave = function (e) {
 
-    }
+    };
 
     MainContainer.prototype.getSelf = function () {
         return this;
-    }
+    };
 
     MainContainer.prototype.createLayerAnimations = function (horizontalRatio, verticalRatio) {
         var animations = [];
@@ -12610,7 +12446,7 @@ N2Require('MainContainer', ['LayerContainer'], ['smartSlider'], function ($, sco
             animations.push.apply(animations, children[i].createLayerAnimations(horizontalRatio, verticalRatio));
         }
         return animations;
-    }
+    };
 
     MainContainer.prototype.getDroppables = function (exclude) {
         var editorMode = this.canvasManager.currentEditorMode,
@@ -12640,11 +12476,11 @@ N2Require('MainContainer', ['LayerContainer'], ['smartSlider'], function ($, sco
         }
 
         return droppables;
-    }
+    };
 
     MainContainer.prototype.getLLDroppables = function (layer) {
         return this.container.getLLDroppables(layer);
-    }
+    };
 
     MainContainer.prototype.getDroppable = function () {
         return {
@@ -12652,7 +12488,7 @@ N2Require('MainContainer', ['LayerContainer'], ['smartSlider'], function ($, sco
             layer: this,
             placement: 'absolute'
         }
-    }
+    };
 
     MainContainer.prototype.getLLDroppable = function (layer) {
         switch (layer.type) {
@@ -12667,7 +12503,7 @@ N2Require('MainContainer', ['LayerContainer'], ['smartSlider'], function ($, sco
                 break;
         }
         return false;
-    }
+    };
 
     MainContainer.prototype.replaceLayers = function (layersData) {
 
@@ -12686,6 +12522,9 @@ N2Require('MainContainer', ['LayerContainer'], ['smartSlider'], function ($, sco
 
         this.canvasManager.refreshMode();
 
+        this.container.layerContainerElement.n2imagesLoaded()
+            .always($.proxy(this.canvasManager.refreshMode, this.canvasManager));
+
         if (!this.getSelectedLayer()) {
             if (layers.length > 0) {
                 layers[0].activate();
@@ -12697,7 +12536,7 @@ N2Require('MainContainer', ['LayerContainer'], ['smartSlider'], function ($, sco
         }
 
         return layers;
-    }
+    };
 
     MainContainer.prototype.historyDeleteAll = function (layersData, historicalLayers) {
         for (var i = 0; i < historicalLayers.length; i++) {
@@ -12705,7 +12544,7 @@ N2Require('MainContainer', ['LayerContainer'], ['smartSlider'], function ($, sco
         }
 
         this.canvasManager.mainContent.getSelf().remove();
-    }
+    };
 
     MainContainer.prototype.historyReplaceLayers = function (layersData, historicalLayers, historicalAllLayers) {
         this.replaceLayers(layersData);
@@ -12714,7 +12553,7 @@ N2Require('MainContainer', ['LayerContainer'], ['smartSlider'], function ($, sco
         for (var i = 0; i < historicalAllLayers.length; i++) {
             historicalAllLayers[i].setSelf(layers[i]);
         }
-    }
+    };
 
     MainContainer.prototype.addLayers = function (layersData, group) {
 
@@ -12731,20 +12570,20 @@ N2Require('MainContainer', ['LayerContainer'], ['smartSlider'], function ($, sco
         smartSlider.history.addSimple(this, this.historyDeleteLayers, this.historyAddLayers, [layersData, layers, group]);
 
         return layers;
-    }
+    };
 
     MainContainer.prototype.historyDeleteLayers = function (layersData, historicalLayers, historicalGroup) {
         for (var i = 0; i < historicalLayers.length; i++) {
             historicalLayers[i].getSelf().delete();
         }
-    }
+    };
 
     MainContainer.prototype.historyAddLayers = function (layersData, historicalLayers, historicalGroup) {
         var layers = this.addLayers(layersData, historicalGroup.getSelf());
         for (var i = 0; i < historicalLayers.length; i++) {
             historicalLayers[i].setSelf(layers[i]);
         }
-    }
+    };
 
     MainContainer.prototype.dataToLayers = function (layers, $targetGroupContent) {
         var nodes = [];
@@ -12771,7 +12610,7 @@ N2Require('MainContainer', ['LayerContainer'], ['smartSlider'], function ($, sco
         }
 
         return nodes;
-    }
+    };
 
     MainContainer.prototype._buildNodePrepareID = function ($layer, layerData) {
         if (layerData.id) {
@@ -12806,7 +12645,7 @@ N2Require('MainContainer', ['LayerContainer'], ['smartSlider'], function ($, sco
                     layerData.parentid = '';
             }
         }
-    }
+    };
 
 
     MainContainer.prototype.buildContentNode = function (layerData, $targetGroupContent) {
@@ -12824,7 +12663,7 @@ N2Require('MainContainer', ['LayerContainer'], ['smartSlider'], function ($, sco
         this.dataToLayers(layerData.layers, $content);
 
         return $layer;
-    }
+    };
 
     MainContainer.prototype.buildRowNode = function (layerData, $targetGroupContent) {
 
@@ -12843,7 +12682,7 @@ N2Require('MainContainer', ['LayerContainer'], ['smartSlider'], function ($, sco
         this.dataToLayers(layerData.cols, $content);
 
         return $layer;
-    }
+    };
 
     MainContainer.prototype.buildColNode = function (layerData, $targetGroupContent) {
 
@@ -12860,7 +12699,7 @@ N2Require('MainContainer', ['LayerContainer'], ['smartSlider'], function ($, sco
         this.dataToLayers(layerData.layers, $content);
 
         return $layer;
-    }
+    };
 
     MainContainer.prototype.buildLayerNode = function (layerData, $targetGroupContent) {
 
@@ -12902,6 +12741,11 @@ N2Require('MainContainer', ['LayerContainer'], ['smartSlider'], function ($, sco
 N2Require('Row', ['LayerContainer', 'ComponentAbstract'], ['smartSlider'], function ($, scope, smartSlider, undefined) {
     "use strict";
 
+    /**
+     * @constructor
+     * @augments ComponentAbstract
+     * @memberof scope
+     */
     function Row(canvasManager, group, properties) {
         this.label = n2_('Row');
         this.type = 'row';
@@ -13844,6 +13688,7 @@ N2Require('ComponentSettings', [], ['smartSlider'], function ($, scope, smartSli
             inneralign: $('#layercol-inneralign'),
             verticalalign: $('#layercol-verticalalign'),
             bgcolor: $('#layercol-background-color'),
+            link: $('#layercol-link'),
             bgimage: $('#layercol-background-image'),
             bgimagex: $('#layercol-background-focus-x'),
             bgimagey: $('#layercol-background-focus-y'),

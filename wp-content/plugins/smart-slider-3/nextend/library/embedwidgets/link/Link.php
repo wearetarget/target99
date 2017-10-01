@@ -1,10 +1,5 @@
 <?php
 
-/**
- * User: David
- * Date: 2014.05.21.
- * Time: 11:45
- */
 class N2Link extends N2EmbedWidget implements N2EmbedWidgetInterface
 {
 

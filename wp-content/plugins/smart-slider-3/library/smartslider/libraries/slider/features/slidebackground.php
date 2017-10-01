@@ -34,10 +34,6 @@ class N2SmartSliderFeatureSlideBackground {
 
         $html = $this->makeBackground($slide);
 
-        if ($slide->parameters->get('background-type') == 'video') {
-            $html .= $this->makeBackgroundVideo($slide);
-        }
-
         return $html;
     }
 
@@ -94,6 +90,11 @@ class N2SmartSliderFeatureSlideBackground {
 
     private function makeBackground($slide) {
 
+        $videoHTML = '';
+        if ($slide->parameters->get('background-type') == 'video') {
+            $videoHTML .= $this->makeBackgroundVideo($slide);
+        }
+
         $backgroundColorStyle = $this->getBackgroundStyle($slide);
 
         $backgroundImageOpacity = min(100, max(0, $slide->parameters->get('backgroundImageOpacity', 100))) / 100;
@@ -107,70 +108,75 @@ class N2SmartSliderFeatureSlideBackground {
         if ($fillMode == 'default') {
             $fillMode = $this->slider->params->get('backgroundMode', 'fill');
         }
+
         if ($slide->parameters->get('background-type') == 'color') {
-            return $this->colorOnly($fillMode, $backgroundColorStyle, $backgroundImageOpacity, $backgroundImageBlur, $x, $y);
-        } else {
-
-            if ($slide->hasGenerator()) {
-
-                $rawBackgroundImage = $slide->parameters->get('backgroundImage', '');
-                $backgroundImage    = $slide->fill($rawBackgroundImage);
-
-                $imageData = N2ImageManager::getImageData($rawBackgroundImage);
-
-                $imageData['desktop-retina']['image'] = $slide->fill($imageData['desktop-retina']['image']);
-                $imageData['tablet']['image']         = $slide->fill($imageData['tablet']['image']);
-                $imageData['tablet-retina']['image']  = $slide->fill($imageData['tablet-retina']['image']);
-                $imageData['mobile']['image']         = $slide->fill($imageData['mobile']['image']);
-                $imageData['mobile-retina']['image']  = $slide->fill($imageData['mobile-retina']['image']);
-            } else {
-                $backgroundImage = $slide->fill($slide->parameters->get('backgroundImage', ''));
-
-                $imageData = N2ImageManager::getImageData($backgroundImage);
-            }
-            $sizes = $this->slider->assets->sizes;
-
-            if (empty($backgroundImage)) {
-                $src = N2Image::base64Transparent();
-            } else {
-                $src = N2ImageHelper::dynamic($this->slider->features->optimize->optimizeBackground($backgroundImage, $x, $y));
-            }
-
-
-            $alt   = $slide->fill($slide->parameters->get('backgroundAlt', ''));
-            $title = $slide->fill($slide->parameters->get('backgroundTitle', ''));
-
-            return $this->image($fillMode, $backgroundColorStyle, $backgroundImageOpacity, $backgroundImageBlur, $src, $imageData, $alt, $title, $x, $y);
+            return $this->colorOnly($videoHTML, $fillMode, $backgroundColorStyle, $backgroundImageOpacity, $backgroundImageBlur, $x, $y);
         }
+
+
+        if ($slide->hasGenerator()) {
+
+            $rawBackgroundImage = $slide->parameters->get('backgroundImage', '');
+            $backgroundImage    = $slide->fill($rawBackgroundImage);
+
+            $imageData = N2ImageManager::getImageData($rawBackgroundImage);
+
+            $imageData['desktop-retina']['image'] = $slide->fill($imageData['desktop-retina']['image']);
+            $imageData['tablet']['image']         = $slide->fill($imageData['tablet']['image']);
+            $imageData['tablet-retina']['image']  = $slide->fill($imageData['tablet-retina']['image']);
+            $imageData['mobile']['image']         = $slide->fill($imageData['mobile']['image']);
+            $imageData['mobile-retina']['image']  = $slide->fill($imageData['mobile-retina']['image']);
+        } else {
+            $backgroundImage = $slide->fill($slide->parameters->get('backgroundImage', ''));
+
+            $imageData = N2ImageManager::getImageData($backgroundImage);
+        }
+
+        if (empty($backgroundImage)) {
+            $src = N2Image::base64Transparent();
+        } else {
+            $src = N2ImageHelper::dynamic($this->slider->features->optimize->optimizeBackground($backgroundImage, $x, $y));
+        }
+
+
+        $alt   = $slide->fill($slide->parameters->get('backgroundAlt', ''));
+        $title = $slide->fill($slide->parameters->get('backgroundTitle', ''));
+
+        return $this->image($videoHTML, $fillMode, $backgroundColorStyle, $backgroundImageOpacity, $backgroundImageBlur, $src, $imageData, $alt, $title, $x, $y);
+
     }
 
-    private function colorOnly($fillMode, $backgroundColor, $backgroundImageOpacity, $backgroundImageBlur, $x, $y) {
+    private function colorOnly($videoHTML, $fillMode, $backgroundColor, $backgroundImageOpacity, $backgroundImageBlur, $x, $y) {
 
         return N2Html::tag('div', array(
-            "style"        => $backgroundColor,
             "class"        => "n2-ss-slide-background n2-ow",
             "data-opacity" => $backgroundImageOpacity,
             "data-blur"    => $backgroundImageBlur,
             "data-mode"    => $fillMode,
             "data-x"       => $x,
             "data-y"       => $y
-        ), '');
+        ), N2Html::tag('div', array(
+            'class' => 'n2-ss-slide-background-mask',
+            "style" => $backgroundColor
+        ), $videoHTML));
     }
 
-    private function image($fillMode, $backgroundColor, $backgroundImageOpacity, $backgroundImageBlur, $src, $imageData, $alt, $title, $x, $y) {
+    private function image($videoHTML, $fillMode, $backgroundColor, $backgroundImageOpacity, $backgroundImageBlur, $src, $imageData, $alt, $title, $x, $y) {
         $deviceAttributes = $this->getDeviceAttributes($src, $imageData);
 
         return N2Html::tag('div', $deviceAttributes + array(
-                "style"        => $backgroundColor,
                 "class"        => "n2-ss-slide-background n2-ow",
                 "data-opacity" => $backgroundImageOpacity,
                 "data-blur"    => $backgroundImageBlur,
                 "data-mode"    => $fillMode,
                 "data-x"       => $x,
                 "data-y"       => $y
-            ), N2Html::image($this->getDefaultImage($src, $deviceAttributes), $alt, array(
-            "title" => $title
-        )));
+            ), N2Html::tag('div', array(
+            'class' => 'n2-ss-slide-background-mask',
+            "style" => $backgroundColor
+        ), N2Html::image($this->getDefaultImage($src, $deviceAttributes), $alt, array(
+                "title" => $title
+            )) . $videoHTML));
     }
 
     private function getDeviceAttributes($image, $imageData) {

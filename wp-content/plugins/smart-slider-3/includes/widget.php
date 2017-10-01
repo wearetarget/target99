@@ -20,6 +20,9 @@ class N2SS3Widget extends WP_Widget {
             $this,
             'notPreventRender'
         ), 10000000000);
+
+        // Enable shortcodes for text widgets
+        add_filter( 'widget_text', 'do_shortcode' );
     }
 
     public static function register_widget() {

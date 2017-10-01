@@ -72,7 +72,16 @@ class N2SmartSliderFeatureAutoplay {
                 }
                 break;
             case 'slideindex':
-                $properties['autoplay']['autoplayToSlideIndex'] = $this->interval;
+                $interval = max(1, $this->interval);
+                if ($this->intervalSlide == 'next') {
+                    $interval++;
+                }
+
+                if ($interval > count($this->slider->slides)) {
+                    $interval = 1;
+                }
+
+                $properties['autoplay']['autoplayToSlideIndex'] = $interval;
             default:
                 $properties['autoplay']['autoplayToSlide'] = $this->interval * count($this->slider->slides) - 1;
                 if ($this->intervalSlide == 'next') {

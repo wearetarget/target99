@@ -3913,10 +3913,10 @@ N2Require('Icons', [], [], function ($, scope, undefined) {
     Icons.prototype._render = function (iconPack, icon) {
 
         if (iconPack.isLigature) {
-            return '<i class="' + iconPack.class + '">' + icon + '</i>';
+            return '<i class="n2i ' + iconPack.class + '">' + icon + '</i>';
         }
 
-        return '<i class="' + iconPack.class + " " + iconPack.prefix + icon + '"></i>';
+        return '<i class="n2i ' + iconPack.class + " " + iconPack.prefix + icon + '"></i>';
     }
 
     var callback = false;

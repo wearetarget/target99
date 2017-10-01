@@ -368,7 +368,7 @@ abstract class  N2SSSlideComponent {
         if ($image != '') {
             $x = intval($this->data->get('bgimagex', 50));
             $y = intval($this->data->get('bgimagey', 50));
-            $background .= 'url("' . N2ImageHelper::fixed($image) . '") ' . $x . '% ' . $y . '% / cover no-repeat' . ($this->data->get('bgimageparallax', 0) ? ' fixed' : '');
+            $background .= 'URL("' . N2ImageHelper::fixed($image) . '") ' . $x . '% ' . $y . '% / cover no-repeat' . ($this->data->get('bgimageparallax', 0) ? ' fixed' : '');
         }
 
         $color    = $this->data->get('bgcolor');
@@ -410,10 +410,13 @@ abstract class  N2SSSlideComponent {
         return '';
     }
 
-    public function getFilled(&$layer) {
+    /**
+     * @param N2SmartSliderSlide $slide
+     * @param array              $layer
+     */
+    public static function getFilled($slide, &$layer) {
 
     }
-
 
     /**
      * @param N2SmartSliderExport $export

@@ -84,7 +84,7 @@ $this->renderInline("tutorial-free");
             var isPreview = false;
 
             form.on('submit', function (e) {
-                if (!isPreview) {
+                if (form.attr('target') == undefined) {
                     e.preventDefault();
                     nextend.askToSave = false;
                     NextendAjaxHelper.ajax({

@@ -48,8 +48,7 @@ class N2GeneratorPostsPosts extends N2GeneratorAbstract {
             }
         }
 
-        $allTerms = $this->data->get('postcustomtaxonomy', ''); 
-        $term_query = '';
+        $allTerms = $this->data->get('postcustomtaxonomy', '');
         if (!empty($allTerms)) {
             $terms = explode('||', $allTerms);
             if (!in_array('0', $terms)) {
@@ -244,6 +243,29 @@ class N2GeneratorPostsPosts extends N2GeneratorAbstract {
                             $record = array_merge($record, $sizes);
                         }
                     }
+                }
+            }
+			
+			$post_meta = get_post_meta($post->ID);
+            if (count($post_meta) && is_array($post_meta) && !empty($post_meta)) {
+                foreach ($post_meta AS $key => $value) {
+                    if (count($value) && is_array($value) && !empty($value)) {
+						foreach ($value AS $v) {
+							if (!empty($v) && !is_array($v) && !is_object($v)) {
+								$key = str_replace(array(
+									'_',
+									'-'
+								), array(
+									'',
+									''
+								), $key);
+								if (array_key_exists($key, $record)) {
+									$key = 'meta' . $key;
+								}
+								$record[$key] = $v;
+							}
+						}
+					}
                 }
             }
 

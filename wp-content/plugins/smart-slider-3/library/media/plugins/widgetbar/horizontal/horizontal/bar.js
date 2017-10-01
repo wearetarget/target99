@@ -16,20 +16,27 @@ N2Require('SmartSliderWidgetBarHorizontal', [], [], function ($, scope, undefine
         this.offset = 0;
         this.tween = null;
 
-        this.originalBars = this.bars = bars;
 
-        if (typeof this.slider.shuffled !== 'undefined') {
-            var _temp = [];
-            for (var i = 0; i < this.slider.shuffled.length; i++) {
-                _temp.push(this.bars[this.slider.shuffled[i]]);
+        if (this.slider.isShuffled) {
+            var _bars = [];
+            for (var i = 0; i < this.slider.realSlides.length; i++) {
+                var slide = this.slider.realSlides[i];
+                _bars.push(bars[slide.originalIndex]);
             }
-            this.originalBars = this.bars = _temp;
+
+            bars = _bars;
         }
+
+        this.originalBars = this.bars = bars;
 
         this.bar = this.slider.sliderElement.find('.nextend-bar');
         this.innerBar = this.bar.find('> div');
 
-        this.slider.sliderElement.on('slideCountChanged', $.proxy(this.onSlideCountChanged, this));
+        this.slider.sliderElement.on({
+            slideCountChanged: $.proxy(this.onSlideCountChanged, this)
+        });
+
+        this.slider.firstSlideReady.done($.proxy(this.onFirstSlideSet, this));
 
         if (parameters.animate) {
             this.slider.sliderElement.on('mainAnimationStart', $.proxy(this.onSliderSwitchToAnimateStart, this));
@@ -37,7 +44,6 @@ N2Require('SmartSliderWidgetBarHorizontal', [], [], function ($, scope, undefine
             this.slider.sliderElement.on('sliderSwitchTo', $.proxy(this.onSliderSwitchTo, this));
         }
 
-        this.onSliderSwitchTo(null, this.slider.currentSlideIndex);
 
         if (parameters.overlay == 0) {
             var side = false;
@@ -63,6 +69,11 @@ N2Require('SmartSliderWidgetBarHorizontal', [], [], function ($, scope, undefine
         this.bar.on('click', $.proxy(function (e) {
             this.slider.sliderElement.find('.n2-ss-slide-active .n2-ss-layers-container').trigger(event);
         }, this));
+    };
+
+    SmartSliderWidgetBarHorizontal.prototype.onFirstSlideSet = function (slide) {
+
+        this.onSliderSwitchTo(null, slide.index);
     };
 
     SmartSliderWidgetBarHorizontal.prototype.onSliderSwitchTo = function (e, targetSlideIndex) {

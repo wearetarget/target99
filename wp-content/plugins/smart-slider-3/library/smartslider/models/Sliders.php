@@ -402,7 +402,7 @@ class N2SmartsliderSlidersModel extends N2Model {
 
 
         $attributes = array(
-            'style'         => 'background-image: url("' . N2ImageHelper::fixed($thumbnail) . '");',
+            'style'         => 'background-image: URL("' . N2ImageHelper::fixed($thumbnail) . '");',
             'class'         => 'n2-ss-box-slider n2-box-selectable ' . ($slider['type'] == 'group' ? 'n2-ss-box-slider-group' : 'n2-ss-box-slider-slider'),
             'data-title'    => $slider['title'],
             'data-editUrl'  => $editUrl,
@@ -452,7 +452,7 @@ class N2SmartsliderSlidersModel extends N2Model {
 
 
         $attributes = array(
-            'style' => 'background-image: url(' . N2ImageHelper::fixed($thumbnail) . ');',
+            'style' => 'background-image: URL(' . N2ImageHelper::fixed($thumbnail) . ');',
             'class' => 'n2-ss-box-slider n2-box-selectable ' . ($slider['type'] == 'group' ? 'n2-ss-box-slider-group' : 'n2-ss-box-slider-slider')
         );
 
@@ -562,5 +562,11 @@ class N2SmartsliderSlidersModel extends N2Model {
         N2JS::addFirstCode('nextend.NextendElementUrlParams=' . N2ElementUrl::getNextendElementUrlParameters() . ';');
 
         return $data;
+    }
+
+    public static function renderShapeDividerForm() {
+    }
+
+    public static function renderParticleForm() {
     }
 } 

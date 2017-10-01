@@ -147,4 +147,10 @@ class N2SmartsliderBackendSliderController extends N2SmartSliderController {
     public function actionPublishHTML() {
     }
 
+    public function actionShapeDivider() {
+    }
+
+    public function actionParticle() {
+    }
+
 }

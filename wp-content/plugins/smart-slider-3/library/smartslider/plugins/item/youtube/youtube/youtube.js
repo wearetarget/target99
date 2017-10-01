@@ -1,14 +1,20 @@
 N2Require('ItemYoutube', ['Item'], ['smartSlider'], function ($, scope, smartSlider, undefined) {
     "use strict";
 
+    /**
+     * @constructor
+     * @augments Item
+     * @memberof scope
+     */
     function ItemYoutube() {
         this.type = 'youtube';
-        this.needSize = true;
         scope.Item.prototype.constructor.apply(this, arguments);
     };
 
     ItemYoutube.prototype = Object.create(scope.Item.prototype);
     ItemYoutube.prototype.constructor = ItemYoutube;
+
+    ItemYoutube.needSize = true;
 
     ItemYoutube.prototype.added = function () {
         this.needFill = ['youtubeurl', 'image', 'start'];

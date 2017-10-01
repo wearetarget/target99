@@ -139,20 +139,11 @@ abstract class N2AssetsAbstract {
                 }
             }
         }
+
         if (isset($files['n2'])) {
             return array('n2' => $files['n2']) + $this->staticGroup + $files;
         }
         return array_merge($files, $this->staticGroup);
-    }
-
-    protected function getFilesRaw() {
-        $this->uniqueFiles();
-
-        $raw = '';
-        foreach ($this->groups AS $group) {
-            $raw .= $this->cache->getAssetRaw($group, $this->files[$group], $this->codes[$group]);
-        }
-        return $raw;
     }
 
     public function serialize() {

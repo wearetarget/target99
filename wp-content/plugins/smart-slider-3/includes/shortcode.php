@@ -4,8 +4,11 @@ class N2SS3Shortcode {
 
     public static $iframe = false;
 
-    public static function forceIframe() {
-        self::$iframe = true;
+    public static $iframeReason = '';
+
+    public static function forceIframe($reason) {
+        self::$iframe       = true;
+        self::$iframeReason = $reason;
     }
 
     public static function doShortcode($parameters) {
@@ -22,8 +25,7 @@ class N2SS3Shortcode {
 
     public static function renderIframe($sliderID) {
 
-        $onload = '
-if(typeof window.n2SSIframeLoader != "function"){
+        $script = 'if(typeof window.n2SSIframeLoader != "function"){
     (function($){
         var frames = [],
             clientHeight = 0;
@@ -97,22 +99,41 @@ if(typeof window.n2SSIframeLoader != "function"){
             frames.push(iframe);
         }
     })(jQuery);
-}
-n2SSIframeLoader(this);';
+  }';
 
-        return N2HTML::tag('iframe', array(
-            'onload'      => str_replace(array(
-                "\n",
-                "\r",
-                "\r\n"
-            ), "", $onload),
+        $attributes = array(
             'class'       => "n2-ss-slider-frame",
             'style'       => 'width:100%',
             'frameborder' => 0,
-            'src'         => site_url() . '?n2prerender=1&n2app=smartslider&n2controller=slider&n2action=iframe&sliderid=' . $sliderID
-        ));
+            'src'         => site_url() . '?n2prerender=1&n2app=smartslider&n2controller=slider&n2action=iframe&sliderid=' . $sliderID . '&hash=' . md5($sliderID . NONCE_SALT)
+        );
+        $html       = '';
 
-        return '<iframe onload="" class="n2-ss-slider-frame" style="width:100%" frameborder="0" src="' . site_url() . '?n2prerender=1&n2app=smartslider&n2controller=slider&n2action=iframe&sliderid=' . $sliderID . '"></iframe>';
+        switch (self::$iframeReason) {
+            case 'divi':
+                $attributes['onload'] = str_replace(array(
+                        "\n",
+                        "\r",
+                        "\r\n",
+                        '"',
+                    ), array(
+                        "",
+                        "",
+                        "",
+                        "'"
+                    ), $script) . 'n2SSIframeLoader(this);';
+                break;
+            case 'visualcomposer':
+            default:
+                $attributes['onload'] = str_replace(array(
+                        "\n",
+                        "\r",
+                        "\r\n"
+                    ), "", $script) . 'n2SSIframeLoader(this);';
+                break;
+        }
+
+        return $html . N2HTML::tag('iframe', $attributes);
     }
 
     public static function render($parameters, $usage = 'WordPress Shortcode') {

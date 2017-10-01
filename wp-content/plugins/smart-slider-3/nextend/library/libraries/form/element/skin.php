@@ -1,8 +1,7 @@
 <?php
 N2Loader::import('libraries.form.element.list');
 
-class N2ElementSkin extends N2ElementList
-{
+class N2ElementSkin extends N2ElementList {
 
     protected $fixedMode = false;
 
@@ -33,6 +32,7 @@ class N2ElementSkin extends N2ElementList
                 $this->skins[$v][$param->getName()] = (string)$param;
             }
         }
+
         return $html;
     }
 }

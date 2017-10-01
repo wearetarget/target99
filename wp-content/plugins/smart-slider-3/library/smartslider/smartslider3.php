@@ -2,7 +2,9 @@
 
 class N2SS3 {
 
-    public static $version = '3.2.4';
+    public static $version = '3.2.8';
+
+    public static $plan = 'pro';
 
     public static $product = 'smartslider3';
 
@@ -31,10 +33,10 @@ class N2SS3 {
             $params['source'] = self::$source;
         }
         $params['utm_campaign'] = N2SS3::$campaign;
-        $params['utm_medium']   = 'smartslider-' . N2Platform::getPlatform() . '-' . (N2SSPRO ? 'pro' : 'free');
+        $params['utm_medium']   = 'smartslider-' . N2Platform::getPlatform() . '-' . N2SS3::$plan;
 
 
-        return 'https://smartslider3.com/features/?' . http_build_query($params);
+        return 'https://smartslider3.com/pro-features/?' . http_build_query($params);
     }
 
     public static function getUpdateInfo() {
@@ -45,10 +47,11 @@ class N2SS3 {
     }
 
     public static function api($_posts, $returnUrl = false) {
-
+        $isPro = 0;
+    
         $posts = array(
             'product' => self::$product,
-            'pro'     => N2SSPRO
+            'pro'     => $isPro
         );
         return N2::api($_posts + $posts, $returnUrl);
     }
@@ -111,6 +114,7 @@ class N2SS3 {
     public static function initLicense() {
     }
 }
+N2SS3::$plan = 'free';
 if (defined('SMARTSLIDER3AFFILIATE')) {
     N2SS3::$source = SMARTSLIDER3AFFILIATE;
 }

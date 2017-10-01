@@ -56,7 +56,6 @@ class N2Tab {
                 $class = N2Form::importElement(N2XmlHelper::getAttribute($element, 'type'));
                 if (!class_exists($class, false)) {
                     throw new Exception($class . ' missing in ' . $this->_form->_xmlfile);
-                    n2_exit(true);
                 }
 
                 $field = new $class($this->_form, $this, $element);

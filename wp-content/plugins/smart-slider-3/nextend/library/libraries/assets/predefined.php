@@ -84,7 +84,7 @@ class N2AssetsPredefined {
         }
     
 
-        N2JS::addInline('window.nextend={localization: {}, deferreds:[], loadScript: function(url){n2jQuery.ready(function () {nextend.deferreds.push(n2.ajax({url:url,dataType:"script",cache:true,error:function(){console.log(arguments)}}))})}, ready: function(cb){n2.when.apply(n2, nextend.deferreds).done(function(){cb.call(window,n2)})}};', true);
+        N2JS::addInline('window.nextend={localization: {}, deferreds:[], loadScript: function(url){n2jQuery.ready(function () {var d = n2.Deferred();nextend.deferreds.push(d); n2.ajax({url:url,dataType:"script",cache:true,complete:function(){setTimeout(function(){d.resolve()})}})})}, ready: function(cb){n2.when.apply(n2, nextend.deferreds).done(function(){cb.call(window,n2)})}};', true);
 
         N2JS::jQuery($force);
 
@@ -134,7 +134,8 @@ class N2AssetsPredefined {
                 N2JS::addStaticGroup(N2LIBRARYASSETS . "/dist/nextend-gsap.min.js", 'nextend-gsap');
             
             } else {
-                N2JS::addInline(N2Filesystem::readFile(N2LIBRARYASSETS . "/js/core/gsap/NextendTimeline.js"));
+                N2JS::addInline(N2Filesystem::readFile(N2LIBRARYASSETS . "/dist/nextend-nogsap.min.js"));
+            
             }
         }
     }

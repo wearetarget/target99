@@ -74,14 +74,11 @@ class N2FormAbstract extends N2Data {
 
     function loadXMLFile($file) {
         if (!N2Filesystem::existsFile($file)) {
-            echo "xml file not found ('{$file}')! <br /><strong>" . __FILE__ . ":" . __LINE__ . "</strong>";
-            n2_exit(true);
-            //throw new Exception("xml file not found ('{$file}')! <br /><strong>" . __FILE__ . ":" . __LINE__."</strong>");
+            throw new Exception("xml file not found ('{$file}')! <br /><strong>" . __FILE__ . ":" . __LINE__ . "</strong>");
         }
 
         if (!function_exists('simplexml_load_string')) {
-            n2_e("SimpleXML extension must be enabled in PHP!");
-            n2_exit(true);
+            throw new Exception(n2_("SimpleXML extension must be enabled in php.ini. Please contact your server administrator to enable it for you."));
         }
 
         // @fix Warning: simplexml_load_file(): I/O warning : failed to load external entity
@@ -113,6 +110,7 @@ class N2FormAbstract extends N2Data {
                 return $tabObject->_elements[$name];
             }
         }
+
         return null;
     }
 
@@ -120,6 +118,7 @@ class N2FormAbstract extends N2Data {
         if ($key != '' && (!defined($key) || !constant($key))) {
             return false;
         }
+
         return true;
     }
 
@@ -132,6 +131,7 @@ class N2FormAbstract extends N2Data {
                 }
             }
         }
+
         return $class;
     }
 
@@ -144,6 +144,7 @@ class N2FormAbstract extends N2Data {
                 }
             }
         }
+
         return $class;
     }
 }

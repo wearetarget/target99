@@ -4,7 +4,7 @@ if ($fixTo) {
     <script type="text/javascript">
         nextend.ready(
             function ($) {
-                var topOffset = $('#wpadminbar, .navbar-fixed-top').height(),
+                var topOffset = $('#wpadminbar:visible, .navbar-fixed-top:visible').height(),
                     topOffsetLightbox = 0;
                 $('.<?php echo $snapClass; ?>').each(function () {
                     var bar = $(this);

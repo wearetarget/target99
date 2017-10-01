@@ -49,3 +49,23 @@ N2Loader::import('libraries.stylemanager.renderer');
 require_once dirname(__FILE__) . '/applications/system/plugins/loadplugin.php';
 
 N2Loader::import("libraryafter", "platform");
+
+if (defined('NEXTEND_CACHE_STORAGE') && isset($_GET['nextendcache']) && !empty($_GET['g']) && !empty($_GET['k'])) {
+    N2Loader::importAll('libraries.cache');
+
+    $sectionStorage = N2Cache::getStorage('database');
+    $data           = $sectionStorage->get($_GET['g'], $_GET['k'], 'web');
+    if (empty($data)) {
+        header("HTTP/1.0 404 Not Found");
+        exit;
+    }
+
+    if (substr($_GET['k'], -4, 4) == '.css') {
+        header("Content-type: text/css", true);
+    } else if (substr($_GET['k'], -3, 3) == '.js') {
+        header("Content-Type: application/javascript", true);
+    }
+
+    echo $data;
+    exit;
+}

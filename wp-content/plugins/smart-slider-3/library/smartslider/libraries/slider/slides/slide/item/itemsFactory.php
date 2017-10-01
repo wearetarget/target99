@@ -106,14 +106,17 @@ class N2SmartSliderItemsFactory {
 
     }
 
-    public function getFilled($item) {
+    /**
+     * @param N2SmartSliderSlide $slide
+     * @param array              $item
+     */
+    public static function getFilled($slide, &$item) {
+        self::_load();
         $type = $item['type'];
         if (isset(self::$items[$type])) {
-            $item['values'] = self::$items[$type]->getFilled($this->slide, new N2Data($item['values']))
+            $item['values'] = self::$items[$type]->getFilled($slide, new N2Data($item['values']))
                                                  ->toArray();
         }
-
-        return $item;
     }
 
     /**

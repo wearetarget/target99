@@ -3,6 +3,12 @@ N2Loader::import('libraries.cache.cache');
 
 class N2CacheImage extends N2Cache {
 
+    protected $_storageEngine = 'filesystem';
+
+    protected function getScope() {
+        return 'image';
+    }
+
     public function makeCache($fileExtension, $callable, $parameters = array(), $hash = false) {
 
         if (!$hash) {
@@ -11,25 +17,11 @@ class N2CacheImage extends N2Cache {
         $keepFileName = pathinfo($parameters[1], PATHINFO_FILENAME);
         $fileName     = $hash . (!empty($keepFileName) ? '/' . $keepFileName : '') . '.' . $fileExtension;
 
-        if (!$this->isCached($fileName)) {
-            $path = $this->getStorageFilePath($fileName);
-
-            if (!empty($keepFileName) && !N2Filesystem::existsFolder(dirname($path))) {
-                N2Filesystem::createFolder(dirname($path));
-            }
-
-            array_unshift($parameters, $path);
-
-            call_user_func_array($callable, $parameters);
+        if (!$this->exists($fileName)) {
+            $this->set($fileName, call_user_func_array($callable, $parameters));
         }
-        return $this->getStorageFilePath($fileName);
-    }
 
-    private function isCached($fileName) {
-        if (N2Filesystem::existsFile($this->getStorageFilePath($fileName))) {
-            return true;
-        }
-        return false;
+        return $this->getPath($fileName);
     }
 
     private function generateHash($fileExtension, $callable, $parameters) {
@@ -39,35 +31,26 @@ class N2CacheImage extends N2Cache {
             $parameters
         )));
     }
-
-    protected function setCurrentPath() {
-        $this->currentPath = N2Filesystem::getImagesFolder() . NDS . $this->group;
-
-        if (!N2Filesystem::existsFolder($this->currentPath)) {
-            N2Filesystem::createFolder($this->currentPath);
-        }
-    }
 }
 
 class N2StoreImage extends N2Cache {
+
+    protected $_storageEngine = 'filesystem';
+
+    protected function getScope() {
+        return 'image';
+    }
 
     public function makeCache($fileName, $content) {
         if (!$this->isImage($fileName)) {
             return false;
         }
 
-        $targetFile = $this->getStorageFilePath($fileName);
-        if (!$this->isCached($fileName)) {
-            N2Filesystem::createFile($targetFile, $content);
+        if (!$this->exists($fileName)) {
+            $this->set($fileName, $content);
         }
-        return $targetFile;
-    }
 
-    private function isCached($fileName) {
-        if (N2Filesystem::existsFile($this->getStorageFilePath($fileName))) {
-            return true;
-        }
-        return false;
+        return $this->getPath($fileName);
     }
 
     private function isImage($fileName) {
@@ -84,14 +67,7 @@ class N2StoreImage extends N2Cache {
         if (in_array($ext, $supported_image)) {
             return true;
         }
+
         return false;
-    }
-
-    protected function setCurrentPath() {
-        $this->currentPath = N2Filesystem::getImagesFolder() . NDS . $this->group;
-
-        if (!N2Filesystem::existsFolder($this->currentPath)) {
-            N2Filesystem::createFolder($this->currentPath);
-        }
     }
 }

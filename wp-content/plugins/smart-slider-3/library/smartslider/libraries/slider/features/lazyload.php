@@ -1,7 +1,6 @@
 <?php
 
-class N2SmartSliderFeatureLazyLoad
-{
+class N2SmartSliderFeatureLazyLoad {
 
     private $slider;
 
@@ -33,12 +32,12 @@ class N2SmartSliderFeatureLazyLoad
         if ($this->isEnabled == 0) {
             return false;
         }
-        if ($this->slider->_activeSlide == $slideIndex) {
+        if ($this->slider->firstSlideIndex == $slideIndex) {
             return false;
         }
 
         if ($this->lazyLoad->neighborCount) {
-            $dist         = abs($this->slider->_activeSlide - $slideIndex);
+            $dist         = abs($this->slider->firstSlideIndex - $slideIndex);
             $distanceBack = abs($slideIndex - count($this->_slides) - 1);
             if ($distanceBack < $dist) {
                 $dist = $distanceBack;
@@ -47,6 +46,7 @@ class N2SmartSliderFeatureLazyLoad
                 return false;
             }
         }
+
         return true;
     }
 }

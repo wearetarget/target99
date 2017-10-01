@@ -4,6 +4,8 @@ class N2CacheManifestSlider extends N2CacheManifest {
 
     private $parameters = array();
 
+    private $isExtended = false;
+
     public function __construct($cacheId, $parameters = array()) {
         parent::__construct($cacheId, false);
         $this->parameters = $parameters;
@@ -11,11 +13,63 @@ class N2CacheManifestSlider extends N2CacheManifest {
     }
 
     public function makeCache($fileName, $hash, $callable) {
+
         $variations = 1;
-        if (N2Filesystem::existsFile($this->getManifestFilePath('variations'))) {
-            $variations = intval(N2Filesystem::readFile($this->getManifestFilePath('variations')));
+        if ($this->exists($this->getManifestKey('variations'))) {
+            $variations = intval($this->get($this->getManifestKey('variations')));
         }
-        return parent::makeCache($fileName . mt_rand(1, $variations), $hash, $callable);
+        $fileName = $fileName . mt_rand(1, $variations);
+
+        if ($this->exists($this->getManifestKey('data'))) {
+            $data     = json_decode($this->get($this->getManifestKey('data')), true);
+            $fileName = $this->extendFileName($fileName, $data);
+        } else {
+            $this->clearCurrentGroup();
+        }
+
+        $output = parent::makeCache($fileName, $hash, $callable);
+
+        return $output;
+    }
+
+    protected function createCacheFile($fileName, $hash, $content) {
+
+        $this->set($this->getManifestKey('data'), json_encode($this->parameters['slider']->manifestData));
+
+        $fileName = $this->extendFileName($fileName, $this->parameters['slider']->manifestData);
+
+        return parent::createCacheFile($fileName, $hash, $content);
+    }
+
+    private function extendFileName($fileName, $manifestData) {
+
+        if ($this->isExtended) {
+            return $fileName;
+        }
+        
+        $this->isExtended = true;
+
+        $generators = $manifestData['generator'];
+
+        if (count($generators)) {
+            N2Loader::import("models.generator", "smartslider");
+            $generatorModel = new N2SmartsliderGeneratorModel();
+
+            foreach ($generators AS $generator) {
+                list($group, $type, $params) = $generator;
+                $info = $generatorModel->getGeneratorInfo($group, $type);
+
+                require_once($info->path . '/generator.php');
+                $class = 'N2Generator' . $group . $type;
+
+                $fileName .= call_user_func_array(array(
+                    $class,
+                    'cacheKey'
+                ), $params);
+            }
+        }
+
+        return $fileName;
     }
 
     protected function isCacheValid(&$manifestData) {
@@ -30,6 +84,7 @@ class N2CacheManifestSlider extends N2CacheManifest {
             $this->clearCurrentGroup();
             N2SmartSliderHelper::getInstance()
                                ->setSliderChanged($this->parameters['slider']->sliderId, 0);
+
             return false;
         }
 
@@ -39,7 +94,7 @@ class N2CacheManifestSlider extends N2CacheManifest {
             return false;
         }
 
-        if (!isset($manifestData['currentPath']) || $manifestData['currentPath'] != md5($this->currentPath)) {
+        if (!isset($manifestData['currentPath']) || $manifestData['currentPath'] != md5(__FILE__)) {
             return false;
         }
 
@@ -49,7 +104,7 @@ class N2CacheManifestSlider extends N2CacheManifest {
     protected function addManifestData(&$manifestData) {
 
         $manifestData['nextCacheRefresh'] = N2Pluggable::applyFilters('SSNextCacheRefresh', $this->parameters['slider']->getNextCacheRefresh(), array($this->parameters['slider']));
-        $manifestData['currentPath']      = md5($this->currentPath);
+        $manifestData['currentPath']      = md5(__FILE__);
         $manifestData['version']          = N2SS3::$version;
 
         $variations = 1;
@@ -62,6 +117,6 @@ class N2CacheManifestSlider extends N2CacheManifest {
             }
         }
 
-        N2Filesystem::createFile($this->getManifestFilePath('variations'), $variations);
+        $this->set($this->getManifestKey('variations'), $variations);
     }
 }

@@ -4,8 +4,7 @@
  * @property mixed moduleParams
  * @property mixed module
  */
-class N2ControllerAbstract
-{
+class N2ControllerAbstract {
 
     /** @var  N2Layout */
     public $layout;
@@ -94,8 +93,10 @@ class N2ControllerAbstract
         if (!$this->canDo($permission)) {
             $this->addView("../defaults/noaccess");
             $this->render();
+
             return false;
         }
+
         return true;
     }
 
@@ -104,8 +105,10 @@ class N2ControllerAbstract
         if (!$condition) {
             $this->addView("../defaults/noaccess");
             $this->render();
+
             return false;
         }
+
         return true;
     }
 
@@ -113,16 +116,20 @@ class N2ControllerAbstract
         if (!$condition) {
             $this->addView("../defaults/noaccess");
             $this->render();
+
             return false;
         }
+
         return true;
     }
 
     protected function validateToken() {
         if (!N2Form::checkToken()) {
             N2Message::error(n2_('Security token mismatch'));
+
             return false;
         }
+
         return true;
     }
 
@@ -131,22 +138,25 @@ class N2ControllerAbstract
 N2Loader::import("libraries.mvc.controller", 'platform');
 
 if (!class_exists('N2Controller', false)) {
-    class N2Controller extends N2ControllerAbstract
-    {
+    class N2Controller extends N2ControllerAbstract {
 
     }
 }
 
 N2Loader::import('libraries.ajax.response');
 
-class N2ControllerAjax extends N2Controller
-{
+class N2ControllerAjax extends N2Controller {
 
     /** @var N2AjaxResponse */
     protected $response;
 
     public function __construct($appType, $defaultParams) {
-        ob_end_clean();
+        $handlers = ob_list_handlers();
+        while (count($handlers) > 0 && $handlers[0] != 'ob_gzhandler') {
+            ob_end_clean();
+            $handlers = ob_list_handlers();
+        }
+
         $this->response = new N2AjaxResponse($appType);
         parent::__construct($appType, $defaultParams);
     }

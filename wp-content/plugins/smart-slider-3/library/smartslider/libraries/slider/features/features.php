@@ -96,7 +96,6 @@ class N2SmartSliderFeatures {
 
         $return         = array(
             'admin'          => $this->slider->isAdmin,
-            'isStaticEdited' => intval($this->slider->isStaticEdited),
             'translate3d'    => intval(N2SmartSliderSettings::get('hardware-acceleration', 1)),
             'callbacks'      => $this->slider->params->get('callbacks', '')
         );

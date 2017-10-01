@@ -143,7 +143,7 @@ $router = N2Base::getApplication('smartslider')
             ), '<img src="' . N2ImageHelper::fixed('$ss$/admin/images/do-you-like.png') . '" /><a href="' . $this->appType->router->createUrl(array(
                     'sliders/hidePromoLike',
                     N2Form::tokenizeUrl()
-                )) . '" class="n2-close"></a><span>' . n2_('Do you like Smart Slider 3?') . '</span><div class="n2-box-promo-buttons"><a href="https://smartslider3.com/satisfied-customer/?utm_campaign=' . N2SS3::$campaign . '&utm_source=dashboard-satisfied&utm_medium=smartslider-' . N2Platform::getPlatform() . '-' . (N2SSPRO ? 'pro' : 'free') . '" target="_blank" class="n2-button n2-button-normal n2-button-s n2-button-green n2-radius-s n2-uc n2-h5">' . n2_('Yes') . '</a><a href="http://smartslider3.com/suggestion/?utm_campaign=' . N2SS3::$campaign . '&utm_source=dashboard-not-satisfied&utm_medium=smartslider-' . N2Platform::getPlatform() . '-' . (N2SSPRO ? 'pro' : 'free') . '" target="_blank" class="n2-button n2-button-normal n2-button-s n2-button-red n2-radius-s n2-uc n2-h5">' . n2_('No') . '</a></div>');
+                )) . '" class="n2-close"></a><span>' . n2_('Do you like Smart Slider 3?') . '</span><div class="n2-box-promo-buttons"><a href="https://smartslider3.com/satisfied-customer/?utm_campaign=' . N2SS3::$campaign . '&utm_source=dashboard-satisfied&utm_medium=smartslider-' . N2Platform::getPlatform() . '-' . N2SS3::$plan . '" target="_blank" class="n2-button n2-button-normal n2-button-s n2-button-green n2-radius-s n2-uc n2-h5">' . n2_('Yes') . '</a><a href="https://smartslider3.com/suggestion/?utm_campaign=' . N2SS3::$campaign . '&utm_source=dashboard-not-satisfied&utm_medium=smartslider-' . N2Platform::getPlatform() . '-' . N2SS3::$plan . '" target="_blank" class="n2-button n2-button-normal n2-button-s n2-button-red n2-radius-s n2-uc n2-h5">' . n2_('No') . '</a></div>');
         }
         if (!N2Base::getApplication('smartslider')->storage->get('free', 'promoUpgrade')) {
             echo N2Html::tag('div', array(
@@ -164,8 +164,7 @@ $router = N2Base::getApplication('smartslider')
         <div class="n2-box-menu-content">
             <ul>
                 <li class="n2-ss-preview"><?php n2_e("Preview"); ?></li>
-                <li class="n2-ss-add-to-group"><?php n2_e("Add to group"); ?></li>
-                <li class="n2-ss-remove-from-group"><?php n2_e("Remove from group"); ?></li>
+                <?php ?>
                 <li class="n2-ss-duplicate"><?php n2_e("Duplicate"); ?></li>
                 <li class="n2-ss-delete"><?php n2_e("Delete"); ?></li>
             </ul>

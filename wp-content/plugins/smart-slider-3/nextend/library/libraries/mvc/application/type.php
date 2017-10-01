@@ -202,8 +202,15 @@ abstract class N2ApplicationType {
     }
 
     public function render($parameters, $arguments = array()) {
+        try {
+            ob_start();
+            $this->run($parameters, $arguments);
+            echo ob_get_clean();
+        } catch (Exception $e) {
+            ob_end_clean();
+            echo "<div style='position:fixed;background:white;left:25%;top:25%;width:46%;height:46%;z-index:100000;padding:3%;'>" . $e->getMessage() . "</div>";
 
-        $this->run($parameters, $arguments);
+        }
     }
 
     protected function onControllerReady() {

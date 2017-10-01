@@ -390,6 +390,10 @@ class N2BulletProof {
             throw new N2ImageUploaderException($this->commonUploadErrors($fileToUpload["error"]));
         }
 
+        if(!function_exists("mime_content_type")){
+            throw new N2ImageUploaderException("The mime_content_type() function is not found on the server. It is required to upload images. Contact your host and ask them to enable this function!");            
+        }
+
         $rawMime = mime_content_type($fileToUpload["tmp_name"]);
 
         switch ($rawMime) {

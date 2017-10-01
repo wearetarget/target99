@@ -3,8 +3,8 @@ Contributors: nextendweb
 Tags: slider, gallery slider, image slider, layer slider, responsive slider, slideshow, fullwidth slider, post slider, horizontal slider, vertical slider, photo slider, video slider
 Donate link: https://sites.fastspring.com/nextend/product/smartslider3donate
 Requires at least: 4.0
-Tested up to: 4.8.0
-Stable tag: 3.2.4
+Tested up to: 4.8.2
+Stable tag: 3.2.8
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -16,7 +16,7 @@ Responsive slider plugin to create sliders in visual editor easily. Build beauti
 
 Smart Slider 3 is a brand new and intuitive WordPress plugin to create sliders which was never possible before with any free slider plugins. Smart Slider 3 has every feature what you can expect from a free slider plugin. Besides that Smart Slider gives you the tool to create YouTube and Vimeo slides, create slides from your WordPress posts, even more it has a complete easy-to-use slide editor with different layers. Don't hesitate install the Smart Slider 3 and enjoy the next generation plugin experience!
 
->[Sample sliders](https://smartslider3.com/tag/free)  |  [Tutorial videos](https://www.youtube.com/watch?v=lsq09izc1H4&list=PLSawiBnEUNfvzcI3pBHs4iKcbtMCQU0dB)  |  [Documentation](https://smartslider3.helpscoutdocs.com/)  |  [Support](https://smartslider3.com/contact-us)  |  [PRO features](https://smartslider3.com/features/)
+>[Sample sliders](https://smartslider3.com/tag/free)  |  [Tutorial videos](https://www.youtube.com/watch?v=lsq09izc1H4&list=PLSawiBnEUNfvzcI3pBHs4iKcbtMCQU0dB)  |  [Docs](https://smartslider3.helpscoutdocs.com/)  |  [Support](https://smartslider3.com/contact-us)  |  [PRO features](https://smartslider3.com/features/)
 
 [youtube https://www.youtube.com/watch?v=lsq09izc1H4]
 
@@ -204,6 +204,33 @@ Of course! Smart Slider use protocol relative urls which works fine on http:// a
 9. Layer slider with layers styles. Made with FREE version.
 
 == Changelog ==
+
+= 3.2.8 - 20. September 2017. =
+* Fix: Possible cache related PHP error
+* Fix: Can't save on slide settings at certain cases
+* Fix: Template slider import on some servers
+* Fix: Slide editor possible bug
+
+= 3.2.7 - 12. September 2017. =
+* Fix: Possible cache related PHP error
+
+= 3.2.6 - 08. September 2017. =
+* Fix: Debug code removed
+
+= 3.2.5 - 07. September 2017. =
+* Feature: Column count is not limited anymore
+* Feature: Post generator post meta variables
+* Feature: WordPress text widget's shortcode will be replaced, even if your theme doesn't replace it
+* Feature: WordPress  twenty-seventeen theme better compatibility on specific positions
+* Feature: AJAX can load the slider in most cases
+* Feature: Lots of optimization to make the editing smoother and the loading faster
+* Feature: Elementor 1.6.x compatibility
+* Feature: Stability and speed improvements
+* Feature: Visual Composer Ultimate Layouts compatibility
+* Feature: Disable Font Awesome icons if you load your own library.
+* Fix: jQuery 3.x fixes
+* Fix: Dynamic slide Static save
+* Fix: Delayed (for lightbox/tabs) compatibility fix with new tab plugins
 
 = 3.2.4 - 27. June 2017. =
 * Feature: Content builder mode in slide editor https://www.youtube.com/watch?v=2nRabX8miDY

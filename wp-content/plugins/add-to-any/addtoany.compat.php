@@ -51,7 +51,7 @@ add_action( 'woocommerce_share', 'addtoany_woocommerce_share', 10 );
 
 function addtoany_woocommerce_share() {
 	remove_filter( 'the_content', 'A2A_SHARE_SAVE_add_to_content', 98 );
-	remove_filter( 'the_excerpt', 'A2A_SHARE_SAVE_add_to_content', 98 );	
+	remove_filter( 'the_excerpt', 'A2A_SHARE_SAVE_add_to_content', 98 );
 	
 	$options = get_option( 'addtoany_options', array() );
 	$sharing_disabled = get_post_meta( get_the_ID(), 'sharing_disabled', true );

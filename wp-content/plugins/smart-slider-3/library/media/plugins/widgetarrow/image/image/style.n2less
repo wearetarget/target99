@@ -3,9 +3,13 @@
     cursor: pointer;
     overflow: hidden;
     line-height: 0 !important;
+    z-index: 20;
   }
 
   .nextend-arrow img {
+    position: relative;
+    min-height: 0px;
+    min-width: 0px;
     vertical-align: top;
     width: auto;
     height: auto;

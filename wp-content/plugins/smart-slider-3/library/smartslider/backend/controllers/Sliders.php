@@ -80,7 +80,7 @@ class N2SmartsliderBackendSlidersController extends N2SmartSliderController {
             $files[] = $export->create(true);
         }
 
-        $zip = new N2ZipFile();
+        $zip = new N2ZipCreator();
         foreach ($files AS $file) {
             $zip->addFile(file_get_contents($file), basename($file));
             unlink($file);

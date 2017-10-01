@@ -1,13 +1,20 @@
 N2Require('ItemButton', ['Item'], ['smartSlider'], function ($, scope, smartSlider, undefined) {
     "use strict";
 
+    /**
+     * @constructor
+     * @augments Item
+     * @memberof scope
+     */
     function ItemButton() {
         this.type = 'button';
         scope.Item.prototype.constructor.apply(this, arguments);
-    };
+    }
 
     ItemButton.prototype = Object.create(scope.Item.prototype);
     ItemButton.prototype.constructor = ItemButton;
+
+    ItemButton.needSize = false;
 
     ItemButton.prototype.added = function () {
         this.needFill = ['content'];

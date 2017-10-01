@@ -18,7 +18,7 @@ class N2SSItemVimeo extends N2SSItemAbstract {
         $image     = $this->data->get('image');
         $playImage = '';
         if (!empty($image)) {
-            $style    = 'cursor:pointer; background: url(' . N2ImageHelper::fixed($image) . ') no-repeat 50% 50%; background-size: cover';
+            $style    = 'cursor:pointer; background: URL(' . N2ImageHelper::fixed($image) . ') no-repeat 50% 50%; background-size: cover';
             $hasImage = 1;
             if ($this->data->get('playbutton', 1) == 1) {
 
@@ -66,7 +66,7 @@ class N2SSItemVimeo extends N2SSItemAbstract {
 
         return N2Html::tag('div', array(
             "class" => 'n2-ow',
-            "style" => 'width: 100%; height: 100%; background: url(' . N2ImageHelper::fixed($this->data->getIfEmpty('image', '$system$/images/placeholder/video.png')) . ') no-repeat 50% 50%; background-size: cover;'
+            "style" => 'width: 100%; height: 100%; background: URL(' . N2ImageHelper::fixed($this->data->getIfEmpty('image', '$system$/images/placeholder/video.png')) . ') no-repeat 50% 50%; background-size: cover;'
         ), '<div class="n2-video-play n2-ow">' . N2ImageHelperAbstract::readSVG('$ss$/images/play.svg') . '</div>');
     }
 

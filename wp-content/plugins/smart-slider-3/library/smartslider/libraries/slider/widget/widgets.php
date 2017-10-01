@@ -1,28 +1,17 @@
 <?php
 
-class N2SmartSliderWidgets
-{
+class N2SmartSliderWidgets {
 
     public $enabledWidgets = array();
 
     public $widgets = array();
 
-    private $positions = array(
-        1  => array(
-            'side'       => 'vertical',
-            'modifierH'  => 1,
-            'modifierV'  => 1,
-            'stack'      => 'vertical',
-            'horizontal' => array(
-                'side'     => 'left',
-                'position' => 'width/2-{widgetname}width/2'
-            ),
+    private $above = array();
+    private $aboveHTML = '';
+    private $below = array();
+    private $belowHTML = '';
 
-            'vertical'   => array(
-                'side'     => 'bottom',
-                'position' => 'height'
-            )
-        ),
+    private $positions = array(
         2  => array(
             'side'       => 'both',
             'modifierH'  => 1,
@@ -33,7 +22,7 @@ class N2SmartSliderWidgets
                 'position' => '0'
             ),
 
-            'vertical'   => array(
+            'vertical' => array(
                 'side'     => 'top',
                 'position' => '0'
             )
@@ -48,7 +37,7 @@ class N2SmartSliderWidgets
                 'position' => 'width/2-{widgetname}width/2'
             ),
 
-            'vertical'   => array(
+            'vertical' => array(
                 'side'     => 'top',
                 'position' => '0'
             )
@@ -63,7 +52,7 @@ class N2SmartSliderWidgets
                 'position' => '0'
             ),
 
-            'vertical'   => array(
+            'vertical' => array(
                 'side'     => 'top',
                 'position' => '0'
             )
@@ -78,7 +67,7 @@ class N2SmartSliderWidgets
                 'position' => 'width'
             ),
 
-            'vertical'   => array(
+            'vertical' => array(
                 'side'     => 'top',
                 'position' => 'height/2-{widgetname}height/2'
             )
@@ -93,7 +82,7 @@ class N2SmartSliderWidgets
                 'position' => '0'
             ),
 
-            'vertical'   => array(
+            'vertical' => array(
                 'side'     => 'top',
                 'position' => 'height/2-{widgetname}height/2'
             )
@@ -108,7 +97,7 @@ class N2SmartSliderWidgets
                 'position' => '0'
             ),
 
-            'vertical'   => array(
+            'vertical' => array(
                 'side'     => 'top',
                 'position' => 'height/2-{widgetname}height/2'
             )
@@ -123,7 +112,7 @@ class N2SmartSliderWidgets
                 'position' => 'width'
             ),
 
-            'vertical'   => array(
+            'vertical' => array(
                 'side'     => 'top',
                 'position' => 'height/2-{widgetname}height/2'
             )
@@ -138,7 +127,7 @@ class N2SmartSliderWidgets
                 'position' => '0'
             ),
 
-            'vertical'   => array(
+            'vertical' => array(
                 'side'     => 'bottom',
                 'position' => '0'
             )
@@ -153,7 +142,7 @@ class N2SmartSliderWidgets
                 'position' => 'width/2-{widgetname}width/2'
             ),
 
-            'vertical'   => array(
+            'vertical' => array(
                 'side'     => 'bottom',
                 'position' => '0'
             )
@@ -168,24 +157,9 @@ class N2SmartSliderWidgets
                 'position' => '0'
             ),
 
-            'vertical'   => array(
+            'vertical' => array(
                 'side'     => 'bottom',
                 'position' => '0'
-            )
-        ),
-        12 => array(
-            'side'       => 'vertical',
-            'modifierH'  => 1,
-            'modifierV'  => 1,
-            'stack'      => 'vertical',
-            'horizontal' => array(
-                'side'     => 'left',
-                'position' => 'width/2-{widgetname}width/2'
-            ),
-
-            'vertical'   => array(
-                'side'     => 'top',
-                'position' => 'height'
             )
         )
     );
@@ -227,6 +201,7 @@ class N2SmartSliderWidgets
             }
 
             $this->makePositions($positions, $params);
+
             foreach ($this->enabledWidgets AS $k => $v) {
                 $class = 'N2SSPluginWidget' . $k . $v;
 
@@ -235,7 +210,23 @@ class N2SmartSliderWidgets
                     'render'
                 ), $slider, $slider->elementId, $params);
             }
+            foreach ($this->above AS $name) {
+                $this->aboveHTML .= $this->widgets[$name] . "\n";
+                unset($this->widgets[$name]);
+            }
+            foreach ($this->below AS $name) {
+                $this->belowHTML .= $this->widgets[$name] . "\n";
+                unset($this->widgets[$name]);
+            }
         }
+    }
+
+    function echoAbove() {
+        echo $this->aboveHTML;
+    }
+
+    function echoBelow() {
+        echo $this->belowHTML;
     }
 
     function echoOnce($k) {
@@ -289,6 +280,17 @@ class N2SmartSliderWidgets
         $values = array();
 
         $area = intval($params->get($key . 'area'));
+        if ($area == 1) {
+            $this->above[] = $name;
+            $params->set($key . 'mode', 'above');
+
+            return;
+        } else if ($area == 12) {
+            $this->below[] = $name;
+            $params->set($key . 'mode', 'below');
+
+            return;
+        }
 
         $position = $this->positions[$area];
 
@@ -320,11 +322,6 @@ class N2SmartSliderWidgets
                 $calc = $position['modifierV'] . "*{$calc}";
             }
             $this->positions[$area]['vertical']['position'] .= '+' . $calc;
-            /* check if we need stacking on both side
-            if ($position['side'] == 'both') {
-                $this->positions[$area]['horizontal']['position'] .= '+(' . $position['modifierH'] . "*{$offset})";
-            }
-            */
         }
 
         if ($position['stack'] == 'horizontal') {
@@ -337,11 +334,6 @@ class N2SmartSliderWidgets
                 $calc = $position['modifierH'] . "*{$calc}";
             }
             $this->positions[$area]['horizontal']['position'] .= '+' . $calc;
-            /* check if we need stacking on both side
-            if ($position['side'] == 'both') {
-                $this->positions[$area]['vertical']['position'] .= '+(' . $position['modifierV'] . "*{$offset})";
-            }
-            */
         }
 
         foreach ($values AS $k => $v) {

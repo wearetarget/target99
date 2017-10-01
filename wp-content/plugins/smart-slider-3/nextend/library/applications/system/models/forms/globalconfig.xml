@@ -19,6 +19,7 @@
       <option value="inline">Inline</option>
       <option value="async">Async</option>
     </param>
+    <param type="onoff" name="icon-fa" label="Load Font Awesome on frontend when required" default="1"/>
   </params>
   <params name="requests" label="API requests">
     <param type="onoff" name="curl" label="Curl" default="1"/>

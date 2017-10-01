@@ -1,5 +1,5 @@
 <?php
-N2Loader::import('libraries.zip.zip_read');
+N2Loader::import('libraries.zip.reader');
 N2Loader::import('libraries.backup', 'smartslider');
 
 class N2SmartSliderImport {
@@ -29,7 +29,7 @@ class N2SmartSliderImport {
             file_put_contents($tmp, $filePathOrData);
             $filePathOrData = $tmp;
         }
-        $importData = N2ZipRead($filePathOrData);
+        $importData = N2ZipReader::read($filePathOrData);
         if (!is_array($importData)) {
             N2Message::error(n2_('The importing failed at the unzipping part.'));
 

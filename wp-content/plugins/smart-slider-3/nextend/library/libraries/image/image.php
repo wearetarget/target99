@@ -8,24 +8,6 @@ class N2Image extends N2CacheImage {
         parent::__construct($group, true);
     }
 
-    public static function solidColor($group, $color) {
-        $cache = new self($group);
-        return N2Filesystem::pathToAbsoluteURL($cache->makeCache('png', array(
-            $cache,
-            '_solidColor'
-        ), array($color)));
-    }
-
-    protected function _solidColor($filePath, $color) {
-        $im    = imagecreatetruecolor(10, 10);
-        $rgb   = N2Color::hex2rgb($color);
-        $color = imagecolorallocate($im, $rgb[0], $rgb[1], $rgb[2]);
-        imagefilledrectangle($im, 0, 0, 10, 10, $color);
-        imagepng($im, $filePath);
-        imagedestroy($im);
-        return $filePath;
-    }
-
     public static function resizeImage($group, $imageUrl, $targetWidth, $targetHeight, $mode = 'cover', $backgroundColor = false, $resizeRemote = false, $quality = 100, $optimize = false, $x = 50, $y = 50) {
         $quality          = max(0, min(100, $quality));
         $originalImageUrl = $imageUrl;
@@ -51,6 +33,7 @@ class N2Image extends N2CacheImage {
                 if (!$extension) {
                     return $originalImageUrl;
                 }
+
                 return N2Filesystem::pathToAbsoluteURL($cache->makeCache($extension, array(
                     $cache,
                     '_resizeRemoteImage'
@@ -81,6 +64,7 @@ class N2Image extends N2CacheImage {
                 if (!$extension) {
                     return $originalImageUrl;
                 }
+
                 return N2Filesystem::pathToAbsoluteURL($cache->makeCache($extension, array(
                     $cache,
                     '_resizeImage'
@@ -100,11 +84,11 @@ class N2Image extends N2CacheImage {
         }
     }
 
-    protected function _resizeRemoteImage($filePath, $extension, $imageUrl, $targetWidth, $targetHeight, $mode, $backgroundColor, $quality, $optimize, $x, $y) {
-        $this->_resizeImage($filePath, $extension, $imageUrl, $targetWidth, $targetHeight, $mode, $backgroundColor, $quality, $optimize, $x, $y);
+    protected function _resizeRemoteImage($extension, $imageUrl, $targetWidth, $targetHeight, $mode, $backgroundColor, $quality, $optimize, $x, $y) {
+        return $this->_resizeImage($extension, $imageUrl, $targetWidth, $targetHeight, $mode, $backgroundColor, $quality, $optimize, $x, $y);
     }
 
-    protected function _resizeImage($filePath, $extension, $imagePath, $targetWidth, $targetHeight, $mode, $backgroundColor, $quality = 100, $optimize = false, $x = 50, $y = 50) {
+    protected function _resizeImage($extension, $imagePath, $targetWidth, $targetHeight, $mode, $backgroundColor, $quality = 100, $optimize = false, $x = 50, $y = 50) {
         $rotated = false;
         if ($extension == 'png') {
             $image = @imagecreatefrompng($imagePath);
@@ -128,13 +112,15 @@ class N2Image extends N2CacheImage {
             if ($optimize) {
 
                 if ($originalWidth <= $targetWidth || $originalHeight <= $targetHeight) {
+                    ob_start();
                     if ($extension == 'png') {
-                        imagepng($image, $filePath);
+                        imagepng($image);
                     } else if ($extension == 'jpg') {
-                        imagejpeg($image, $filePath, $quality);
+                        imagejpeg($image, null, $quality);
                     }
                     imagedestroy($image);
-                    return true;
+
+                    return ob_get_clean();
                 }
 
                 if ($originalWidth / $targetWidth > $originalHeight / $targetHeight) {
@@ -164,13 +150,15 @@ class N2Image extends N2CacheImage {
                 $newImage = $image;
             }
 
+            ob_start();
             if ($extension == 'png') {
-                imagepng($newImage, $filePath);
+                imagepng($newImage);
             } else if ($extension == 'jpg') {
-                imagejpeg($newImage, $filePath, $quality);
+                imagejpeg($newImage, null, $quality);
             }
             imagedestroy($newImage);
-            return true;
+
+            return ob_get_clean();
         }
 
         throw new Exception('Unable to resize image: ' . $imagePath);
@@ -201,6 +189,7 @@ class N2Image extends N2CacheImage {
                 if (!$extension) {
                     return $originalImageUrl;
                 }
+
                 return N2ImageHelper::dynamic(N2Filesystem::pathToAbsoluteURL($cache->makeCache($extension, array(
                     $cache,
                     '_scaleRemoteImage'
@@ -233,6 +222,7 @@ class N2Image extends N2CacheImage {
                 if (!$extension) {
                     return $originalImageUrl;
                 }
+
                 return N2ImageHelper::dynamic(N2Filesystem::pathToAbsoluteURL($cache->makeCache($extension, array(
                     $cache,
                     '_scaleImage'
@@ -246,11 +236,11 @@ class N2Image extends N2CacheImage {
         }
     }
 
-    protected function _scaleRemoteImage($filePath, $extension, $imageUrl, $scale, $quality) {
-        $this->_scaleImage($filePath, $extension, $imageUrl, $scale, $quality);
+    protected function _scaleRemoteImage($extension, $imageUrl, $scale, $quality) {
+        return $this->_scaleImage($extension, $imageUrl, $scale, $quality);
     }
 
-    protected function _scaleImage($filePath, $extension, $imagePath, $scale, $quality = 100) {
+    protected function _scaleImage($extension, $imagePath, $scale, $quality = 100) {
         if ($extension == 'png') {
             $image = @imagecreatefrompng($imagePath);
         } else if ($extension == 'jpg') {
@@ -288,13 +278,15 @@ class N2Image extends N2CacheImage {
                 $newImage = $image;
             }
 
+            ob_start();
             if ($extension == 'png') {
-                imagepng($newImage, $filePath);
+                imagepng($newImage);
             } else if ($extension == 'jpg') {
-                imagejpeg($newImage, $filePath, $quality);
+                imagejpeg($newImage, null, $quality);
             }
             imagedestroy($newImage);
-            return true;
+
+            return ob_get_clean();
         }
 
         throw new Exception('Unable to resize image: ' . $imagePath);
@@ -316,8 +308,10 @@ class N2Image extends N2CacheImage {
                     $rotated = imagerotate($image, 90, 0);
                     break;
             }
+
             return $rotated;
         }
+
         return false;
     }
 
@@ -353,6 +347,7 @@ class N2Image extends N2CacheImage {
                 $dst_w = $new_w;
             }
         }
+
         return array(
             $dst_x,
             $dst_y,
@@ -376,6 +371,7 @@ class N2Image extends N2CacheImage {
         if (isset($validExtensions[$extension])) {
             return $validExtensions[$extension];
         }
+
         return false;
     }
 
@@ -389,6 +385,7 @@ class N2Image extends N2CacheImage {
         if ($extension) {
             return 'data:image/' . $extension . ';base64,' . base64_encode(N2Filesystem::readFile($imagePath));
         }
+
         return N2ImageHelper::fixed($image);
     }
 
@@ -397,6 +394,7 @@ class N2Image extends N2CacheImage {
             if ((list($width, $height, $type, $attr) = getimagesize($filename)) !== false) {
                 return $type;
             }
+
             return false;
         }
 

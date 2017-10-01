@@ -117,7 +117,7 @@ class N2SmartsliderBackendGeneratorView extends N2ViewBase {
         $this->widget->init("box", array(
             'attributes' => array(
                 'class' => 'n2-box-generator',
-                'style' => 'background-image: url(' . N2ImageHelper::fixed(N2Uri::pathToUri(N2Filesystem::translate($info->path . '/../dynamic.png'))) . ');',
+                'style' => 'background-image: URL(' . N2ImageHelper::fixed(N2Uri::pathToUri(N2Filesystem::translate($info->path . '/../dynamic.png'))) . ');',
 
             ),
             'placeholderContent' => N2Html::tag('div', array(

@@ -54,6 +54,7 @@ class N2SmartSliderSlidesGenerator {
         if (count($slides) == 0) {
             $slides = null;
         }
+
         return $slides;
     }
 
@@ -68,6 +69,7 @@ class N2SmartSliderSlidesGenerator {
         if (count($slides) == 0) {
             $slides[] = $this->slide;
         }
+
         return $slides;
     }
 
@@ -82,7 +84,14 @@ class N2SmartSliderSlidesGenerator {
         if (!isset(self::$localCache[$this->slide->generator_id])) {
 
 
+            $this->slider->manifestData['generator'][] = array(
+                $this->currentGenerator['group'],
+                $this->currentGenerator['type'],
+                $this->currentGenerator['params']->toArray()
+            );
+
             $info = $this->generatorModel->getGeneratorInfo($this->currentGenerator['group'], $this->currentGenerator['type']);
+
 
             require_once($info->path . '/generator.php');
             $class = 'N2Generator' . $this->currentGenerator['group'] . $this->currentGenerator['type'];
@@ -91,6 +100,7 @@ class N2SmartSliderSlidesGenerator {
 
             $cache = new N2CacheManifestGenerator($this->slider, $this);
             $name  = $this->dataSource->filterName('generator' . $this->currentGenerator['id']);
+
             self::$localCache[$this->slide->generator_id] = $cache->makeCache($name, $this->dataSource->hash(json_encode($this->currentGenerator) . max($this->slide->parameters->get('record-slides'), 1)), array(
                 $this,
                 'getNotCachedData'

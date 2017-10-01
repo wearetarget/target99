@@ -120,8 +120,12 @@ class N2SSSlideComponentContent extends N2SSSlideComponent {
         N2SmartsliderSlidesModel::prepareSample($layer['layers']);
     }
 
-    public function getFilled(&$layer) {
+    /**
+     * @param N2SmartSliderSlide $slide
+     * @param array              $layer
+     */
+    public static function getFilled($slide, &$layer) {
 
-        N2SmartSliderSlide::fillLayers($layer['layers']);
+        $slide->fillLayers($layer['layers']);
     }
 }

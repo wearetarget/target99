@@ -81,7 +81,7 @@ abstract class N2SSPluginItemFactoryAbstract extends N2PluginBase {
      *
      * @return N2Data
      */
-    public function getFilled($slide, $data) {
+    public static function getFilled($slide, $data) {
         return $data;
     }
 

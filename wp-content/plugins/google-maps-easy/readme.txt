@@ -4,8 +4,8 @@ Author URI: https://supsystic.com/
 Plugin URI: https://supsystic.com/plugins/google-maps-plugin
 Donate link: https://supsystic.com/plugins/google-maps-plugin
 Tags: google map, map, Google Maps, map markers, location
-Tested up to: 4.8
-Stable tag: 1.7.9
+Tested up to: 4.8.2
+Stable tag: 1.8.1
 
 Google Maps with markers, locations and clusterization. Any data on the google map: text, images, videos. Custom google map markers with map builder
 
@@ -26,10 +26,16 @@ Google Maps with markers, locations and clusterization. Any data on the google m
 * 100% customizable. All google map and markers options can be modified
 * Works with any WordPress themes
 * Add map with shortcode or PHP code
-* Google Maps Import and Export feature
+* Google Maps and Markers Import and Export feature
+* [Map with Exposition slider](https://supsystic.com/exposition-slider-example/ "Exposition slider")
+* [KML layers (import and filter)](https://supsystic.com/kml-filter/ "KML filter") (pro)
+* Traffic, Transit and Bicycling Layers (pro)
+* [Heatmap Layer](https://supsystic.com/heatmap-layer/ "Heatmap") (pro)
+* [Front-end map and markers editing](https://supsystic.com/add-markers-frontend-pro-option/ "Front-end markers editing") (pro)
 * [Map Markers and Locations groups (clusterization)](http://supsystic.com/clusterization-example/ "Google Maps Clusterization") (pro)
 * [Display google map markers with slider mode](http://supsystic.com/horizontal-slider-example/ "Google Maps with Slider") (pro)
 * [Draw figures and paths on the map](http://supsystic.com/google-map-with-kml-layer/ "Draw Figures and Paths on the Map") (pro)
+See more examples [here](https://supsystic.com/google-maps-easy-usage-examples/ "Map examples") 
 
 Create [Google Maps](http://supsystic.com/plugins/google-maps-plugin?utm_source=wordpress&utm_medium=description&utm_campaign=maps "Google Maps WordPress plugin") in a minute with with Google Maps Easy WordPress plugin. 
 Google Map markers with any media, location points with video and text descriptions.
@@ -38,31 +44,39 @@ Ultimate solution to display google map on the contact page, routes, real estate
 
 [youtube http://www.youtube.com/watch?v=Ej8EtuLcLZk]
 
-Google Map Easy plugin is an excellent way to make a beautiful map on your website and to help your clients  in discovering your location on the google map. For example, if you are an owner of  a restaurant, you will have much more possibilities of attracting visitors by using this plugin. The Google map allows you not only to mark the place of your business location, but also to show people its coloured pictures. You can attach photos and videos to the google map marker description and make your potential visitors to feel the atmosphere inside your restaurant, shop or other place of interest.
+[Google Maps Easy](https://supsystic.com/plugins/google-maps-plugin "Google Maps Easy") plugin is an excellent way to make a beautiful map on your website and to help your clients  in discovering your location on the google map. For example, if you are an owner of  a restaurant, you will have much more possibilities of attracting visitors by using this plugin. The Google map allows you not only to mark the place of your business location, but also to show people its coloured pictures. You can attach photos and videos to the google map marker description and make your potential visitors to feel the atmosphere inside your restaurant, shop or other place of interest.
 
 = Google Maps Plugin Support =
 
-If you have any problem or feature request for the Google Maps by Supsystic, please [let us know](http://supsystic.com/contact-us/ "Contact Us")!
+If you have any problem or feature request for the [Google Maps by Supsystic](https://supsystic.com/plugins/google-maps-plugin "Google Maps Easy"), please [let us know](http://supsystic.com/contact-us/ "Contact Us")!
 
 = Translations in your language =
 
-You have an incredible opportunity to get PRO version for free. Just Make Translation of the Google Maps by Supsystic plugin! It will be amazing if you take advantage of this offer!
+You have an incredible opportunity to get PRO version for free. Just Make Translation of the Google Maps by Supsystic plugin! It will be amazing if you take advantage of this offer! Available Translations:
 
 * English
-* Polish
-* German
-* Russian
+* Albanian
+* Bulgarian
+* Chinese (Taiwan)
+* Danish
 * Dutch
-* Chinese
-* Italian
+* French
+* German
+* Italiano
+* Norwegian (Bokmål)
+* Persian
+* Polish
+* Portuguese (Portugal)
+* Russian
+* Spanish
 
-Google Maps for WordPress are very useful these days usually in contact forms which showcase the correct location of the business or a place of interest. Google Map by Supsystic plugin require only location input to mark the point accurately as it will auto fetch the live map details from Google map. Marking different locations on the google map can be done easily with the google map marker options the plugin provides and that too with colorful icons for interaction on the google map. Route your journey across multiple travel location with google map plugin and you will start loving them. Add titles, description and much more details on your travel details on the map with the help of pointers.
+Google Maps for WordPress are very useful these days usually in contact forms which showcase the correct location of the business or a place of interest. [Google Map by Supsystic](https://supsystic.com/plugins/google-maps-plugin "Google Maps Easy") plugin require only location input to mark the point accurately as it will auto fetch the live map details from Google map. Marking different locations on the google map can be done easily with the google map marker options the plugin provides and that too with colorful icons for interaction on the google map. Route your journey across multiple travel location with google map plugin and you will start loving them. Add titles, description and much more details on your travel details on the map with the help of pointers.
 
 == Installation ==
 
 = First time Google Maps Easy user =
 
-Thank you for choosing Google Maps by Supsystic! Open page of our plug-in admin panel in WordPress and you will see three menu items: "Add maps", "All Maps" "Settings". 
+Thank you for choosing [Google Maps by Supsystic](https://supsystic.com/plugins/google-maps-plugin "Google Maps Easy")! Open page of our plug-in admin panel in WordPress and you will see three menu items: "Add maps", "All Maps" "Settings". 
 Under "Settings" you can import and export maps, markers and locations.
 
 In order to create your Google Map, simply click on "Add Maps" in your left menu. When Google Maps page loads, set the height, width and google map name (map width can set in percent and in pixels). To add a marker to your Google Map click on button "Add marker". Here you can set map marker configuration. 
@@ -74,7 +88,7 @@ Important! Short code must be inserted in a text editor page, and not in the vis
 
 = To install a Google Maps Easy plugin via FTP, you must = 
 
-1. Download the Google Maps Easy plugin
+1. Download the [Google Maps Easy plugin](https://downloads.wordpress.org/plugin/google-maps-easy.zip "Download")
 2. Unarchive plugin google-maps-easy.zip
 3. Copy the folder with google maps plugin
 4. Open the ftp \wp-content\plugins\
@@ -87,6 +101,9 @@ More Info: [Create Your First Google Maps for WordPress](http://supsystic.com/cr
 
 = How to add map into site content? =
 You can add a map in the site content via shortcode or php code. [Learn more here](http://supsystic.com/add-map-into-site-content/ "Add Google Map with Shortcode or PHP code")
+
+= How to install PRO version of plugin? = 
+To install Google Maps by Supsystic PRO follow this [instruction](https://supsystic.com/documentation/installation-pro-version/ "Installation of PRO version")
 
 = How to zoom and center the initial map on markers? =
 There is a few different ways to zoom and centralize map.
@@ -164,16 +181,20 @@ Copy and paste the shortcode into your post or page and Google Maps Easy will au
 
 = Our plugins =
 
-* [Social Share Buttons by Supsystic](https://wordpress.org/plugins/social-share-buttons-by-supsystic/ "Social Share Buttons by Supsystic")
+* [Photo Gallery by Supsystic](https://wordpress.org/plugins/gallery-by-supsystic/ "Photo Gallery by Supsystic")
+* [Pricing Table by Supsystic](https://wordpress.org/plugins/pricing-table-by-supsystic/ "Pricing Table by Supsystic")
+* [Contact Form by Supsystic](https://wordpress.org/plugins/contact-form-by-supsystic/ "Contact Form by Supsystic")
 * [Data Tables Generator by Supsystic](https://wordpress.org/plugins/data-tables-generator-by-supsystic/ "Data Tables Generator by Supsystic")
-* [Google Maps Easy](https://wordpress.org/plugins/google-maps-easy/ "Google Maps Easy")
-* [Gallery by Supsystic](https://wordpress.org/plugins/gallery-by-supsystic/ "Gallery by Supsystic")
-* [Backup by Supsystic](https://wordpress.org/plugins/backup-by-supsystic/ "Backup by Supsystic")
 * [Slider by Supsystic](https://wordpress.org/plugins/slider-by-supsystic/ "Slider by Supsystic")
+* [Social Share Buttons by Supsystic](https://wordpress.org/plugins/social-share-buttons-by-supsystic/ "Social Share Buttons by Supsystic")
+* [Coming Soon by Supsystic](https://wordpress.org/plugins/coming-soon-by-supsystic/ "Coming Soon by Supsystic")
 * [PopUp by Supsystic](https://wordpress.org/plugins/popup-by-supsystic/ "PopUp by Supsystic")
-* [Coming Soon Plugin](https://wordpress.org/plugins/coming-soon-by-supsystic/ "Coming Soon Plugin")
-* [Pricing Table Plugin](https://wordpress.org/plugins/pricing-table-by-supsystic/ "Pricing Table Plugin")
-
+* [Digital Publications by Supsystic](https://wordpress.org/plugins/digital-publications-by-supsystic/ "Digital Publications by Supsystic")
+* [Backup by Supsystic](https://wordpress.org/plugins/backup-by-supsystic/ "Backup by Supsystic")
+* [Membership by Supsystic](https://wordpress.org/plugins/membership-by-supsystic/ "Membership by Supsystic")
+* [Newsletter by Supsystic](https://wordpress.org/plugins/newsletter-by-supsystic/ "Newsletter by Supsystic")
+* [Live Chat by Supsystic](https://wordpress.org/plugins/live-chat-by-supsystic/ "Live Chat by Supsystic")
+* [Translate by Supsystic](https://wordpress.org/plugins/translate-by-supsystic/ "Translate by Supsystic")
 
 == Screenshots ==
 
@@ -191,12 +212,22 @@ Copy and paste the shortcode into your post or page and Google Maps Easy will au
 
 == Changelog ==
 
+= Google Map Plugin v1.8.1 / 20.09.2017 =
+
+ * Minor issues fix and improvements
+
+= Google Map Plugin v1.8.0 / 29.08.2017 =
+
+ * Updated German language
+ * Added Bulgarian language
+ * Minor issues fix
+
 = Google Map Plugin v1.7.9 / 03.08.2017 =
 
-* Fixed bugs with Membership integration - https://supsystic.com/plugins/membership-plugin
-* Fixed Membership integration for Marker List link
-* Updated Polish language
-* Updated Persian language
+ * Fixed bugs with Membership integration - https://supsystic.com/plugins/membership-plugin
+ * Fixed Membership integration for Marker List link
+ * Updated Polish language
+ * Updated Persian language
 
 = Google Map Plugin v1.7.8 / 27.07.2017 =
 

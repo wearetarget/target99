@@ -69,7 +69,12 @@ window.n2const = {
 };
 
 if (window.n2const.isIOS) {
-    window.n2const.IOSVersion = (navigator.appVersion).match(/OS (\d+)_(\d+)_?(\d+)?/)[1];
+    var match = navigator.appVersion.match(/OS (\d+)_(\d+)_?(\d+)?/);
+    if (match) {
+        window.n2const.IOSVersion = match[1];
+    } else {
+        window.n2const.IOSVersion = 100; // Desktop version requested on IOS
+    }
 }
 
 if (window.n2const.isPhone) {
@@ -83,6 +88,17 @@ nextend.isRetina = (function () {
 
 String.prototype.capitalize = function () {
     return this.charAt(0).toUpperCase() + this.slice(1);
+};
+
+window.n2passiveEvents = false;
+try {
+    var opts = Object.defineProperty({}, 'passive', {
+        get: function () {
+            window.n2passiveEvents = true;
+        }
+    });
+    window.addEventListener('test', null, opts);
+} catch (e) {
 }
 
 nextend.triggerResize = (function ($) {
@@ -1281,47 +1297,68 @@ window.Base64 = Base64;
                 },
                 startX = 0, startY = 0;
 
-            el.on('touchstart.universalclick', function (e) {
-                startX = e.originalEvent.touches[0].clientX;
-                startY = e.originalEvent.touches[0].clientY;
-            }).on('touchend.universalclick', function (e) {
-                if (Math.abs(e.originalEvent.changedTouches[0].clientX - startX) < 10 && Math.abs(e.originalEvent.changedTouches[0].clientY - startY) < 10) {
+            try {
+                var cb = function (e) {
+                    startX = e.touches[0].clientX;
+                    startY = e.touches[0].clientY;
+                };
+
+                el[0]['_touchstart'] = cb;
+                el[0].addEventListener('touchstart', cb, window.n2passiveEvents ? {passive: true} : false);
+
+                el.on('touchend.universalclick', function (e) {
+                    if (Math.abs(e.originalEvent.changedTouches[0].clientX - startX) < 10 && Math.abs(e.originalEvent.changedTouches[0].clientY - startY) < 10) {
+                        if (!_suppress) {
+                            suppress();
+                            handleObj.handler.apply(this, arguments);
+                        }
+                    }
+                }).on('click.universalclick', function (e) {
                     if (!_suppress) {
                         suppress();
                         handleObj.handler.apply(this, arguments);
                     }
-                }
-            }).on('click.universalclick', function (e) {
-                if (!_suppress) {
-                    suppress();
-                    handleObj.handler.apply(this, arguments);
-                }
 
-            });
+                });
+            } catch (e) {
+                console.error(e);
+            }
         },
 
-        remove: function (handleObj) {
+        remove: function () {
             $(this).off('.universalclick');
+            try {
+                this.removeEventListener('touchstart', this['_touchstart'], window.n2passiveEvents ? {passive: true} : false);
+                delete this['_touchstart'];
+            } catch (e) {
+            }
         }
     };
 
-    var touchElements = [];
-    var globalTouchWatched = false;
-    var watchGlobalTouch = function () {
+    var touchElements = [],
+        globalTouchWatched = false,
+        touchStartCB = function (e) {
+            var target = $(e.target);
+            for (var i = touchElements.length - 1; i >= 0; i--) {
+                if (!touchElements[i].is(target) && touchElements[i].find(target).length == 0) {
+                    touchElements[i].trigger('universal_leave');
+                }
+            }
+        },
+        watchGlobalTouch = function () {
             if (!globalTouchWatched) {
                 globalTouchWatched = true;
-                $('body').on('touchstart.universaltouch', function (e) {
-                    var target = $(e.target);
-                    for (var i = touchElements.length - 1; i >= 0; i--) {
-                        if (!touchElements[i].is(target) && touchElements[i].find(target).length == 0) {
-                            touchElements[i].trigger('universal_leave');
-                        }
-                    }
-                });
+                try {
+                    $('body').get(0).addEventListener('touchstart', touchStartCB, window.n2passiveEvents ? {passive: true} : false);
+                } catch (e) {
+                }
             }
         }, unWatchGlobalTouch = function () {
             if (globalTouchWatched) {
-                $('body').off('.universaltouch');
+                try {
+                    $('body').get(0).removeEventListener('touchstart', touchStartCB, window.n2passiveEvents ? {passive: true} : false);
+                } catch (e) {
+                }
                 globalTouchWatched = false;
             }
         },
@@ -1365,7 +1402,44 @@ window.Base64 = Base64;
                 leaveOnSecond = handleObj.data.leaveOnSecond;
             }
 
-            var touchTimeout = null;
+            var touchTimeout = null,
+                mouseenter = function (e) {
+                    if (!_suppress) {
+                        suppress();
+                        if (e.type == 'touchstart') {
+                            if (leaveOnSecond) {
+                                if (touchTimeout) {
+                                    el.trigger('universal_leave');
+                                } else {
+                                    addTouchElement(el);
+                                    handleObj.handler.apply(this, arguments);
+                                    touchTimeout = setTimeout(function () {
+                                        el.trigger('universal_leave');
+                                    }, 5000);
+                                }
+                            } else {
+                                if (touchTimeout) {
+                                    clearTimeout(touchTimeout);
+                                    touchTimeout = null;
+                                }
+
+                                addTouchElement(el);
+
+                                handleObj.handler.apply(this, arguments);
+                                touchTimeout = setTimeout(function () {
+                                    el.trigger('universal_leave');
+                                }, 5000);
+
+                            }
+                        } else {
+                            handleObj.handler.apply(this, arguments);
+                            el.on('mouseleave.universalleave', function () {
+                                el.off('.universalleave')
+                                    .trigger('universalleave');
+                            });
+                        }
+                    }
+                };
 
             el.on('universal_leave.universalenter', function (e) {
                 e.stopPropagation();
@@ -1373,47 +1447,23 @@ window.Base64 = Base64;
                 touchTimeout = null;
                 removeTouchElement(el);
                 el.trigger('universalleave');
-            }).on('touchstart.universalenter mouseenter.universalenter', function (e) {
-                if (!_suppress) {
-                    suppress();
-                    if (e.type == 'touchstart') {
-                        if (leaveOnSecond) {
-                            if (touchTimeout) {
-                                el.trigger('universal_leave');
-                            } else {
-                                addTouchElement(el);
-                                handleObj.handler.apply(this, arguments);
-                                touchTimeout = setTimeout(function () {
-                                    el.trigger('universal_leave');
-                                }, 5000);
-                            }
-                        } else {
-                            if (touchTimeout) {
-                                clearTimeout(touchTimeout);
-                                touchTimeout = null;
-                            }
+            }).on('mouseenter.universalenter', mouseenter);
 
-                            addTouchElement(el);
+            try {
+                el[0]['_mouseenter'] = mouseenter;
+                el[0].addEventListener('touchstart', mouseenter, window.n2passiveEvents ? {passive: true} : false);
+            } catch (e) {
 
-                            handleObj.handler.apply(this, arguments);
-                            touchTimeout = setTimeout(function () {
-                                el.trigger('universal_leave');
-                            }, 5000);
-
-                        }
-                    } else {
-                        handleObj.handler.apply(this, arguments);
-                        el.on('mouseleave.universalleave', function () {
-                            el.off('.universalleave')
-                                .trigger('universalleave');
-                        });
-                    }
-                }
-            });
+            }
         },
-
-        remove: function (handleObj) {
+        remove: function () {
             $(this).off('.universalenter .universalleave');
+            try {
+                this.removeEventListener('touchstart', this['_mouseenter'], window.n2passiveEvents ? {passive: true} : false);
+                delete this['_mouseenter'];
+            } catch (e) {
+
+            }
         }
     };
 })(n2);

@@ -52,6 +52,10 @@ class SmartSlider3 {
         if (class_exists('MPCEShortcode', false)) {
             SmartSlider3::motoPressCE();
         }
+
+        if (isset($_GET['pswLoad']) && $_GET['pswLoad'] == 1 || isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
+            N2SS3Shortcode::forceIframe('psw');
+        }
     }
 
     public static function unyson_extension($locations) {
@@ -88,19 +92,36 @@ class SmartSlider3 {
     }
 
     public static function preRender() {
-        if (isset($_GET['n2prerender']) && isset($_GET['n2app']) && current_user_can('smartslider')) {
-            try {
-                N2Base::getApplication($_GET['n2app'])
-                      ->getApplicationType(N2Platform::$isAdmin ? 'backend' : 'frontend')
-                      ->setCurrent()
-                      ->render(array(
-                          "prerender"  => true,
-                          "controller" => $_GET['n2controller'],
-                          "action"     => $_GET['n2action']
-                      ));
-                n2_exit(true);
-            } catch (Exception $e) {
-                exit;
+
+        if (isset($_GET['n2prerender']) && isset($_GET['n2app'])) {
+            if (current_user_can('smartslider')) {
+                try {
+                    N2Base::getApplication($_GET['n2app'])
+                          ->getApplicationType(N2Platform::$isAdmin ? 'backend' : 'frontend')
+                          ->setCurrent()
+                          ->render(array(
+                              "prerender"  => true,
+                              "controller" => $_GET['n2controller'],
+                              "action"     => $_GET['n2action']
+                          ));
+                    n2_exit(true);
+                } catch (Exception $e) {
+                    exit;
+                }
+            } else if (isset($_GET['sliderid']) && isset($_GET['hash']) && md5($_GET['sliderid'] . NONCE_SALT) == $_GET['hash']) {
+                try {
+                    N2Base::getApplication('smartslider')
+                          ->getApplicationType('frontend')
+                          ->setCurrent()
+                          ->render(array(
+                              "prerender"  => true,
+                              "controller" => 'slider',
+                              "action"     => 'iframe'
+                          ));
+                    n2_exit(true);
+                } catch (Exception $e) {
+                    exit;
+                }
             }
         }
     }

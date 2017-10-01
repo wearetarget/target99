@@ -1,19 +1,10 @@
 <?php
 
-class N2AssetsCache
-{
+class N2AssetsCache {
 
     public $outputFileType;
 
     protected $group, $files, $codes;
-
-    public function getAssetRaw($group, &$files = array(), &$codes = array()) {
-        $this->group = $group;
-        $this->files = $files;
-        $this->codes = $codes;
-
-        return $this->getCachedContent();
-    }
 
     public function getAssetFile($group, &$files = array(), &$codes = array()) {
         $this->group = $group;
@@ -21,8 +12,8 @@ class N2AssetsCache
         $this->codes = $codes;
 
         $cache = new N2CacheManifest($group, true, true);
+        $hash  = $this->getHash();
 
-        $hash = $this->getHash();
         return $cache->makeCache($group . "." . $this->outputFileType, $hash, array(
             $this,
             'getCachedContent'
@@ -53,15 +44,21 @@ class N2AssetsCache
         return md5($hash) . "." . $this->outputFileType;
     }
 
-    public function getCachedContent() {
+    /**
+     * @param N2CacheManifest $cache
+     *
+     * @return string
+     */
+    public function getCachedContent($cache) {
         $fileContents = '';
         foreach ($this->files AS $file) {
-            $fileContents .= $this->parseFile(N2Filesystem::readFile($file), $file) . "\n";
+            $fileContents .= $this->parseFile($cache, N2Filesystem::readFile($file), $file) . "\n";
         }
 
         foreach ($this->codes AS $code) {
             $fileContents .= $code . "\n";
         }
+
         return $fileContents;
     }
 
@@ -69,7 +66,14 @@ class N2AssetsCache
         return $file . filemtime($file);
     }
 
-    protected function parseFile($content, $originalFilePath) {
+    /**
+     * @param N2CacheManifest $cache
+     * @param                 $content
+     * @param                 $originalFilePath
+     *
+     * @return mixed
+     */
+    protected function parseFile($cache, $content, $originalFilePath) {
         return $content;
     }
 

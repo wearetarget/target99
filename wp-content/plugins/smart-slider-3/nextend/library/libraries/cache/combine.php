@@ -1,4 +1,5 @@
 <?php
+N2Loader::import('libraries.cache.cache');
 
 class N2CacheCombine extends N2Cache {
 
@@ -34,13 +35,14 @@ class N2CacheCombine extends N2Cache {
         if (!empty($this->inline)) {
             $hash .= $this->inline;
         }
+
         return md5($hash . json_encode($this->options));
     }
 
     public function make() {
-        $hash = $this->getHash();
-        $file = $this->getStorageFilePath($hash . '.' . $this->fileType);
-        if (!$this->isCached($file)) {
+        $hash     = $this->getHash();
+        $fileName = $hash . '.' . $this->fileType;
+        if (!$this->exists($fileName)) {
             $buffer = '';
             for ($i = 0; $i < count($this->files); $i++) {
                 $buffer .= file_get_contents($this->files[$i]);
@@ -49,16 +51,10 @@ class N2CacheCombine extends N2Cache {
                 $buffer = call_user_func($this->minify, $buffer);
             }
             $buffer .= $this->inline;
-            N2Filesystem::createFile($file, $buffer);
-        }
-        return $file;
-    }
 
-    private function isCached($file) {
-
-        if (N2Filesystem::existsFile($file)) {
-            return true;
+            $this->set($fileName, $buffer);
         }
-        return false;
+
+        return $this->getPath($fileName);
     }
 }

@@ -58,7 +58,7 @@ class N2SSPluginItemFactoryImage extends N2SSPluginItemFactoryAbstract {
         return dirname(__FILE__) . DIRECTORY_SEPARATOR . $this->type . DIRECTORY_SEPARATOR;
     }
 
-    public function getFilled($slide, $data) {
+    public static function getFilled($slide, $data) {
         $data->set('image', $slide->fill($data->get('image', '')));
         $data->set('alt', $slide->fill($data->get('alt', '')));
         $data->set('title', $slide->fill($data->get('title', '')));
