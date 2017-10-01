@@ -18,6 +18,10 @@ body {
   margin: 0 auto;
   padding-bottom: 220px;
 
+  @media @small-screen {
+    padding-bottom: 300px;
+  }
+
   .layout__service {
     box-sizing: border-box;
     margin: 0 auto;
@@ -38,7 +42,6 @@ body {
 
     @media @small-screen {
       min-width: @mobile-min-width;
-      padding-bottom: 90px;
     }
   }
 }

@@ -1,0 +1,148 @@
+@import '../base/variables';
+@import '../base/layout';
+
+.contact-form {
+  display: block;
+  background-color: @turquoise-3;
+
+  .contact-form__inner-container {
+    padding: 50px 20px;
+  }
+
+  .contact-form__title-container {
+    padding-bottom: 30px;
+
+    text-align: center;
+
+    @media @small-screen {
+      font-size: @tablet-font-size;
+      margin-bottom: 20px;
+    }
+  }
+
+  .contact-form__title {
+    font-weight: bold;
+    text-transform: uppercase;
+    color: @white-1;
+  }
+
+  form {
+    .wpcf7-mail-sent-ng, .wpcf7-validation-errors {
+      border: none;
+      text-align: center;
+      color: @white-1;
+      font-size: @h2-size;
+    }
+  }
+  .contact-form__form-inner-container {
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+    text-align: center;
+    color: @turquoise-1;
+  }
+
+  .contact-form__button-container {
+    padding: 20px 0;
+    width: 30%;
+    margin: 0 auto;
+
+    @media @small-screen {
+      width: 100%;
+    }
+  }
+
+  .contact-form__button {
+    width: 100%;
+  }
+
+  .contact-form__input-container {
+    box-sizing: border-box;
+    display: block;
+    padding-bottom: 20px;
+
+    &.contact-form__input-container--full {
+      display: block;
+      clear: both;
+      width: 100%;
+    }
+
+    &.contact-form__input-container--half {
+      float: left;
+      width: 50%;
+
+      @media @small-screen, @medium-screen {
+        width: 100%;
+        float: none;
+
+        &:nth-of-type(odd) {
+          padding-right: 0;
+        }
+
+        &:nth-of-type(even) {
+          padding-left: 0;
+        }
+      }
+
+      @media @large-screen, @xl-screen {
+        &:nth-of-type(odd) {
+          padding-right: 10px;
+        }
+
+        &:nth-of-type(even) {
+          padding-left: 10px;
+        }
+      }
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      box-sizing: border-box;
+      font-size: @normal-font-size;
+      font-family: @main-control-font;
+      font-weight: bold;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      padding-left: 10px;
+      color: @dark-gray-1;
+      border: 1px solid @white-1;
+      background-color: @white-1;
+
+      &:focus {
+        outline-width: 0;
+      }
+
+      &::-webkit-input-placeholder {
+        text-transform: uppercase;
+
+        color: @dark-gray-1;
+      }
+
+      &::-moz-placeholder {
+        text-transform: uppercase;
+
+        color: @dark-gray-1;
+      }
+
+      /* Firefox 19+ */
+      &:-moz-placeholder {
+        text-transform: uppercase;
+
+        color: @dark-gray-1;
+      }
+
+      /* Firefox 18- */
+      &:-ms-input-placeholder {
+        text-transform: uppercase;
+
+        color: @dark-gray-1;
+      }
+    }
+
+    span.wpcf7-not-valid-tip {
+      text-align: left;
+      color: @white-1;
+    }
+  }
+}

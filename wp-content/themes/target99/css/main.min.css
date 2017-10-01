@@ -141,6 +141,11 @@ body {
   margin: 0 auto;
   padding-bottom: 220px;
 }
+@media screen and (max-width: 599px) {
+  .layout {
+    padding-bottom: 300px;
+  }
+}
 .layout .layout__service {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
@@ -165,7 +170,6 @@ body {
 @media screen and (max-width: 599px) {
   .layout .layout__content {
     min-width: 320px;
-    padding-bottom: 90px;
   }
 }
 .visibility-layout {
@@ -432,165 +436,6 @@ a:hover {
 }
 .archive-page .archive-page__pagination-container {
   text-align: center;
-}
-.faq {
-  display: block;
-  background-color: #34c1a9;
-}
-.faq .faq__inner-container {
-  position: relative;
-  padding: 50px 0;
-}
-.faq .faq__title-container {
-  padding-bottom: 30px;
-  text-align: center;
-}
-@media screen and (max-width: 599px) {
-  .faq .faq__title-container {
-    font-size: 16px;
-  }
-}
-.faq .faq__title {
-  font-weight: bold;
-  text-transform: uppercase;
-  color: white;
-}
-@media screen and (max-width: 599px) {
-  .faq .faq__title {
-    margin-bottom: 20px;
-  }
-}
-.faq .faq__form-container {
-  width: 100%;
-  margin-bottom: -60px;
-  text-align: center;
-}
-.faq .faq__button {
-  width: 20%;
-}
-@media screen and (max-width: 599px) {
-  .faq .faq__button {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    text-align: center;
-  }
-}
-.faq .faq__footer {
-  text-align: center;
-}
-.faq .faq__footer span {
-  padding: 20px 75px;
-}
-@media screen and (max-width: 599px) {
-  .faq .faq__footer {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-  }
-}
-.faq .faq__form {
-  clear: both;
-  display: table;
-  margin: 0 auto;
-  -ms-flex-line-pack: center;
-  align-content: center;
-}
-@media screen and (max-width: 599px) {
-  .faq .faq__form {
-    width: 100%;
-  }
-}
-.faq .faq__input-container {
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-}
-@media screen and (max-width: 599px) {
-  .faq .faq__input-container {
-    float: none;
-    width: 80%;
-    padding-bottom: 20px;
-  }
-}
-.faq .faq__input-container.faq__input-container--full {
-  width: 100%;
-  height: 108px;
-  margin-bottom: 40px;
-  padding-top: 15px;
-}
-@media screen and (max-width: 599px) {
-  .faq .faq__input-container.faq__input-container--full {
-    float: none;
-    width: 80%;
-    margin-bottom: 65px;
-    padding-bottom: 20px;
-  }
-}
-.faq .faq__input-container.faq__input-container--half {
-  display: inline-block;
-  float: left;
-  width: 49%;
-  height: 54px;
-  margin: 20px 0;
-}
-@media screen and (max-width: 599px) {
-  .faq .faq__input-container.faq__input-container--half {
-    margin-top: 0;
-  }
-}
-.faq .faq__input-container.faq__input-container--half:nth-child(2n+1) {
-  float: right;
-}
-@media screen and (max-width: 599px) {
-  .faq .faq__input-container.faq__input-container--half:nth-child(2n+1) {
-    float: none;
-  }
-}
-.faq .faq__input-container input,
-.faq .faq__input-container textarea {
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  font-size: 14px;
-  font-family: 'PT Sans', sans-serif;
-  font-weight: bold;
-  padding-top: 5px;
-  padding-left: 10px;
-  color: #1f1f1f;
-  border: 1px solid white;
-  background-color: white;
-  /* Firefox 19+ */
-  /* Firefox 18- */
-}
-.faq .faq__input-container input:focus,
-.faq .faq__input-container textarea:focus {
-  outline-width: 0;
-}
-.faq .faq__input-container input::-webkit-input-placeholder,
-.faq .faq__input-container textarea::-webkit-input-placeholder {
-  text-transform: uppercase;
-  color: #1f1f1f;
-}
-.faq .faq__input-container input::-moz-placeholder,
-.faq .faq__input-container textarea::-moz-placeholder {
-  text-transform: uppercase;
-  color: #1f1f1f;
-}
-.faq .faq__input-container input:-moz-placeholder,
-.faq .faq__input-container textarea:-moz-placeholder {
-  text-transform: uppercase;
-  color: #1f1f1f;
-}
-.faq .faq__input-container input:-ms-input-placeholder,
-.faq .faq__input-container textarea:-ms-input-placeholder {
-  text-transform: uppercase;
-  color: #1f1f1f;
-}
-@media screen and (max-width: 599px) {
-  .faq {
-    min-height: 350px;
-  }
 }
 .post-page {
   background-color: #f1f1f1;
@@ -983,7 +828,7 @@ a:hover {
 }
 .event-panel .event-panel__title-container {
   padding-bottom: 50px;
-  text-align: left;
+  text-align: right;
 }
 @media screen and (max-width: 599px) {
   .event-panel .event-panel__title-container {
@@ -1535,6 +1380,136 @@ a:hover {
   width: 100%;
   padding-bottom: 20px;
 }
+.contact-form {
+  display: block;
+  background-color: #34c1a9;
+}
+.contact-form .contact-form__inner-container {
+  padding: 50px 20px;
+}
+.contact-form .contact-form__title-container {
+  padding-bottom: 30px;
+  text-align: center;
+}
+@media screen and (max-width: 599px) {
+  .contact-form .contact-form__title-container {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+}
+.contact-form .contact-form__title {
+  font-weight: bold;
+  text-transform: uppercase;
+  color: white;
+}
+.contact-form form .wpcf7-mail-sent-ng,
+.contact-form form .wpcf7-validation-errors {
+  border: none;
+  text-align: center;
+  color: white;
+  font-size: 26px;
+}
+.contact-form .contact-form__form-inner-container {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  text-align: center;
+  color: #00ab8f;
+}
+.contact-form .contact-form__button-container {
+  padding: 20px 0;
+  width: 30%;
+  margin: 0 auto;
+}
+@media screen and (max-width: 599px) {
+  .contact-form .contact-form__button-container {
+    width: 100%;
+  }
+}
+.contact-form .contact-form__button {
+  width: 100%;
+}
+.contact-form .contact-form__input-container {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  display: block;
+  padding-bottom: 20px;
+}
+.contact-form .contact-form__input-container.contact-form__input-container--full {
+  display: block;
+  clear: both;
+  width: 100%;
+}
+.contact-form .contact-form__input-container.contact-form__input-container--half {
+  float: left;
+  width: 50%;
+}
+@media screen and (max-width: 599px), screen and (min-width: 600px) and (max-width: 899px) {
+  .contact-form .contact-form__input-container.contact-form__input-container--half {
+    width: 100%;
+    float: none;
+  }
+  .contact-form .contact-form__input-container.contact-form__input-container--half:nth-of-type(odd) {
+    padding-right: 0;
+  }
+  .contact-form .contact-form__input-container.contact-form__input-container--half:nth-of-type(even) {
+    padding-left: 0;
+  }
+}
+@media screen and (min-width: 900px) and (max-width: 1366px), screen and (min-width: 1367px) {
+  .contact-form .contact-form__input-container.contact-form__input-container--half:nth-of-type(odd) {
+    padding-right: 10px;
+  }
+  .contact-form .contact-form__input-container.contact-form__input-container--half:nth-of-type(even) {
+    padding-left: 10px;
+  }
+}
+.contact-form .contact-form__input-container input,
+.contact-form .contact-form__input-container textarea {
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  font-size: 18px;
+  font-family: 'PT Sans', sans-serif;
+  font-weight: bold;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  color: #1f1f1f;
+  border: 1px solid white;
+  background-color: white;
+  /* Firefox 19+ */
+  /* Firefox 18- */
+}
+.contact-form .contact-form__input-container input:focus,
+.contact-form .contact-form__input-container textarea:focus {
+  outline-width: 0;
+}
+.contact-form .contact-form__input-container input::-webkit-input-placeholder,
+.contact-form .contact-form__input-container textarea::-webkit-input-placeholder {
+  text-transform: uppercase;
+  color: #1f1f1f;
+}
+.contact-form .contact-form__input-container input::-moz-placeholder,
+.contact-form .contact-form__input-container textarea::-moz-placeholder {
+  text-transform: uppercase;
+  color: #1f1f1f;
+}
+.contact-form .contact-form__input-container input:-moz-placeholder,
+.contact-form .contact-form__input-container textarea:-moz-placeholder {
+  text-transform: uppercase;
+  color: #1f1f1f;
+}
+.contact-form .contact-form__input-container input:-ms-input-placeholder,
+.contact-form .contact-form__input-container textarea:-ms-input-placeholder {
+  text-transform: uppercase;
+  color: #1f1f1f;
+}
+.contact-form .contact-form__input-container span.wpcf7-not-valid-tip {
+  text-align: left;
+  color: white;
+}
 .event .event__content {
   position: relative;
   display: block;
@@ -1589,6 +1564,9 @@ a:hover {
 }
 .event .event__date [class*='fa-'] {
   padding: 5px;
+}
+.faq-accordion {
+  padding: 0 20px;
 }
 .faq-accordion .faq-accordion__button {
   position: relative;

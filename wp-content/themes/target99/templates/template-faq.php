@@ -16,7 +16,6 @@ the_post();
 get_header();
 ?>
 
-
 <section class="faq-panel">
     <div class="faq-panel__inner-container layout__content">
         <div class="faq-panel__title-container">
@@ -60,14 +59,14 @@ get_header();
     });
 </script>
 
-<section class="faq">
-    <div class="faq__inner-container layout__service">
-        <div class="faq__title-container">
-            <h2 class="faq__title">
+<section class="contact-form">
+    <div class="contact-form__inner-container layout__content">
+        <div class="contact-form__title-container">
+            <h2 class="contact-form__title">
                 ЗАДАТЬ ВОПРОС, НАПИСАТЬ СООБЩЕНИЕ
             </h2>
-            <?php echo do_shortcode('[contact-form-7 id="119" title="Contact form"]'); ?>
         </div>
+        <?php echo do_shortcode('[contact-form-7 id="119" title="Contact form"]'); ?>
     </div>
 </section>
 
